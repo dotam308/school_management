@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Quản lí điểm</title>
+  <title>Quáº£n lÃ­ Ä‘iá»ƒm</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -26,7 +26,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
+         Quáº£n lÃ­ Ä‘iá»ƒm
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -41,13 +41,13 @@
               <li class="nav-item active  ">
                   <a class="nav-link" href="manageGrades.php?view=person">
                   <i class="material-icons">person</i>
-                  Xem điểm cá nhân
+                  Xem Ä‘iá»ƒm cÃ¡ nhÃ¢n
                   </a>
                 </li>
              <li class="nav-item active  ">
                   <a class="nav-link" href="manageGrades.php?view=all">
                   <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
+                  Xem Ä‘iá»ƒm toÃ n trÆ°á»�ng
                   </a>
              </li>
           	</ul>
@@ -86,25 +86,22 @@
         <div class="container-fluid">
         	<?php 
         	
+        	require_once 'configs.php';
         	
-        	$servername = "localhost";
-        	$username = "root";
-        	$password= "";
-        	$db = "mydb";
-        	
-        	$conn = new mysqli($servername, $username, $password, $db);
+        	updateStudentOnGrade();
+        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         	if ($conn->connect_error) {
         	    echo $conn->error;
         	}
         	echo "<form  method='post' action='#'>
                                 <table class='table' style='width:  100%;'>
                                     <tr>
-                                        <th>Mã sinh viên</th>
-                                        <th>Họ tên</th>
-                                        <th>Lớp</th>
-                                        <th>Tên môn học</th>
-                                        <th>Điểm</th>
-                                        <th>Sửa điểm</th>
+                                        <th>MÃ£ sinh viÃªn</th>
+                                        <th>Há»� tÃªn</th>
+                                        <th>Lá»›p</th>
+                                        <th>TÃªn mÃ´n há»�c</th>
+                                        <th>Ä�iá»ƒm</th>
+                                        <th>Sá»­a Ä‘iá»ƒm</th>
                                     </tr>";
         	
         	
@@ -135,7 +132,7 @@
         	        }
         	        
         	        echo "</table>
-                     <button type='submit'>Ghi nhận</button>
+                     <button type='submit'>Ghi nháº­n</button>
                      </form>";
         	        
         	    } else {
@@ -148,7 +145,7 @@
         	            $courseID = getDetailData($key);
         	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
         	            if ($conn->query($sqlUpdate)) {
-        	                echo "<p>Update thành công, vui lòng tải lại trang</p>";
+        	                echo "<p>Update thÃ nh cÃ´ng, vui lÃ²ng táº£i láº¡i trang</p>";
         	                echo "<button onClick='window.location.reload();'>Refresh Page</button>"; 
         	            } else {
         	               // echo "erroe at Update";

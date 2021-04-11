@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Quản lí điểm</title>
+  <title>Quáº£n lÃ­ Ä‘iá»ƒm</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -26,7 +26,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
+         Quáº£n lÃ­ Ä‘iá»ƒm
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -41,7 +41,7 @@
               <li class="nav-item active  ">
                   <a class="nav-link" href="manageGrades.php?view=person">
                   <i class="material-icons">person</i>
-                  Xem điểm cá nhân
+                  Xem Ä‘iá»ƒm cÃ¡ nhÃ¢n
                   </a>
                 </li>
           	</ul>
@@ -80,14 +80,13 @@
         <div class="container-fluid">
         	<?php 
         	require_once 'functions.php';
+        	require_once 'configs.php';
         	doTask('person', '');
         	
-        	$servername = "localhost";
-        	$username = "root";
-        	$password= "";
-        	$db = "mydb";
+        	updateStudentOnGrade();
         	
-        	$conn = new mysqli($servername, $username, $password, $db);
+        	
+        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         	if ($conn->connect_error) {
         	    echo $conn->error;
         	}
@@ -95,12 +94,12 @@
         	echo "<form  method='post' action='#'>
                                 <table class='table' style='width:  100%;'>
                                     <tr>
-                                        <td>Mã sinh viên</td>
-                                        <td>Họ tên</td>
-                                        <td>Lớp</td>
-                                        <td>Tên môn học</td>
-                                        <td>Điểm</td>
-                                        <td>Sửa điểm</td>
+                                        <td>MÃ£ sinh viÃªn</td>
+                                        <td>Há»� tÃªn</td>
+                                        <td>Lá»›p</td>
+                                        <td>TÃªn mÃ´n há»�c</td>
+                                        <td>Ä�iá»ƒm</td>
+                                        <td>Sá»­a Ä‘iá»ƒm</td>
                                     </tr>";
         	
         	
@@ -132,7 +131,7 @@
         	        }
         	        
         	        echo "</table>
-                     <button type='submit'>Ghi nhận</button>
+                     <button type='submit'>Ghi nháº­n</button>
                      </form>";
         	        
         	    } else {

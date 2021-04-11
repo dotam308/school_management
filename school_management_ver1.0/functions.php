@@ -1,13 +1,10 @@
 
 <?php
+    require_once 'configs.php';
     function doTask($type, $object, $viewByUnit="") {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "mydb";
         
         // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -25,28 +22,28 @@
         
         if ($object == "student") {
             $myTable = "studentdata";
-            $code = "Mã sinh viên";
-            $name = "Họ tên";
-            $info1 = "Ngày sinh";
-            $info2 = "Số điện thoại";
-            $info3 = "Lớp";
-            $info4 = "Khác";
+            $code = "MÃ£ sinh viÃªn";
+            $name = "Há»� tÃªn";
+            $info1 = "NgÃ y sinh";
+            $info2 = "Sá»‘ Ä‘iá»‡n thoáº¡i";
+            $info3 = "Lá»›p";
+            $info4 = "KhÃ¡c";
         } else if ($object == "teacher") {
             $myTable = "teacherdata";
-            $code = "Mã giáo viên";
-            $name = "Họ tên";
-            $info1 = "Ngày sinh";
-            $info2 = "Số điện thoại";
-            $info3 = "Đơn vị";
-            $info4 = "Lớp quản lí";
+            $code = "MÃ£ giÃ¡o viÃªn";
+            $name = "Há»� tÃªn";
+            $info1 = "NgÃ y sinh";
+            $info2 = "Sá»‘ Ä‘iá»‡n thoáº¡i";
+            $info3 = "Ä�Æ¡n vá»‹";
+            $info4 = "Lá»›p quáº£n lÃ­";
         } else if ($object == "course") {
             $myTable = "coursedata";
-            $code = "Mã môn học";
-            $name = "Tên môn học";
-            $info1 = "Giáo viên";
-            $info2 = "Số tín chỉ";
-            $info3 = "Thời gian";
-            $info4 = "Địa điểm";
+            $code = "MÃ£ mÃ´n há»�c";
+            $name = "TÃªn mÃ´n há»�c";
+            $info1 = "GiÃ¡o viÃªn";
+            $info2 = "Sá»‘ tÃ­n chá»‰";
+            $info3 = "Thá»�i gian";
+            $info4 = "Ä�á»‹a Ä‘iá»ƒm";
         }
 
         switch ($type) {
@@ -91,7 +88,7 @@
                             </tr>";
                         }
                         if ($viewByUnit != "") {
-                            $mainTeacher = "Chưa có";
+                            $mainTeacher = "ChÆ°a cÃ³";
                             $sqlGetMainTeacher = "SELECT * FROM `teacherdata` WHERE 1";
                             if ($res = $conn->query($sqlGetMainTeacher)) {
                                 $teacherList = $res->fetch_all();
@@ -105,7 +102,7 @@
                                 echo "error: at sqlGetMainTeacher";
                             }
                             
-                            echo "<h3>Cố vấn học tập: $mainTeacher</h3>";
+                            echo "<h3>Cá»‘ váº¥n há»�c táº­p: $mainTeacher</h3>";
                         }
                     } else if ($object == "teacher") {
                         while($row = $result->fetch_assoc()) {
@@ -161,7 +158,7 @@
                     
                     		
                     		</table>
-                    		<button type='submit'>Hoàn tất</button>
+                    		<button type='submit'>HoÃ n táº¥t</button>
                     	</form>";
                 $entity = array();
                 if (!empty($_POST)) {
@@ -212,7 +209,7 @@
                         
                         
                         </table>
-                        <button type='submit'>Hoàn tất</button>
+                        <button type='submit'>HoÃ n táº¥t</button>
                         </form>";
                 $entity = array();
                 if (! empty($_POST)) {
@@ -245,7 +242,7 @@
                     	<input type='text' name='code'/>
                     	</p>
                     	
-                    	<button type='submit'>Hoàn tất</button>
+                    	<button type='submit'>HoÃ n táº¥t</button>
                     </form>";
                 $code = "";
                 if(isset($_POST["code"])) $code = $_POST["code"];
@@ -269,7 +266,7 @@
                 
             case "setMainTeacher":
                 $classCurrent = ($_GET["class"]);
-                echo "<h3>Chọn cố vấn học tập: </h3>";
+                echo "<h3>Chá»�n cá»‘ váº¥n há»�c táº­p: </h3>";
                 
                 
                 $sql = "SELECT * FROM teacherdata";
@@ -281,7 +278,7 @@
                     $nameVal = $result[$i][1];
                     echo "<input type='radio' name='gv' value='$idVal'>$nameVal<br />";
                 }
-                echo "<button type='submit'>Xác nhận</button>
+                echo "<button type='submit'>XÃ¡c nháº­n</button>
                  </form>";
                 
                 if (isset($_POST['gv'])) {
@@ -303,7 +300,7 @@
                     if ($conn->query($sqlUpdateGV)) {
                         echo '
                             <script type="text/javascript">
-                            	alert("Thay đổi cố vấn học tập thành công");
+                            	alert("Thay Ä‘á»•i cá»‘ váº¥n há»�c táº­p thÃ nh cÃ´ng");
                             </script>
                             ';
                     } else {
@@ -313,32 +310,32 @@
                 break;
             case "person":
                 echo "<form action='queryOnStudentGrade.php' method='post'>
-                            Nhập mã sinh viên<input name='id' type='text'>
-                              <button type='submit'>Tra cứu</button>
+                            Nháº­p mÃ£ sinh viÃªn<input name='id' type='text'>
+                              <button type='submit'>Tra cá»©u</button>
                     
                          </form>";
                 break;
             case 'school':
-//                 echo "<h3>Đăng nhập tài khoản admin</h3>";
+//                 echo "<h3>Ä�Äƒng nháº­p tÃ i khoáº£n admin</h3>";
 //                 echo "<form action='queryOnSchoolGrade.php' method='post'>
 
 //                                 <table class='table'>
 //                                     <tr>
-//                                         <td>Tên đăng nhập</td>
+//                                         <td>TÃªn Ä‘Äƒng nháº­p</td>
 
 //                                         <td> <input type='text' name='username'/></td>
 //                                     </tr>
 
 //                                     <tr>
                                         
-//                                         <td>Mật khẩu</td>
+//                                         <td>Máº­t kháº©u</td>
 //                                         <td><input type='password' name='password'/></td>
 //                                     </tr>
 //                                 </table>
-//                               <button type='submit'>Đăng nhập</button>
+//                               <button type='submit'>Ä�Äƒng nháº­p</button>
                     
 //                          </form>";
-                echo "<button type='submit'><a href='queryOnSchoolGrade.php'>Truy cập</a></button>";
+                echo "<button type='submit'><a href='queryOnSchoolGrade.php'>Truy cáº­p</a></button>";
                 break;
                 
             default:
@@ -349,13 +346,9 @@
     function getDataFrom($field, $table, $condition = "1") {
         
         $output = array();
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "mydb";
         
         // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -381,13 +374,8 @@
     }
     
     function queryOnClass($type) {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "myDB";
-        
         // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -430,9 +418,9 @@
                     // output data of each row
                     echo "<table style='width:100%' class='table'>
                           <tr>
-                            <th>Tên lớp</th>
-                            <th>Số sinh viên tối đa</th>
-                            <th>Sĩ số hiện tại</th>
+                            <th>TÃªn lá»›p</th>
+                            <th>Sá»‘ sinh viÃªn tá»‘i Ä‘a</th>
+                            <th>SÄ© sá»‘ hiá»‡n táº¡i</th>
                           </tr>";
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>
@@ -455,8 +443,8 @@
                     	<form action="#" method="post">
                     		<table class="table">
                     			<tr>
-                    				<th>Tên lớp</th>
-                                    <th>Số sinh viên tối đa</th>
+                    				<th>TÃªn lá»›p</th>
+                                    <th>Sá»‘ sinh viÃªn tá»‘i Ä‘a</th>
                     			</tr>
                     			<tr>
                     				<td><input type="text" name="name"/></td>
@@ -466,7 +454,7 @@
                     
                     
                     		</table>
-                    		<button type="submit">Hoàn tất</button>
+                    		<button type="submit">HoÃ n táº¥t</button>
                     	</form>';
                 $class = array();
                 if (!empty($_POST)) {
@@ -492,8 +480,8 @@
                     	<form action="#" method="post">
                     		<table class="table">
                     			<tr>
-                    				<th>Tên lớp cũ</th>
-                    				<th>Tên lớp mới</th>
+                    				<th>TÃªn lá»›p cÅ©</th>
+                    				<th>TÃªn lá»›p má»›i</th>
                     			</tr>
                     			<tr>
                     				<td><input type="text" name="oldName"/></td>
@@ -503,7 +491,7 @@
                     
                     
                     		</table>
-                    		<button type="submit">Hoàn tất</button>
+                    		<button type="submit">HoÃ n táº¥t</button>
                     	</form>';
                 $class = array();
                 if (! empty($_POST)) {
@@ -526,11 +514,11 @@
                     <form action="#" method="post">
                     
                     	<p>
-                    	<span>Tên lớp</span>
+                    	<span>TÃªn lá»›p</span>
                     	<input type="text" name="name"/>
                     	</p>
                     
-                    	<button type="submit">Hoàn tất</button>
+                    	<button type="submit">HoÃ n táº¥t</button>
                     </form>';
                 $name = "";
                 if(isset($_POST["name"])) $name = $_POST["name"];
@@ -556,12 +544,8 @@
     }
 
     function registerQuery($type, $id, $name, $class) {
-        $servername = "localhost";
-        $username ="root";
-        $password = "";
-        $db = "mydb";
         
-        $conn = new mysqli($servername, $username, $password, $db);
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
         
         if ($conn->connect_error) {
             die("Connection fails: " . $conn->error);
@@ -577,16 +561,16 @@
                 }
                 
                 if ($result->num_rows <= 0) {
-                    echo "Bạn chưa đăng ký môn học";
+                    echo "Báº¡n chÆ°a Ä‘Äƒng kÃ½ mÃ´n há»�c";
                 } else {
                     echo "<table class='table'>
                             <tr>
-                                <th>Mã sinh viên</th>
-                                <th>Họ tên</th>
-                                <th>Lớp</th>
-                                <th>Mã môn học</th>
-                                <th>Tên môn học</th>
-                                <th>Số tín chỉ</th>
+                                <th>MÃ£ sinh viÃªn</th>
+                                <th>Há»� tÃªn</th>
+                                <th>Lá»›p</th>
+                                <th>MÃ£ mÃ´n há»�c</th>
+                                <th>TÃªn mÃ´n há»�c</th>
+                                <th>Sá»‘ tÃ­n chá»‰</th>
                             </tr>";
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>
@@ -605,25 +589,25 @@
                 
                 break;
             case "add" :
-                echo "<div><h3 class='title'>Đăng kí môn học</h3>";
+                echo "<div><h3 class='title'>Ä�Äƒng kÃ­ mÃ´n há»�c</h3>";
                 $sqlSelectCourses = "SELECT * FROM `coursedata` WHERE 1";
                 $result = $conn->query($sqlSelectCourses);
                 
                 if ($result->num_rows <= 0) {
-                    echo "Chưa có môn học đăng kí";
+                    echo "ChÆ°a cÃ³ mÃ´n há»�c Ä‘Äƒng kÃ­";
                 } else {
                     echo "
                             
                             <form action='#' method='post'>
                                 <table class='table'>
                                     <tr>
-                                        <th>Chọn</th>
-                                        <th>Mã môn học</th>
-                                        <th>Tên môn học</th>
-                                        <th>Giáo viên</th>
-                                        <th>Số tín chỉ</th>
-                                        <th>Thời gian</th>
-                                        <th>Địa điểm</th>
+                                        <th>Chá»�n</th>
+                                        <th>MÃ£ mÃ´n há»�c</th>
+                                        <th>TÃªn mÃ´n há»�c</th>
+                                        <th>GiÃ¡o viÃªn</th>
+                                        <th>Sá»‘ tÃ­n chá»‰</th>
+                                        <th>Thá»�i gian</th>
+                                        <th>Ä�á»‹a Ä‘iá»ƒm</th>
                                     </tr>";
 
                     while ($row = $result->fetch_assoc()) {
@@ -640,7 +624,7 @@
                     }
                     echo "
                         </table>
-                        <button type='submit'>Xác nhận</button>
+                        <button type='submit'>XÃ¡c nháº­n</button>
                         </form>";
                     
                     $result = $conn->query($sqlSelectCourses);
@@ -656,7 +640,7 @@
                                     if (gettype($registeredCourses) == "array") {
                                         for ($index = 0; $index < count($registeredCourses); $index++) {
                                             if ($key == $registeredCourses[$index]) {
-                                                echo "Bạn đã đăng ký môn học $key <br/>";
+                                                echo "Báº¡n Ä‘Ã£ Ä‘Äƒng kÃ½ mÃ´n há»�c $key <br/>";
                                                 $exist = true;
                                             }
                                         }
@@ -687,20 +671,20 @@
                 
                 break;
             case "delete":
-                echo "<h3>Xoá môn học</h3>";
+                echo "<h3>XoÃ¡ mÃ´n há»�c</h3>";
                 $sqlSelectRegisteredCourses = "SELECT * FROM `registdata` WHERE id='$id'";
                 $result = $conn->query($sqlSelectRegisteredCourses);
                 
                 echo "<form action='#' method='post'>
                         <table class='table'>
                         <tr>
-                            <th>Chọn</th>
-                            <th>Mã sinh viên</th>
-                            <th>Sinh viên</th>
-                            <th>Lớp</th>
-                            <th>Mã môn học</th>
-                            <th>Tên môn học</th>
-                            <th>Số tín chỉ</th>
+                            <th>Chá»�n</th>
+                            <th>MÃ£ sinh viÃªn</th>
+                            <th>Sinh viÃªn</th>
+                            <th>Lá»›p</th>
+                            <th>MÃ£ mÃ´n há»�c</th>
+                            <th>TÃªn mÃ´n há»�c</th>
+                            <th>Sá»‘ tÃ­n chá»‰</th>
                         </tr>";
                 if ($result->num_rows <= 0) {
                     
@@ -725,7 +709,7 @@
                 
                 echo "
                     </table>
-                        <button type='submit'>Xác nhận</button>
+                        <button type='submit'>XÃ¡c nháº­n</button>
                     </form>";
                 if (isset($_POST)) {
                     $success = false;
@@ -735,7 +719,7 @@
                         if ($conn->query($sqlDeleteRegisteredCourses)) {
                             $success = true;
                             
-                            echo "Xoá thành công môn $key <br />";
+                            echo "XoÃ¡ thÃ nh cÃ´ng mÃ´n $key <br />";
                         } else {
                             echo "error at DeleteRegisteredCourses:" . $conn->error;
                         }
@@ -748,6 +732,46 @@
         }
         
         
+    }
+
+    
+    function updateStudentOnGrade() {
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
+        if ($conn->connect_error) {
+            die ("$conn->error");
+        }
+        $sql = 'SELECT * FROM `registdata` WHERE 1';
+        $sqlGrade = 'SELECT * FROM `gradedata` WHERE 1';
+        $data = $conn->query($sqlGrade)->fetch_all();
+        
+        if ($res = $conn->query($sql)) {
+            while ($row = $res->fetch_assoc()) {
+                $id = $row['id'];
+                $fullName = $row['fullName'];
+                $class = $row['belongUnit'];
+                $courseName = $row['courseName'];
+                
+                
+                $exist = false;
+                for ($i = 0; $i < count($data); $i++) {
+                    if ($id == $data[$i][0] && $courseName == $data[$i][3]) {
+                        $exist = true;
+                        break;
+                    }
+                }
+                
+                if (!$exist) {
+                    $sqlUpdate = "INSERT INTO `gradedata`(`id`, `fullName`, `belongUnit`, `courseName`, `grade`) VALUES ($id,'$fullName', '$class','$courseName','0')";
+                    if ($conn->query($sqlUpdate)) {
+                        
+                    } else {
+                        echo $conn->error;
+                    }
+                }
+            }
+        } else {
+            echo $conn->error;
+        }
     }
     
    

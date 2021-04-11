@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
-  <title>Quản lí nhà trường</title>
+
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+  <title>Quáº£n lÃ­ nhÃ  trÆ°á»�ng</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -11,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
@@ -22,7 +24,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quản lí nhà trường
+         Quáº£n lÃ­ nhÃ  trÆ°á»�ng
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -37,38 +39,38 @@
               <li class="nav-item active  ">
                 <a class="nav-link" href="manageStudent.php">
                   <i class="material-icons">person</i>
-                  <p>Quản lí sinh viên</p>
+                  <p>Quáº£n lÃ­ sinh viÃªn</p>
                 </a>
            		 </li>
            		 <li class="nav-item active  ">
                 <a class="nav-link" href="manageTeacher.php">
                   <i class="material-icons fas fa-chalkboard-teacher"></i>
-                  <p>Quản lí giáo viên</p>
+                  <p>Quáº£n lÃ­ giÃ¡o viÃªn</p>
                 </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageCourse.php">
                       <i class="material-icons">book</i>
-                      <p>Quản lí khoá học</p>
+                      <p>Quáº£n lÃ­ khoÃ¡ há»�c</p>
                     </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageClass.php">
                       <i class="material-icons fas fa-chalkboard"></i>
-                      <p>Quản lí lớp học</p>
+                      <p>Quáº£n lÃ­ lá»›p há»�c</p>
                     </a>
            		 </li>
            		 
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="registerCourses.php">
                       <i class="material-icons">note</i>
-                      <p>Đăng ký học</p>
+                      <p>Ä�Äƒng kÃ½ há»�c</p>
                     </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageGrades.php">
                       <i class="material-icons">grade</i>
-                      <p>Quản lí điểm</p>
+                      <p>Quáº£n lÃ­ Ä‘iá»ƒm</p>
                     </a>
            		 </li>
             </ul>
