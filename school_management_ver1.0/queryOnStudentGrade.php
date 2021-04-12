@@ -44,6 +44,13 @@
                   Xem điểm cá nhân
                   </a>
                 </li>
+                
+             <li class="nav-item active  ">
+                  <a class="nav-link" href="manageGrades.php?view=school">
+                  <i class="material-icons">circle</i>
+                  Xem điểm toàn trường
+                  </a>
+             </li>
           	</ul>
       	
       	</form>

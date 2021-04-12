@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Đăng ký học</title>
+  <title>Đăng kí học</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -13,6 +13,7 @@
   <!-- Material Kit CSS -->
   <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" rel="stylesheet" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -20,7 +21,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Đăng ký học
+        Đăng kí học
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -33,23 +34,12 @@
                 </a>
               </li>
               <li class="nav-item active  ">
-                <a class="nav-link" href="registerQuery.php?type=view">
-                  <i class="material-icons">search</i>
-                  <p>Xem danh sách</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="registerQuery.php?type=add">
-                  <i class="material-icons">add</i>
-                  <p>Thêm môn học</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="registerQuery.php?type=delete">
-                  <i class="material-icons">delete</i>
-                  <p>Xoá môn học</p>
-                </a>
-              </li>
+                    <a class="nav-link" href="registerCourses.php">
+                      <i class="material-icons">note</i>
+                      <p>Đăng kí học</p>
+                    </a>
+           		 </li>
+              
             </ul>
       	
       	</form>
@@ -93,9 +83,29 @@
             	if ($conn->connect_error) {
             	    die("Connection failed: " . $conn->connect_error);
             	}
+            	
+            	
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
+        	       
+        	       echo '<ul>
+                           <li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=view">
+                              <i class="material-icons">search</i>Xem danh sách
+                            </a>
+                          </li>
+                          <li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=add">
+                              <i class="material-icons">add</i>Thêm môn học
+                            </a>
+                          </li>
+                          <li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=delete">
+                              <i class="material-icons">delete</i>Xoá môn học
+                            </a>
+                          </li>
+                        </ul>';
         	   }
         	   require_once 'functions.php';
         	   
@@ -120,10 +130,25 @@
         	       }
         	       
         	       if(!$success) {
-        	           echo "<script>alert('Đăng nhập thất bại')</script>";
+        	           echo "<script>alert('Đăng nhập không thành công')</script>";
         	           echo '<button><a href="registerCourses.php">Đăng nhập lại</a></button>';
         	       }
         	       else {
+        	           echo '<li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=view">
+                              <i class="material-icons">search</i>Xem danh sách
+                            </a>
+                          </li>
+                          <li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=add">
+                              <i class="material-icons">add</i>Thêm môn học
+                            </a>
+                          </li>
+                          <li class="item active  ">
+                            <a class="nav-link" href="registerQuery.php?type=delete">
+                              <i class="material-icons">delete</i>Xoá môn học
+                            </a>
+                          </li>';
         	           echo "<script>alert('Đăng nhập thành công')</script>";
         	          
         	           

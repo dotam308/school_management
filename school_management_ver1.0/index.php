@@ -35,8 +35,11 @@
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageStudent.php">
+              <li class="nav-item active dropdown">
+              	
+                
+                  
+                <a class="nav-link " href="manageStudent.php">
                   <i class="material-icons">person</i>
                   <p>Quản lí sinh viên</p>
                 </a>
@@ -61,9 +64,9 @@
            		 </li>
            		 
            		 <li class="nav-item active  ">
-                    <a class="nav-link" href="registerCourses.php">
+                    <a class="nav-link" href="registerCourses.php?type=login">
                       <i class="material-icons">note</i>
-                      <p>Đăng ký học</p>
+                      <p>Đăng kí học</p>
                     </a>
            		 </li>
            		 <li class="nav-item active  ">
@@ -72,6 +75,7 @@
                       <p>Quản lí điểm</p>
                     </a>
            		 </li>
+           		 
             </ul>
       	
       	</form>

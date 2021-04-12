@@ -112,7 +112,14 @@
         	        if (isset($_GET["type"])) {
         	            $type = $_GET["type"];
         	        }
-        	        doTask($type, "student", "");
+        	        if ($type == 'delete') {
+        	            doTask($type, 'student', "", true);
+        	        } else {
+        	            
+        	            doTask('view', "student", "");
+        	            if ($type != 'view') doTask($type, "student", "");
+        	        }
+        	        
         	        
         	        
         	    } else if ($_GET["view"] == "class"){
@@ -121,22 +128,31 @@
         	        $class = "";
         	        if (isset($_GET["class"])) {
         	            
-        	            
         	            $class = $_GET["class"];
         	            createQueryForm("class", $class);
         	            
-    	                $type2 = "";
-    	                if (isset($_GET["type"])) {
-    	                    $type2 = $_GET["type"];
-    	                }
-    	                doTask($type2, "student", $class);
-    	                
+        	            $type2 = "";
+        	            if (isset($_GET["type"])) {
+        	                
+        	                $type2 = $_GET["type"];
+        	            }
+        	            
+        	            if ($type2 == 'delete') {
+        	                
+        	                doTask('delete', "student", $class, true);
+        	            } else  {
+        	                
+        	                doTask('view', "student", $class, true);
+        	                if ($type2 != 'view' ) doTask($type2, "student", $class, true);
+        	            }
+        	            
+        	            
         	        }
         	        
         	    }
-        	    
-        	    
         	}
+        	    
+                
         	    
             	   
         	   
@@ -180,7 +196,7 @@
                         Xem danh sách
                         </a>
                     </li>
-                        <li class='item'>
+                    <li class='item'>
                         <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=add'>
                         <i class='material-icons'>add</i>Thêm sinh viên
                         </a>

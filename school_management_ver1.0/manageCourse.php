@@ -11,7 +11,9 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
+  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
+  
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
@@ -32,30 +34,12 @@
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageCourse.php?type=view">
-                  <i class="material-icons">search</i>
-                  <p>Xem danh sách</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageCourse.php?type=add">
-                  <i class="material-icons">add</i>
-                  <p>Thêm khoá học</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageCourse.php?type=edit">
-                  <i class="material-icons">edit</i>
-                  <p>Sửa khoá học</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageCourse.php?type=delete">
-                  <i class="material-icons">delete</i>
-                  <p>Xoá khoá học</p>
-                </a>
-              </li>
+           		 <li class="nav-item active  ">
+                    <a class="nav-link" href="manageCourse.php">
+                      <i class="material-icons">book</i>
+                      <p>Quản lí khoá học</p>
+                    </a>
+           		 </li>
             </ul>
       	
       	</form>
@@ -91,12 +75,38 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
+        	echo '
+              <li class="item active  ">
+                <a class="nav-link" href="manageCourse.php?type=view">
+                  <i class="material-icons">search</i>Xem danh sách
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageCourse.php?type=add">
+                  <i class="material-icons">add</i>Thêm khoá học
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageCourse.php?type=edit">
+                  <i class="material-icons">edit</i>Sửa khoá học
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageCourse.php?type=delete">
+                  <i class="material-icons">delete</i>Xoá khoá học
+                </a>
+              </li>';
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
         	   }
         	   require_once 'functions.php';
-        	   doTask($type, "course");
+        	   if ($type == 'delete') {
+        	       doTask('delete', 'course');
+        	   } else {
+        	       doTask('view', 'course');
+        	       if ($type != 'view') doTask($type, 'course');
+        	   }
         	   
         	?>
         	
