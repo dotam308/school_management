@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Quáº£n lÃ­ Ä‘iá»ƒm</title>
+  <title>Quản lí điểm</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -26,7 +26,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quáº£n lÃ­ Ä‘iá»ƒm
+         Quản lí điểm
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -41,7 +41,7 @@
               <li class="nav-item active  ">
                   <a class="nav-link" href="manageGrades.php?view=person">
                   <i class="material-icons">person</i>
-                  Xem Ä‘iá»ƒm cÃ¡ nhÃ¢n
+                  Xem điểm cá nhân
                   </a>
                 </li>
           	</ul>
@@ -94,12 +94,12 @@
         	echo "<form  method='post' action='#'>
                                 <table class='table' style='width:  100%;'>
                                     <tr>
-                                        <td>MÃ£ sinh viÃªn</td>
-                                        <td>Há»� tÃªn</td>
-                                        <td>Lá»›p</td>
-                                        <td>TÃªn mÃ´n há»�c</td>
-                                        <td>Ä�iá»ƒm</td>
-                                        <td>Sá»­a Ä‘iá»ƒm</td>
+                                        <td>Mã sinh viên</td>
+                                        <td>Họ tên</td>
+                                        <td>Lớp</td>
+                                        <td>Tên môn học</td>
+                                        <td>Điểm</td>
+                                        <td>Sửa điểm</td>
                                     </tr>";
         	
         	
@@ -131,7 +131,7 @@
         	        }
         	        
         	        echo "</table>
-                     <button type='submit'>Ghi nháº­n</button>
+                     <button type='submit'>Ghi nhận</button>
                      </form>";
         	        
         	    } else {

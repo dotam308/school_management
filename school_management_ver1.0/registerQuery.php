@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Ä�Äƒng kÃ½ há»�c</title>
+  <title>Đăng ký học</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -20,7 +20,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Ä�Äƒng kÃ½ há»�c
+         Đăng ký học
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -35,19 +35,19 @@
               <li class="nav-item active  ">
                 <a class="nav-link" href="registerQuery.php?type=view">
                   <i class="material-icons">search</i>
-                  <p>Xem danh sÃ¡ch</p>
+                  <p>Xem danh sách</p>
                 </a>
               </li>
               <li class="nav-item active  ">
                 <a class="nav-link" href="registerQuery.php?type=add">
                   <i class="material-icons">add</i>
-                  <p>ThÃªm mÃ´n há»�c</p>
+                  <p>Thêm môn học</p>
                 </a>
               </li>
               <li class="nav-item active  ">
                 <a class="nav-link" href="registerQuery.php?type=delete">
                   <i class="material-icons">delete</i>
-                  <p>XoÃ¡ mÃ´n há»�c</p>
+                  <p>Xoá môn học</p>
                 </a>
               </li>
             </ul>
@@ -120,11 +120,11 @@
         	       }
         	       
         	       if(!$success) {
-        	           echo "<script>alert('Ä�Äƒng nháº­p tháº¥t báº¡i')</script>";
-        	           echo '<button><a href="registerCourses.php">Ä�Äƒng nháº­p láº¡i</a></button>';
+        	           echo "<script>alert('Đăng nhập thất bại')</script>";
+        	           echo '<button><a href="registerCourses.php">Đăng nhập lại</a></button>';
         	       }
         	       else {
-        	           echo "<script>alert('Ä�Äƒng nháº­p thÃ nh cÃ´ng')</script>";
+        	           echo "<script>alert('Đăng nhập thành công')</script>";
         	          
         	           
         	       }
