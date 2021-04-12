@@ -2,9 +2,8 @@
 <html lang="en">
 
 <head>
-
-  <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
-  <title>Quáº£n lÃ­ nhÃ  trÆ°á»�ng</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+    <title>Quản lí nhà trường</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -24,7 +23,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quáº£n lÃ­ nhÃ  trÆ°á»�ng
+         Quản lí nhà trường
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -39,38 +38,38 @@
               <li class="nav-item active  ">
                 <a class="nav-link" href="manageStudent.php">
                   <i class="material-icons">person</i>
-                  <p>Quáº£n lÃ­ sinh viÃªn</p>
+                  <p>Quản lí sinh viên</p>
                 </a>
            		 </li>
            		 <li class="nav-item active  ">
                 <a class="nav-link" href="manageTeacher.php">
                   <i class="material-icons fas fa-chalkboard-teacher"></i>
-                  <p>Quáº£n lÃ­ giÃ¡o viÃªn</p>
+                    <p>Quản lí giáo viên</p>
                 </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageCourse.php">
                       <i class="material-icons">book</i>
-                      <p>Quáº£n lÃ­ khoÃ¡ há»�c</p>
+                      <p>Quản lí khoá học</p>
                     </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageClass.php">
                       <i class="material-icons fas fa-chalkboard"></i>
-                      <p>Quáº£n lÃ­ lá»›p há»�c</p>
+                      <p>Quản lí lớp học</p>
                     </a>
            		 </li>
            		 
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="registerCourses.php">
                       <i class="material-icons">note</i>
-                      <p>Ä�Äƒng kÃ½ há»�c</p>
+                      <p>Đăng ký học</p>
                     </a>
            		 </li>
            		 <li class="nav-item active  ">
                     <a class="nav-link" href="manageGrades.php">
                       <i class="material-icons">grade</i>
-                      <p>Quáº£n lÃ­ Ä‘iá»ƒm</p>
+                      <p>Quản lí điểm</p>
                     </a>
            		 </li>
             </ul>
