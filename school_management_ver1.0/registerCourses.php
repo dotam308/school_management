@@ -20,7 +20,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Đăng ký học
+        Đăng ký học
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -38,6 +38,8 @@
                   <i class="material-icons">person</i>
                   <p>Sinh viên đăng nhập</p>
                 </a>
+                </li>
+                
             </ul>
       	
       	</form>

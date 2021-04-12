@@ -1,12 +1,13 @@
 
 <?php
     require_once 'configs.php';
+    
     function doTask($type, $object, $viewByUnit="") {
         
         // Create connection
         $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
-        mysqli_set_charset($conn,'utf8');
-        mysqli_query($conn, "SET NAMES 'utf8' COLLATE 'utf8mb4_unicode_ci';");
+//         mysqli_set_charset($conn,'utf8');
+//         mysqli_query($conn, "SET NAMES 'utf8' COLLATE 'utf8mb4_unicode_ci';");
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -32,7 +33,7 @@
             $info4 = "Khác";
         } else if ($object == "teacher") {
             $myTable = "teacherdata";
-            $code = "Mã giáo viên";
+            $code = "Mã Giáo viên";
             $name = "Họ tên";
             $info1 = "Ngày sinh";
             $info2 = "Số điện thoại";
@@ -47,7 +48,8 @@
             $info3 = "Thời gian";
             $info4 = "Địa điểm";
         }
-
+        
+       
         switch ($type) {
             case "view":
                 if ($object == "student" || $object == "teacher") {
@@ -59,7 +61,7 @@
                         $sql = "SELECT * FROM $myTable";
                     }
                     
-                } else  if ($object == "course") $sql = "SELECT * FROM $myTable";
+                } else  $sql = "SELECT * FROM $myTable";
                 
                 $result = $conn->query($sql);
                 
@@ -68,9 +70,12 @@
                 } else {
                     
                     // output data of each row
-                    echo "<table style='width:100%' class='table'>
-                          <tr>
-                            <th>$code</th>
+                    echo "
+                            <form method='post' action='#'>
+                            <table style='width:100%' class='table'>
+                          <tr>";
+                    
+                    echo "<th>$code</th>
                             <th>$name</th>
                             <th>$info1</th>
                             <th>$info2</th>
@@ -80,8 +85,9 @@
                           </tr>";
                     if ($object == "student") {
                         while($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                            <td>$row[id]</td>
+                            echo "<tr>";
+                                
+                            echo "<td>$row[id]</td>
                             <td>$row[fullname]</td>
                             <td>$row[dateOfBirth]</td>
                             <td>$row[contactNumber]</td>
@@ -131,7 +137,11 @@
                     }
                         
                     
-                    echo "</table>";
+                    echo "
+                    </table>
+                    </form>";
+                    
+                    
                 }
                 
                 $conn->close();
@@ -141,20 +151,12 @@
                     	<form action='#' method='post'>
                     		<table class='table'>
                     			<tr>
-                                    <th>$code</th>
-                                    <th>$name</th>
-                                    <th>$info1</th>
-                                    <th>$info2</th>
-                                    <th>$info3</th>
-                                    <th>$info4</th>
-                    			</tr>
-                    			<tr>
-                    				<td><input type='text' name='code'/></td>
-                    				<td><input type='text' name='name'/></td>
-                    				<td><input type='text' name='info1' /></td>
-                    				<td><input type='text' name='info2'  /></td>
-                    				<td><input type='text' name='info3'  /></td>
-                    				<td><input type='text' name='info4'  /></td>
+                				<td><input type='text' name='code' placeholder='Mã sinh viên'/></td>
+                				<td><input type='text' name='name' placeholder='Họ tên'/></td>
+                				<td><input type='text' name='info1' placeholder='$info1' /></td>
+                				<td><input type='text' name='info2'  placeholder='$info2'/></td>
+                				<td><input type='text' name='info3'  placeholder='$info3'/></td>
+                				<td><input type='text' name='info4' placeholder='$info4' /></td>
                     			</tr>
                     			
                     
@@ -167,11 +169,15 @@
                     $entity = $_POST;
                 }
                 if (count($entity) != 0) {
-                    if ($object == "student" || $object == "teacher") {
+                    if ($object == "student") {
                         $sql = "INSERT INTO $myTable (`id`, `fullName`, `dateOfBirth`, `contactNumber`, `belongUnit`,`other`)
                         VALUES ('$entity[code]', '$entity[name]', '$entity[info1]', '$entity[info2]', '$entity[info3]', '$entity[info4]')";
                         
-                    } else if ($object == "course") {
+                    } else if ($object == "teacher") {
+                        $sql = "INSERT INTO $myTable (`id`, `fullName`, `dateOfBirth`, `contactNumber`, `belongUnit`,`manageUnit`)
+                        VALUES ('$entity[code]', '$entity[name]', '$entity[info1]', '$entity[info2]', '$entity[info3]', '$entity[info4]')";
+                        
+                    }else if ($object == "course") {
                         $sql = "INSERT INTO $myTable (`courseCode`, `name`, `teacher`, `creditQuatity`, `period`,`place`)
                         VALUES ('$entity[code]', '$entity[name]', '$entity[info1]', '$entity[info2]', '$entity[info3]', '$entity[info4]')";
                         
@@ -190,22 +196,14 @@
             case "edit":
                 echo "<div class='content'>
                         <form action='#' method='post'>
-                        <table class='table'>
-                            <tr>
-                                <th>$code</th>
-                                <th>$name</th>
-                                <th>$info1</th>
-                                <th>$info2</th>
-                                <th>$info3</th>
-                                <th>$info4</th>
-                            </tr>
+                        <table class='table' >
                 			<tr>
-                				<td><input type='text' name='code'/></td>
-                				<td><input type='text' name='name'/></td>
-                				<td><input type='text' name='info1' /></td>
-                				<td><input type='text' name='info2'  /></td>
-                				<td><input type='text' name='info3'  /></td>
-                				<td><input type='text' name='info4'  /></td>
+                				<td><input type='text' name='code' placeholder='Mã sinh viên'/></td>
+                				<td><input type='text' name='name' placeholder='Họ tên'/></td>
+                				<td><input type='text' name='info1' placeholder='$info1' /></td>
+                				<td><input type='text' name='info2'  placeholder='$info2'/></td>
+                				<td><input type='text' name='info3'  placeholder='$info3'/></td>
+                				<td><input type='text' name='info4' placeholder='$info4' value='none'/></td>
                 			</tr>
                         
                         
@@ -218,8 +216,13 @@
                     $entity = $_POST;
                 }
                 if (count($entity) != 0) {
-                    if ($object == "student" || $object == "teacher") {
+                    if ($object == "student") {
+                        
                         $sql = "UPDATE $myTable SET fullname='$entity[name]', dateOfBirth='$entity[info1]', contactNumber='$entity[info2]', belongUnit='$entity[info3]', other='$entity[info4]' WHERE id='$entity[code]'";
+                        
+                    } else if ( $object == "teacher") {
+                        
+                        $sql = "UPDATE $myTable SET fullname='$entity[name]', dateOfBirth='$entity[info1]', contactNumber='$entity[info2]', belongUnit='$entity[info3]', manageUnit='$entity[info4]' WHERE id='$entity[code]'";
                         
                     } else if ($object == "course") {
                         $sql = "UPDATE $myTable SET name='$entity[name]', teacher='$entity[info1]', creditQuatity='$entity[info2]', period='$entity[info3]', place='$entity[info4]' WHERE courseCode='$entity[code]'";
@@ -236,28 +239,130 @@
                 echo '</div>';
                 break;
             case "delete":
-                echo "<div class='content'>
-                    <form action='#' method='post'>
-                    	
-                    	<p>
-                    	<span>$code</span>
-                    	<input type='text' name='code'/>
-                    	</p>
-                    	
-                    	<button type='submit'>Hoàn tất</button>
-                    </form>";
-                $code = "";
-                if(isset($_POST["code"])) $code = $_POST["code"];
-                if ($code != "") {
-                    // sql to delete a record
-                    if($object == "student" || $object == "teacher") $sql = "DELETE FROM $myTable WHERE id=$code";
-                    else if ($object == "course")  $sql = "DELETE FROM $myTable WHERE courseCode=$code";
-                    
-                    if ($conn->query($sql) === TRUE) {
-                        echo "Record deleted successfully";
-                    } else {
-                        echo "Error deleting record: " . $conn->error;
+                if ($object == "student" || $object == "teacher") {
+                    if ($viewByUnit != "") {
+                        $sql = "SELECT * FROM $myTable WHERE belongUnit = '$viewByUnit'";
                     }
+                    
+                    else {
+                        $sql = "SELECT * FROM $myTable";
+                    }
+                    
+                } else  if ($object == "course") $sql = "SELECT * FROM $myTable";
+                
+                $result = $conn->query($sql);
+                
+                if ($result->num_rows <= 0) {
+                    echo "0 results";
+                } else {
+                    
+                    // output data of each row
+                    echo "  
+                            <form method='post' action='#'>
+                                <table style='width:100%' class='table'>
+                                  <tr>
+                                        <th>Chọn</th>
+                                        <th>$code</th>
+                                        <th>$name</th>
+                                        <th>$info1</th>
+                                        <th>$info2</th>
+                                        <th>$info3</th>
+                                        <th>$info4</th>
+                    
+                                </tr>";
+                    if ($object == "student") {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                    <td><input type='checkbox' name='delete$row[id]'/></td>
+                                    <td>$row[id]</td>
+                                    <td>$row[fullname]</td>
+                                    <td>$row[dateOfBirth]</td>
+                                    <td>$row[contactNumber]</td>
+                                    <td>$row[belongUnit]</td>
+                                    <td>$row[other]</td>
+                            </tr>";
+                        }
+                        if ($viewByUnit != "") {
+                            $mainTeacher = "Chưa có";
+                            $sqlGetMainTeacher = "SELECT * FROM `teacherdata` WHERE 1";
+                            if ($res = $conn->query($sqlGetMainTeacher)) {
+                                $teacherList = $res->fetch_all();
+                                for ($i = 0; $i < count($teacherList); $i++) {
+                                    if ($teacherList[$i][5] == $viewByUnit) {
+                                        $mainTeacher = $teacherList[$i][1];
+                                        break;
+                                    }
+                                }
+                            } else {
+                                echo "error: at sqlGetMainTeacher";
+                            }
+                            
+                            echo "<h3>Cố vấn học tập: $mainTeacher</h3>";
+                        }
+                    } else if ($object == "teacher") {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>
+
+                            <td><input type='checkbox' name='delete$row[id]'/></td>
+                            <td>$row[id]</td>
+                            <td>$row[fullname]</td>
+                            <td>$row[dateOfBirth]</td>
+                            <td>$row[contactNumber]</td>
+                            <td>$row[belongUnit]</td>
+                            <td>$row[manageUnit]</td>
+                            </tr>";
+                        }
+                    }else if ($object == "course") {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                            <td><input type='checkbox' name='delete$row[courseCode]'/></td>
+                            <td>$row[courseCode]</td>
+                            <td>$row[name]</td>
+                            <td>$row[teacher]</td>
+                            <td>$row[creditQuatity]</td>
+                            <td>$row[period]</td>
+                            <td>$row[place]</td>
+                            </tr>";
+                        }
+                    }
+                    
+                    echo "<h3>Xoá </h3>";
+                    
+                    echo "
+                    </table>
+                    <button type='submit'>Hoàn tất</button>
+                    </form>";
+                    
+                    
+                }
+                
+//                 $conn->close();
+                $codes = array();
+                if(isset($_POST)) {
+                    foreach ($_POST as $key => $value) {
+                        
+                        $codes[] = substr($key, 6);
+                    }
+                }
+                
+                if (count($codes) != 0) {
+                    // sql to delete a record
+                    foreach ($codes as $key=>$value) {
+                        if($object == "student" || $object == "teacher") $sql = "DELETE FROM $myTable WHERE id=$value";
+                        else if ($object == "course")  $sql = "DELETE FROM $myTable WHERE courseCode=$value";
+                        
+                        if ($conn->query($sql) === TRUE) {
+                            if ($value != "") {
+                                echo "Delete $value succesfully";
+                                $value = "";
+                            }
+                        } else {
+                            echo "Error deleting record: " . $conn->error;
+                        }
+                        echo '<br />';
+                    }
+                    
+                    
                 }
                 
                 
@@ -302,7 +407,7 @@
                     if ($conn->query($sqlUpdateGV)) {
                         echo '
                             <script type="text/javascript">
-                            	alert("Thay đổi cố vấn học tập thành công");
+                            	alert("Update main teacher succesfully");
                             </script>
                             ';
                     } else {
@@ -312,29 +417,29 @@
                 break;
             case "person":
                 echo "<form action='queryOnStudentGrade.php' method='post'>
-                            Nhập mã sinh viên<input name='id' type='text'>
+                            Nhập Mã sinh viên<input name='id' type='text'>
                               <button type='submit'>Tra cứu</button>
                     
                          </form>";
                 break;
             case 'school':
-//                 echo "<h3>Đăng nhập tài khoản admin</h3>";
+//                 echo "<h3>Ä�Äƒng nháº­p tÃ i khoáº£n admin</h3>";
 //                 echo "<form action='queryOnSchoolGrade.php' method='post'>
 
 //                                 <table class='table'>
 //                                     <tr>
-//                                         <td>Tên đăng nhập</td>
+//                                         <td>TÃªn Ä‘Äƒng nháº­p</td>
 
 //                                         <td> <input type='text' name='username'/></td>
 //                                     </tr>
 
 //                                     <tr>
                                         
-//                                         <td>Mật khẩu</td>
+//                                         <td>Máº­t kháº©u</td>
 //                                         <td><input type='password' name='password'/></td>
 //                                     </tr>
 //                                 </table>
-//                               <button type='submit'>Đăng nhập</button>
+//                               <button type='submit'>Ä�Äƒng nháº­p</button>
                     
 //                          </form>";
                 echo "<button type='submit'><a href='queryOnSchoolGrade.php'>Truy cập</a></button>";
@@ -426,11 +531,12 @@
                     // output data of each row
                     echo "<table style='width:100%' class='table'>
                           <tr>
-                            <th>Tên lớp</th>
-                            <th>Số sinh viên tối đa</th>
+                            <th>Tên Lớp</th>
+                            <th>Số sinh viên tối da</th>
                             <th>Sĩ số hiện tại</th>
                           </tr>";
                     while($row = $result->fetch_assoc()) {
+                        if ($row['currentQuatity'] == "" ) $row['currentQuatity'] = 0;
                         echo "<tr>
                         <td>
                         <a href='manageStudent.php?view=class&class=$row[name]'>$row[name]</a>
@@ -449,14 +555,10 @@
             case "add":
                 echo '<div class="content">
                     	<form action="#" method="post">
-                    		<table class="table">
+                    		<table class="table" style="display: flex;">
                     			<tr>
-                    				<th>Tên lớp</th>
-                                    <th>Số sinh viên tối đa</th>
-                    			</tr>
-                    			<tr>
-                    				<td><input type="text" name="name"/></td>
-                    				<td><input type="text" name="maxQuatity"/></td>
+                    				<td><input type="text" name="name" placeholder="Tên lớp"/></td>
+                    				<td><input type="text" name="maxQuatity" placeholder="Số sinh viên tối đa"/></td>
                     			</tr>
                     
                     
@@ -486,14 +588,11 @@
             case "edit":
                 echo '<div class="content">
                     	<form action="#" method="post">
-                    		<table class="table">
+                    		<table class="table" style="display: flex;">
                     			<tr>
-                    				<th>Tên lớp cũ</th>
-                    				<th>Tên lớp mới</th>
-                    			</tr>
-                    			<tr>
-                    				<td><input type="text" name="oldName"/></td>
-                    				<td><input type="text" name="newName"/></td>
+                    				<td><input type="text" name="oldName" placeholder="Tên lớp cũ"/></td>
+                    				<td><input type="text" name="newName" placeholder="Tên lớp mới"/></td>
+                    				<td><input type="text" name="maxQuatity" placeholder="Số sinh viên tối đa"/></td>
                     			</tr>
                     
                     
@@ -507,7 +606,7 @@
                 }
                 if (count($class) != 0) {
                     
-                    $sql = "UPDATE `classdata` SET name='$class[newName]' WHERE name='$class[oldName]'";
+                    $sql = "UPDATE `classdata` SET name='$class[newName]', maxQuatity='$class[maxQuatity]' WHERE name='$class[oldName]'";
                     if ($conn->query($sql) === TRUE) {
                         echo "Record updated successfully";
                     } else {
@@ -518,26 +617,56 @@
                 echo '</div>';
                 break;
             case "delete":
-                echo '<div class="content">
-                    <form action="#" method="post">
+                $sqlSelect = "SELECT * FROM classdata";
+                $result = $conn->query($sqlSelect);
+                
+                if ($result->num_rows <= 0) {
+                    echo "0 results";
+                } else {
                     
-                    	<p>
-                    	<span>Tên lớp</span>
-                    	<input type="text" name="name"/>
-                    	</p>
+                    // output data of each row
+                    echo "<form action='#' method='post'>
+                            <table style='width:100%' class='table'>
+                          <tr>
+                            <th>Chọn</th>
+                            <th>Tên Lớp</th>
+                            <th>Số sinh viên tối da</th>
+                            <th>Sĩ số hiện tại</th>
+                          </tr>";
+                    while($row = $result->fetch_assoc()) {
+                        if ($row['currentQuatity'] == "" ) $row['currentQuatity'] = 0;
+                        echo "<tr>
+                        <td><input type='checkbox' name='$row[name]' /></td>
+                        <td>
+                        <a href='manageStudent.php?view=class&class=$row[name]'>$row[name]</a>
+                        </td>
+                        <td>$row[maxQuatity]</td>
+                        <td>$row[currentQuatity]</td>
+                        </tr>";
+                        
+                    }
                     
-                    	<button type="submit">Hoàn tất</button>
-                    </form>';
-                $name = "";
-                if(isset($_POST["name"])) $name = $_POST["name"];
-                if ($name != "") {
+                    echo "</table>
+
+                        <button type='submit'>Hoàn tất</button>
+                        </form>";
+                }
+                
+                $names = "";
+                if(isset($_POST)) {
+                    $names = $_POST;
+                }
+                if (count($names) != 0) {
                     // sql to delete a record
-                    $sql = "DELETE FROM `classdata` WHERE name='$name'";
-                    
-                    if ($conn->query($sql) === TRUE) {
-                        echo "Record deleted successfully";
-                    } else {
-                        echo "Error deleting record: " . $conn->error;
+                    foreach ($names as $key=>$value) {
+                        
+                        $sql = "DELETE FROM `classdata` WHERE name='$key'";
+                        
+                        if ($conn->query($sql) === TRUE) {
+                            echo "Delete $key successfully";
+                        } else {
+                            echo "Error deleting record: " . $conn->error;
+                        }
                     }
                 }
                 
@@ -599,12 +728,12 @@
                 
                 break;
             case "add" :
-                echo "<div><h3 class='title'>Đăng kí môn học</h3>";
+                echo "<div><h3 class='title'>Đăng ký môn học</h3>";
                 $sqlSelectCourses = "SELECT * FROM `coursedata` WHERE 1";
                 $result = $conn->query($sqlSelectCourses);
                 
                 if ($result->num_rows <= 0) {
-                    echo "Chưa có môn học đăng kí";
+                    echo "Chưa có môn học đăng ký";
                 } else {
                     echo "
                             
@@ -662,7 +791,7 @@
                                         $sqlUpdateRegisCourse = "INSERT INTO `registdata`(`id`, `fullName`, `belongUnit`, `courseCode`, `courseName`, `creditQuatity`) VALUES ($id,'$name','$class','$key','$row[name]','$row[creditQuatity]')";
                                         
                                         if ($conn->query($sqlUpdateRegisCourse)) {
-                                            
+                                            echo "Thêm khoá học $row[name] thành công";
                                         } else {
                                             echo 'error AT UpdateRegisCourse'. $conn->error;
                                         }

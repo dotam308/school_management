@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-  <title>Quản lí giáo viên</title>
+  <title>Quáº£n lÃ­ giáo viên</title>
+  <!-- Required meta tags -->
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -11,8 +12,10 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
+  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 
 <body>
@@ -20,7 +23,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
-         Quản lí giáo viên
+         Quáº£n lÃ­ giáo viên
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -32,30 +35,14 @@
                   <p>Dashboard</p>
                 </a>
               </li>
+              
               <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=view">
-                  <i class="material-icons">search</i>
-                  <p>Xem danh sách</p>
+                <a class="nav-link" href="manageTeacher.php">
+                  <i class="material-icons fas fa-chalkboard-teacher"></i>
+                    <p>Quản lí giáo viên</p>
                 </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=add">
-                  <i class="material-icons">add</i>
-                  <p>Thêm giáo viên</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=edit">
-                  <i class="material-icons">edit</i>
-                  <p>Sửa giáo viên</p>
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=delete">
-                  <i class="material-icons">delete</i>
-                  <p>Xoá giáo viên</p>
-                </a>
-              </li>
+           		 </li>
+              
             </ul>
       	
       	</form>
@@ -91,12 +78,38 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
+        	echo '<li class="item active  ">
+                <a class="nav-link" href="manageTeacher.php?type=view">
+                  <i class="material-icons">search</i>Xem danh sách
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageTeacher.php?type=add">
+                  <i class="material-icons">add</i>Thêm giáo viên
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageTeacher.php?type=edit">
+                  <i class="material-icons">edit</i>Sửa giáo viên
+                </a>
+              </li>
+              <li class="item active  ">
+                <a class="nav-link" href="manageTeacher.php?type=delete">
+                  <i class="material-icons">delete</i>Xoá giáo viên
+                </a>
+              </li>';
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
         	   }
         	   require_once 'functions.php';
-        	   doTask($type, "teacher");
+        	   if ($type == 'delete') {
+        	       doTask('delete', 'teacher');
+        	   } else {
+        	       doTask('view', 'teacher');
+        	       if ($type != 'view') doTask($type, 'teacher');
+        	   }
+        	   
         	   
         	?>
         	
