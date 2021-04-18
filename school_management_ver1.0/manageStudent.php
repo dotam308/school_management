@@ -24,55 +24,8 @@
 	   $classes = getDataFrom("belongUnit", "studentdata");
 	?>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí sinh viên
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageStudent.php?view=class">
-                  <i class="material-icons">class</i>
-                  Xem theo lớp
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageStudent.php?view=all">
-                  <i class="material-icons">circle</i>
-                  Xem tất cả
-                  </a>
-             </li>
-             <?php 
-                if (isset($_GET["view"])) {
-                    if ($_GET["view"] == "class") {
-                        for ($i = 0; $i < count($classes); $i++) {
-                            echo "<li class='nav-item active'>
-                                    <a class='nav-link' href='manageStudent.php?view=class&class=$classes[$i]' >
-                                      <i class='material-icons'>search</i>
-                                      <p>$classes[$i]</p>
-                                    </a>
-                                  </li>";
-                        }
-                            
-                    } 
-                }
-             
-             ?>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'student'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
