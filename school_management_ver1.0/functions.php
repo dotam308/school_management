@@ -151,7 +151,7 @@
                     	<form action='#' method='post'>
                     		<table class='table'>
                     			<tr>
-                				<td><input type='text' name='code' placeholder='Mã sinh viên'/></td>
+                				<td><input type='text' name='code' placeholder='$code'/></td>
                 				<td><input type='text' name='name' placeholder='Họ tên'/></td>
                 				<td><input type='text' name='info1' placeholder='$info1' /></td>
                 				<td><input type='text' name='info2'  placeholder='$info2'/></td>
@@ -198,8 +198,8 @@
                         <form action='#' method='post'>
                         <table class='table' >
                 			<tr>
-                				<td><input type='text' name='code' placeholder='Mã sinh viên'/></td>
-                				<td><input type='text' name='name' placeholder='Họ tên'/></td>
+                				<td><input type='text' name='code' placeholder='$code'/></td>
+                				<td><input type='text' name='name' placeholder='$name'/></td>
                 				<td><input type='text' name='info1' placeholder='$info1' /></td>
                 				<td><input type='text' name='info2'  placeholder='$info2'/></td>
                 				<td><input type='text' name='info3'  placeholder='$info3'/></td>
@@ -423,25 +423,6 @@
                          </form>";
                 break;
             case 'school':
-//                 echo "<h3>Ä�Äƒng nháº­p tÃ i khoáº£n admin</h3>";
-//                 echo "<form action='queryOnSchoolGrade.php' method='post'>
-
-//                                 <table class='table'>
-//                                     <tr>
-//                                         <td>TÃªn Ä‘Äƒng nháº­p</td>
-
-//                                         <td> <input type='text' name='username'/></td>
-//                                     </tr>
-
-//                                     <tr>
-                                        
-//                                         <td>Máº­t kháº©u</td>
-//                                         <td><input type='password' name='password'/></td>
-//                                     </tr>
-//                                 </table>
-//                               <button type='submit'>Ä�Äƒng nháº­p</button>
-                    
-//                          </form>";
                 echo "<button type='submit'><a href='queryOnSchoolGrade.php'>Truy cập</a></button>";
                 break;
                 
@@ -609,10 +590,15 @@
                     $sql = "UPDATE `classdata` SET name='$class[newName]', maxQuatity='$class[maxQuatity]' WHERE name='$class[oldName]'";
                     if ($conn->query($sql) === TRUE) {
                         echo "Record updated successfully";
+                        $sqlUpdateStudent = "UPDATE `studentdata` SET `belongUnit`='$class[newName]' WHERE `belongUnit` ='$class[oldName]'";
+                        $conn->query($sqlUpdateStudent);
+                        
                     } else {
                         echo "Error updating record: " . $conn->error;
                     }
                 }
+                
+                
                 $conn->close();
                 echo '</div>';
                 break;
@@ -916,5 +902,17 @@
         }
     }
     
-   
+    function checkCourseInRegis($courseName, $id) {
+        
+        $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
+        
+        $sqlCheck = "SELECT * FROM `registdata` WHERE id = '$id' AND courseName = '$courseName'";
+        
+        if ($res = $conn->query($sqlCheck)) {
+            if (count($res->fetch_all()) <= 0) return false;
+        }
+        return true;
+        
+        
+    }
 ?>

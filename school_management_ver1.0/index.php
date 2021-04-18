@@ -35,16 +35,13 @@
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li class="nav-item active dropdown">
-              	
-                
-                  
-                <a class="nav-link " href="manageStudent.php">
-                  <i class="material-icons">person</i>
-                  <p>Quản lí sinh viên</p>
+              	<li class="nav-item active">
+               		 <a class="nav-link " href="manageStudent.php">
+                	  <i class="material-icons">person</i>
+                  	<p>Quản lí sinh viên</p>
                 </a>
-           		 </li>
-           		 <li class="nav-item active  ">
+       		 </li>
+           		 <li class="nav-item active">
                 <a class="nav-link" href="manageTeacher.php">
                   <i class="material-icons fas fa-chalkboard-teacher"></i>
                     <p>Quản lí giáo viên</p>
@@ -110,7 +107,6 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container-fluid">
-        	
         	
         </div>
       </div>

@@ -54,13 +54,23 @@
              <?php 
                 if (isset($_GET["view"])) {
                     if ($_GET["view"] == "class") {
-                        for ($i = 0; $i < count($classes); $i++) {
-                            echo "<li class='nav-item active'>
+                        if (gettype($classes) == 'array') {
+                            for ($i = 0; $i < count($classes); $i++) {
+                                echo "<li class='nav-item active'>
                                     <a class='nav-link' href='manageStudent.php?view=class&class=$classes[$i]' >
-                                      <i class='material-icons'>search</i>
-                                      <p>$classes[$i]</p>
+                                    <i class='material-icons'>search</i>
+                                    <p>$classes[$i]</p>
                                     </a>
                                   </li>";
+                            }
+                        } else {
+                            echo "<li class='nav-item active'>
+                                <a class='nav-link' href='manageClass.php?type=add' >
+                                    <i class='material-icons'>search</i>
+                                    <p>Chưa có lớp học</p>
+                                    <p style='text-align: center;'>/Thêm lớp</p>
+                                    </a>
+                            </li>";
                         }
                             
                     } 

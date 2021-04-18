@@ -38,7 +38,7 @@
               	Dashboard
                 </a>
               </li>
-              <li class="nav-item active  ">
+              <li class="nav-item active  dropdown">
                   <a class="nav-link" href="manageGrades.php?view=person">
                   <i class="material-icons">person</i>
                   Xem điểm cá nhân
@@ -122,7 +122,11 @@
         	            $class = $data[$i][2];
         	            $courseName = $data[$i][3];
         	            $grade = $data[$i][4];
+        	            if (!checkCourseInRegis($courseName, $id)) {
+        	                continue;
+        	            }
         	            
+        	                
         	            
         	            $position = $courseName."_".$id;
         	            echo "
@@ -181,6 +185,8 @@
         	    $res[] = $id;
         	    return $res;
         	}
+        	
+        	
         	
         	?>
         	

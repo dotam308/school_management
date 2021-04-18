@@ -102,8 +102,8 @@
                                         <th>Họ tên</th>
                                         <th>Lớp</th>
                                         <th>Tên môn học</th>
-                                        <th>Điểm</th>
-                                        <th>Sửa điểm</th>
+                                        <th>Mã môn</th>
+                                        <th>Số điểm</th>
                                     </tr>";
         	
         	
@@ -118,7 +118,9 @@
         	            $class = $data[$i][2];
         	            $courseName = $data[$i][3];
         	            $grade = $data[$i][4];
-        	            
+        	            if (!checkCourseInRegis($courseName, $id)) {
+        	                continue;
+        	            }
         	            
         	            $position = $courseName."_".$id;
         	            echo "
@@ -147,7 +149,7 @@
         	            $courseID = getDetailData($key);
         	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
         	            if ($conn->query($sqlUpdate)) {
-        	                echo "<p>Update thành công, vui lòng tải lại trang</p>";
+        	                echo "<p>Update thÃ nh cÃ´ng, vui lÃ²ng táº£i láº¡i trang</p>";
         	                echo "<button onClick='window.location.reload();'>Refresh Page</button>"; 
         	            } else {
         	               // echo "erroe at Update";
