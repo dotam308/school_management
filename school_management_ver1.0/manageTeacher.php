@@ -20,35 +20,9 @@
 
 <body>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quáº£n lÃ­ giáo viên
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              <li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php">
-                  <i class="material-icons fas fa-chalkboard-teacher"></i>
-                    <p>Quản lí giáo viên</p>
-                </a>
-           		 </li>
-              
-            </ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+
+      <?php $active_menu = 'teacher'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
