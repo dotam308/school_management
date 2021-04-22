@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Quáº£n lÃ­ giáo viên</title>
+  <title>Quản lí giáo viên</title>
   <!-- Required meta tags -->
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -52,36 +52,13 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	echo '<li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=view">
-                  <i class="material-icons">search</i>Xem danh sách
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=add">
-                  <i class="material-icons">add</i>Thêm giáo viên
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=edit">
-                  <i class="material-icons">edit</i>Sửa giáo viên
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=delete">
-                  <i class="material-icons">delete</i>Xoá giáo viên
-                </a>
-              </li>';
+        	require_once 'function/functions.php';
+        	require_once 'function/queryOnTeacher.php';
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
-        	   }
-        	   require_once 'functions.php';
-        	   if ($type == 'delete') {
-        	       doTask('delete', 'teacher');
-        	   } else {
-        	       doTask('view', 'teacher');
-        	       if ($type != 'view') doTask($type, 'teacher');
+        	       
+        	       queryOnTeacher($type);
         	   }
         	   
         	   

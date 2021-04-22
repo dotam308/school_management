@@ -17,11 +17,6 @@
 </head>
 
 <body>
-	<?php 
-	
-	   require_once 'functions.php';
-	   
-	?>
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="white">
       <div class="logo">
@@ -33,24 +28,17 @@
       	<form class="main-form" method="get">
       		<ul class="nav">
               	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
+               	 <a class="nav-link" href="index.php">
+              		<i class="material-icons">dashboard</i>
+              		Dashboard
+               	 </a>
               </li>
-              <li class="nav-item active  dropdown">
-                  <a class="nav-link" href="manageGrades.php?view=person">
-                  <i class="material-icons">person</i>
-                  Xem điểm cá nhân
-                  </a>
-                </li>
-                
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=school">
-                  <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
-                  </a>
-             </li>
+            <li class="nav-item active  ">
+               	 <a class="nav-link" href="manageGrades.php?type=login">
+              		<i class="material-icons">logout</i>
+              		Đăng xuất
+               	 </a>
+              </li>
           	</ul>
       	
       	</form>
@@ -86,89 +74,132 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	require_once 'functions.php';
-        	require_once 'configs.php';
-        	doTask('person', '');
+        	require_once 'function/functions.php';
+        	require_once 'connection.php';
+//         	doTask('person', '');
         	
         	updateStudentOnGrade();
         	
-        	
-        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
+        	global $conn;
+            
         	if ($conn->connect_error) {
         	    echo $conn->error;
         	}
-        	echo "<div>";
-        	echo "<form  method='post' action='#'>
-                                <table class='table' style='width:  100%;'>
-                                    <tr>
-                                        <td>Mã sinh viên</td>
-                                        <td>Họ tên</td>
-                                        <td>Lớp</td>
-                                        <td>Tên môn học</td>
-                                        <td>Điểm</td>
-                                        <td>Sửa điểm</td>
-                                    </tr>";
         	
+        	$show = false;
         	
         	if (isset($_POST['id'])) {
-        	    $sqlGetData = "SELECT * FROM `gradedata` WHERE id='$_POST[id]'";
+        	    $show = true;
+        	    if ($show) {
+        	        showScores($_POST['id']);
+        	        $show = false;
+        	    }
+        	    
+        	} else {
+        	    
+        	    if (count($_POST) != 0) {
+        	        $updateData = $_POST;
+        	        
+        	        $success = false;
+        	        foreach($updateData as $key=>$value) {
+        	            
+        	            $info = getDetailData($key);
+        	            
+        	            $courseIdPart = $info[0];
+        	            $studentId = $info[1];
+        	            $sqlUpdate = "UPDATE `scores` SET `score`= $value WHERE `courseId`='$courseIdPart' AND `studentId` = '$studentId'";
+        	            
+        	            if ($conn->query($sqlUpdate)) {
+        	                $success = true;
+        	            } else {
+//         	                echo "error at Update";
+        	            }
+        	        }
+        	        
+        	        if ($success) {
+        	            showScores($studentId);
+        	            echo 'Updated successfully';
+        	            
+        	        }
+        	        
+        	    }
+        	    
+        	    
+        	    
+        	    
+        	}
+        	
+        	function showScores($studentId) {
+        	    global $conn;
+        	    $sum = 0;
+        	    $toTalCredit = 0;
+        	    $sqlGetStudentThroughId = "SELECT fullName FROM `students` WHERE `id` = '$studentId'";
+        	    $student = $conn->query($sqlGetStudentThroughId)->fetch_all()[0][0];
+        	    
+        	    echo "<h3 style='text-align: center; color: red'>Kết quả học tập</h3>";
+        	    echo "<div style='display: flex; margin: 0px 300px'>
+                            <div style='margin-right: auto;'>Mã sinh viên: $studentId</div>
+                            <div> Sinh viên: $student </div>
+
+                        </div>";
+        	    echo "<form  method='post' action='#'>
+                                <table class='table' style='width:  100%;'>
+                                    <tr>
+                                        <th>Mã môn học</th>
+                                        <th>Tên môn học</th>
+                                        <th>Số tín</th>
+                                        <th>Điểm</th>
+                                    </tr>";
+        	    $sqlGetData = "SELECT * FROM `registers` WHERE studentId='$studentId'";
         	    
         	    if ($res = $conn->query($sqlGetData)) {
         	        $data = $res->fetch_all();
-        	        
         	        for ($i = 0; $i < count($data); $i++) {
-        	            $id = $data[$i][0];
-        	            $name = $data[$i][1];
-        	            $class = $data[$i][2];
-        	            $courseName = $data[$i][3];
-        	            $grade = $data[$i][4];
-        	            if (!checkCourseInRegis($courseName, $id)) {
-        	                continue;
+        	            $courseId = $data[$i][1];
+        	            
+        	            $sqlSelectCourseThroughId = "SELECT * FROM `courses` WHERE `id`='$courseId'";
+        	            $courseData = $conn->query($sqlSelectCourseThroughId)->fetch_all()[0];
+        	            
+        	            
+        	            $sqlSelectScoreThroughId = "SELECT score FROM `scores`
+        	            WHERE `courseId`='$courseId' AND `studentId` ='$studentId'";
+        	            
+        	            
+        	            $scoreData =  $conn->query($sqlSelectScoreThroughId)->fetch_all();
+        	            
+        	            if (count($scoreData) > 0) {
+        	                
+        	                $scoreOfThisCourse = $scoreData[0][0];
+        	                $valueT = $scoreOfThisCourse;
+        	                $sum += $valueT * $courseData[1];
+        	            } else {
+        	                $valueT = 0;
         	            }
         	            
-        	                
+        	            $toTalCredit += $courseData[1];
         	            
-        	            $position = $courseName."_".$id;
         	            echo "
         	            <tr>
-        	            <td>$id</td>
-        	            <td>$name</td>
-        	            <td>$class</td>
-        	            <td>$courseName</td>
-        	            <td>$grade</td>
-        	            <td><input type='text' name='$position' style='width: 50px;'></td>
+        	            <td>$courseData[5]</td>
+        	            <td>$courseData[6]</td>
+        	            <td>$courseData[1]</td>
+        	            <td><input type='text' name='$courseData[0]_$studentId' style='width: 50px;' value='$valueT'></td>
         	            </tr>
         	            ";
         	        }
         	        
+        	        
+        	        $avg = $sum / $toTalCredit;
+        	        $res = round($avg, 1);
+        	        echo "Điểm trung bình: $res <br />";
         	        echo "</table>
+
                      <button type='submit'>Ghi nhận</button>
                      </form>";
         	        
         	    } else {
         	        echo "error at GetData";
         	    }
-        	    
-        	    
-        	} else {
-        	    
-        	    if (count($_POST) != "") {
-        	        $updateData = $_POST;
-        	        
-        	        foreach($updateData as $key=>$value) {
-        	            $courseID = getDetailData($key);
-        	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
-        	            if ($conn->query($sqlUpdate)) {
-        	                
-        	            } else {
-//         	                echo "error at Update";
-        	            }
-        	        }
-        	        
-        	        
-        	    }
-        	    
-        	    echo "</div>";
         	    
         	}
         	

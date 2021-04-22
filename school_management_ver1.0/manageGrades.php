@@ -19,7 +19,10 @@
 <body>
 	<?php 
 	
-	   require_once 'functions.php';
+	   require_once 'function/functions.php';
+	   $active_menu = 'score';
+	   require_once 'slide_bar.php';
+	   
 	   
 	?>
   <div class="wrapper ">
@@ -55,12 +58,26 @@
         <div class="container-fluid">
         	<?php    
         	
-        	require_once 'functions.php';
-        	if (isset($_GET['view'])) {
-        	    $view = $_GET['view'];
-            	doTask($view, "");
+        	require_once 'function/functions.php';
+        	echo "<h3>Sinh viên đăng nhập</h3>";
+        	echo "
+                 <form method='post' action='queryOnStudentGrade.php'>
+                    Mã sinh viên<input name='id' type='text'/>
+                    <button type='submit'>Go</button>
+                  </form>
+                ";
+        	
+//         	echo "<h3>Admin đăng nhập</h3>";
+//         	echo "
+//                  <form method='post' action='queryOnSchoolGrade.php'>
+//                     Mã admin<input name='id' type='text'/>
+//                     <button type='submit'>Go</button>
+//                   </form>
+//                 ";
+        	if (isset($_POST['id'])) {
+        	    
+        	    
         	}
-        	  
         	?>
         	
         </div>

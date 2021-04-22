@@ -19,7 +19,7 @@
 <body>
 	<?php 
 	
-	   require_once 'functions.php';
+	   require_once 'function/functions.php';
 	   
 	?>
   <div class="wrapper ">
@@ -55,12 +55,10 @@
         <div class="container-fluid">
         	<?php 
         	
-        	require_once 'configs.php';
+        	require_once 'connection.php';
         	
         	updateStudentOnGrade();
-        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
-            mysqli_set_charset($conn,'utf8');
-            mysqli_query($conn, "SET NAMES 'utf8' COLLATE 'utf8mb4_unicode_ci';");
+        	global $conn;
         	if ($conn->connect_error) {
         	    echo $conn->error;
         	}
@@ -76,7 +74,7 @@
                                     </tr>";
         	
         	
-        	    $sqlGetData = "SELECT * FROM `gradedata` WHERE 1";
+        	    $sqlGetData = "SELECT * FROM `scores` WHERE 1";
         	    
         	    if ($res = $conn->query($sqlGetData)) {
         	        $data = $res->fetch_all();
@@ -116,7 +114,7 @@
         	        $updateData = $_POST;
         	        foreach($updateData as $key=>$value) {
         	            $courseID = getDetailData($key);
-        	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
+        	            $sqlUpdate = "UPDATE `scores` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
         	            if ($conn->query($sqlUpdate)) {
         	                echo "<p>Update thÃ nh cÃ´ng, vui lÃ²ng táº£i láº¡i trang</p>";
         	                echo "<button onClick='window.location.reload();'>Refresh Page</button>"; 
