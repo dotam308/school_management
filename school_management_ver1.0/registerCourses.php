@@ -11,41 +11,16 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
+  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 
 <body>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-        Đăng ký học
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              <li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              
-              <li class="nav-item active  ">
-                <a class="nav-link" href="registerCourses.php?type=login">
-                  <i class="material-icons">person</i>
-                  <p>Sinh viên đăng nhập</p>
-                </a>
-                </li>
-                
-            </ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'register'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -79,7 +54,7 @@
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
         	   }
-        	   require_once 'functions.php';
+        	   require_once 'function/functions.php';
         	   if ($type == 'login') {
         	       echo "<form action='registerQuery.php' method='post'>
                             <table class='table'  style=' width: auto;'>

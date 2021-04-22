@@ -19,43 +19,15 @@
 <body>
 	<?php 
 	
-	   require_once 'functions.php';
+	   require_once 'function/functions.php';
+	   $active_menu = 'score';
+	   require_once 'slide_bar.php';
+	   
 	   
 	?>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=person">
-                  <i class="material-icons">person</i>
-                  Xem điểm cá nhân
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=school">
-                  <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
-                  </a>
-             </li>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'score'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -86,12 +58,26 @@
         <div class="container-fluid">
         	<?php    
         	
-        	require_once 'functions.php';
-        	if (isset($_GET['view'])) {
-        	    $view = $_GET['view'];
-            	doTask($view, "");
+        	require_once 'function/functions.php';
+        	echo "<h3>Sinh viên đăng nhập</h3>";
+        	echo "
+                 <form method='post' action='queryOnStudentGrade.php'>
+                    Mã sinh viên<input name='id' type='text'/>
+                    <button type='submit'>Go</button>
+                  </form>
+                ";
+        	
+//         	echo "<h3>Admin đăng nhập</h3>";
+//         	echo "
+//                  <form method='post' action='queryOnSchoolGrade.php'>
+//                     Mã admin<input name='id' type='text'/>
+//                     <button type='submit'>Go</button>
+//                   </form>
+//                 ";
+        	if (isset($_POST['id'])) {
+        	    
+        	    
         	}
-        	  
         	?>
         	
         </div>

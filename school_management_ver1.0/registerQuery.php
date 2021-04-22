@@ -34,9 +34,16 @@
                 </a>
               </li>
               <li class="nav-item active  ">
-                    <a class="nav-link" href="registerCourses.php">
+                    <a class="nav-link" href="registerQuery.php?type=view">
                       <i class="material-icons">note</i>
                       <p>Đăng kí học</p>
+                    </a>
+           		 </li>
+           		 
+              <li class="nav-item active  ">
+                    <a class="nav-link" href="registerCourses.php?type=login">
+                      <i class="material-icons">logout</i>
+                      <p>Đăng xuất</p>
                     </a>
            		 </li>
               
@@ -75,16 +82,11 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	   require_once 'configs.php';
-            	///
-        	   // Create connection
-        	   $conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
-            	// Check connection
-            	if ($conn->connect_error) {
-            	    die("Connection failed: " . $conn->connect_error);
-            	}
+        	require_once 'connection.php';
+        	require_once 'function/registerQuery.php';
+        	   global $conn;
             	
-            	
+        	   if (isset($_GET["type"]) == false && isset($success) && $success) echo "<a type='button' href='registerQuery.php?type=view'>Truy cập</a>";
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
@@ -100,18 +102,12 @@
                               <i class="material-icons">add</i>Thêm môn học
                             </a>
                           </li>
-                          <li class="item active  ">
-                            <a class="nav-link" href="registerQuery.php?type=delete">
-                              <i class="material-icons">delete</i>Xoá môn học
-                            </a>
-                          </li>
                         </ul>';
         	   }
-        	   require_once 'functions.php';
+        	   require_once 'function/functions.php';
         	   
-        	   $sqlGetStudents = "SELECT * FROM `studentdata` WHERE 1";
+        	   $sqlGetStudents = "SELECT * FROM `students` WHERE 1";
         	   $res = $conn->query($sqlGetStudents)->fetch_all();
-        	   
         	   
         	   
         	   $id = 0;
@@ -121,9 +117,19 @@
         	       $id = $_POST['id'];
         	       $name = $_POST['name'];
         	       $class = $_POST['class'];
+        	       
         	       $success = false;
         	       for ($i = 0; $i < count($res); $i++) {
-        	           if ($res[$i][0] == $id && $res[$i][1] == $name && $res[$i][4] == $class) {
+        	           $resClassId= $res[$i][2];
+        	           $sqlFindClassNameThroughId = "SELECT `className` FROM `classes` WHERE `id` = '$resClassId'";
+        	           global $nameClass;
+        	           if ($className = $conn->query($sqlFindClassNameThroughId)) {
+        	               
+        	               $nameClass = $className->fetch_all()[0][0];
+        	           } else {
+        	               echo $conn->error;
+        	           }
+        	           if ($res[$i][0] == $id && $res[$i][1] == $name && $nameClass == $class) {
         	               $success = true;
         	               break;
         	           }
@@ -134,38 +140,29 @@
         	           echo '<button><a href="registerCourses.php">Đăng nhập lại</a></button>';
         	       }
         	       else {
-        	           echo '<li class="item active  ">
-                            <a class="nav-link" href="registerQuery.php?type=view">
-                              <i class="material-icons">search</i>Xem danh sách
-                            </a>
-                          </li>
-                          <li class="item active  ">
-                            <a class="nav-link" href="registerQuery.php?type=add">
-                              <i class="material-icons">add</i>Thêm môn học
-                            </a>
-                          </li>
-                          <li class="item active  ">
-                            <a class="nav-link" href="registerQuery.php?type=delete">
-                              <i class="material-icons">delete</i>Xoá môn học
-                            </a>
-                          </li>';
+        	          
         	           echo "<script>alert('Đăng nhập thành công')</script>";
         	          
         	           
         	       }
         	   }
         	   
-        	   $sqlCreateTempTable = "CREATE TABLE IF NOT EXISTS `mydb`.`temp_table` ( `id` INT NOT NULL , `name` VARCHAR(30) NOT NULL , `class` VARCHAR(15) NOT NULL ) ENGINE = InnoDB;";
+        	   $sqlCreateTempTable = "CREATE TABLE IF NOT EXISTS `myschool`.`temp_table` 
+                ( `id` INT NOT NULL , `name` VARCHAR(30) NOT NULL , `class` VARCHAR(15) NOT NULL ) ENGINE = InnoDB;";
         	   if($conn->query($sqlCreateTempTable)){
         	       
         	   } else {
         	       echo $conn->error;
         	   }
+        	   
+        	   
         	   if ($type == '') {
         	       
         	       $sqlDeleteAll = "DELETE FROM `temp_table` WHERE 1";
         	       $conn->query($sqlDeleteAll);
-        	       $sqlInsertData = "INSERT INTO `temp_table`(`id`, `name`, `class`) VALUES ('$_POST[id]','$_POST[name]','$_POST[class]')";
+        	       
+        	       $sqlInsertData = "INSERT INTO `temp_table`(`id`, `name`, `class`) 
+                    VALUES ('$_POST[id]','$_POST[name]','$_POST[class]')";
         	       if ($conn->query($sqlInsertData)) {
         	           
         	       } else {

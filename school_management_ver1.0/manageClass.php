@@ -14,38 +14,13 @@
   <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
   <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 
 <body>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí lớp học
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              <li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              
-           		 <li class="nav-item active  ">
-                    <a class="nav-link" href="manageClass.php">
-                      <i class="material-icons fas fa-chalkboard"></i>
-                      <p>Quản lí lớp học</p>
-                    </a>
-           		 </li>
-            </ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'class'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -75,37 +50,13 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	echo '
-              <li class="item active  ">
-                <a class="nav-link" href="manageClass.php?type=view">
-                  <i class="material-icons">search</i>Xem danh sách
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageClass.php?type=add">
-                  <i class="material-icons">add</i>Thêm lớp học
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageClass.php?type=edit">
-                  <i class="material-icons">edit</i>Sửa lớp học
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageClass.php?type=delete">
-                  <i class="material-icons">delete</i>Xoá lớp học
-                </a>
-              </li>';
+        	
+            	require_once 'function/functions.php';
+            	require_once 'function/queryOnClass.php';
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
-        	   }
-        	   require_once 'functions.php';
-        	   if ($type == 'delete') {
-        	       queryOnClass('delete');
-        	   } else {
-        	       queryOnClass('view');
-        	       if ($type != 'view') queryOnClass($type);
+        	       queryOnClass($type);
         	   }
         	?>
         	

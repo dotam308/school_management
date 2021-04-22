@@ -20,68 +20,9 @@
 <body>
 
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí nhà trường
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              <li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-item active dropdown">
-              	
-                
-                  
-                <a class="nav-link " href="manageStudent.php">
-                  <i class="material-icons">person</i>
-                  <p>Quản lí sinh viên</p>
-                </a>
-           		 </li>
-           		 <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php">
-                  <i class="material-icons fas fa-chalkboard-teacher"></i>
-                    <p>Quản lí giáo viên</p>
-                </a>
-           		 </li>
-           		 <li class="nav-item active  ">
-                    <a class="nav-link" href="manageCourse.php">
-                      <i class="material-icons">book</i>
-                      <p>Quản lí khoá học</p>
-                    </a>
-           		 </li>
-           		 <li class="nav-item active  ">
-                    <a class="nav-link" href="manageClass.php">
-                      <i class="material-icons fas fa-chalkboard"></i>
-                      <p>Quản lí lớp học</p>
-                    </a>
-           		 </li>
-           		 
-           		 <li class="nav-item active  ">
-                    <a class="nav-link" href="registerCourses.php?type=login">
-                      <i class="material-icons">note</i>
-                      <p>Đăng kí học</p>
-                    </a>
-           		 </li>
-           		 <li class="nav-item active  ">
-                    <a class="nav-link" href="manageGrades.php">
-                      <i class="material-icons">grade</i>
-                      <p>Quản lí điểm</p>
-                    </a>
-           		 </li>
-           		 
-            </ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+
+    <?php $active_menu = 'index'; ?>
+    <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -110,7 +51,6 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container-fluid">
-        	
         	
         </div>
       </div>

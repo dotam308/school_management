@@ -14,65 +14,18 @@
   <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
   <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 
 <body>
 	<?php 
 	
-	   require_once 'functions.php';
-	   
-	   $classes = getDataFrom("belongUnit", "studentdata");
+	   require_once 'function/queryOnStudent.php';
 	?>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí sinh viên
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageStudent.php?view=class">
-                  <i class="material-icons">class</i>
-                  Xem theo lớp
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageStudent.php?view=all">
-                  <i class="material-icons">circle</i>
-                  Xem tất cả
-                  </a>
-             </li>
-             <?php 
-                if (isset($_GET["view"])) {
-                    if ($_GET["view"] == "class") {
-                        for ($i = 0; $i < count($classes); $i++) {
-                            echo "<li class='nav-item active'>
-                                    <a class='nav-link' href='manageStudent.php?view=class&class=$classes[$i]' >
-                                      <i class='material-icons'>search</i>
-                                      <p>$classes[$i]</p>
-                                    </a>
-                                  </li>";
-                        }
-                            
-                    } 
-                }
-             
-             ?>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+
+      <?php $active_menu = 'student'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -101,61 +54,12 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container-fluid">
+       
         	<?php 
-        	if (isset($_GET["view"])) {
-        	    
-        	    if ($_GET["view"] == "all") {
-        	        
-        	        
-        	        createQueryForm("all");
-        	        $type = "";
-        	        if (isset($_GET["type"])) {
-        	            $type = $_GET["type"];
-        	        }
-        	        if ($type == 'delete') {
-        	            doTask($type, 'student', "", true);
-        	        } else {
-        	            
-        	            doTask('view', "student", "");
-        	            if ($type != 'view') doTask($type, "student", "");
-        	        }
-        	        
-        	        
-        	        
-        	    } else if ($_GET["view"] == "class"){
-        	        
-        	        
-        	        $class = "";
-        	        if (isset($_GET["class"])) {
-        	            
-        	            $class = $_GET["class"];
-        	            createQueryForm("class", $class);
-        	            
-        	            $type2 = "";
-        	            if (isset($_GET["type"])) {
-        	                
-        	                $type2 = $_GET["type"];
-        	            }
-        	            
-        	            if ($type2 == 'delete') {
-        	                
-        	                doTask('delete', "student", $class, true);
-        	            } else  {
-        	                
-        	                doTask('view', "student", $class, true);
-        	                if ($type2 != 'view' ) doTask($type2, "student", $class, true);
-        	            }
-        	            
-        	            
-        	        }
-        	        
-        	    }
-        	}
-        	    
-                
-        	    
-            	   
-        	   
+        	   if (isset($_GET['type'])) {
+        	       $type = $_GET['type'];
+        	       queryOnStudent($type);
+        	   }
         	?>
         	
         </div>
@@ -184,71 +88,5 @@
     </div>
   </div>
   
-  <?php 
-    function createQueryForm($view, $class="") {
-        if ($class!= "") {
-            echo "
-            <form class='query-form' method='get'>
-                <ul >
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=view'>
-                            <i class='material-icons'>search</i>
-                        Xem danh sách
-                        </a>
-                    </li>
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=add'>
-                        <i class='material-icons'>add</i>Thêm sinh viên
-                        </a>
-                    </li>
-                    <li class='item'>
-                    <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=edit'>
-                        <i class='material-icons'>edit</i>Sửa sinh viên
-                        </a>
-                    </li>
-                    <li class='item'>
-                    <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=delete'>
-                        <i class='material-icons'>delete</i>Xoá sinh viên
-                        </a>
-                    </li>
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&class=$class&type=setMainTeacher'>
-                            <i class='material-icons'>settings</i>Cố vấn học tập
-                        </a>
-                    </li>
-
-                </ul>
-            </form>";
-        } else {
-            echo "
-            <form class='query-form' method='get'>
-                <ul >
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&type=view'>
-                        <i class='material-icons'>search</i>Xem danh sách
-                        </a>
-                    </li>
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&type=add'>
-                        <i class='material-icons'>add</i>Thêm sinh viên
-                        </a>
-                    </li>
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&type=edit'>
-                        <i class='material-icons'>edit</i>Sửa sinh viên
-                        </a>
-                    </li>
-                    <li class='item'>
-                        <a class='nav-link' href='manageStudent.php?view=$view&type=delete'>
-                        <i class='material-icons'>delete</i>Xoá sinh viên
-                        </a>
-                    </li>
-                </ul>
-            </form>";
-        }
-           
-    }
-  
-  ?>
 </body>
 </html>

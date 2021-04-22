@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Quáº£n lÃ­ giáo viên</title>
+  <title>Quản lí giáo viên</title>
   <!-- Required meta tags -->
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -20,35 +20,9 @@
 
 <body>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quáº£n lÃ­ giáo viên
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              <li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              
-              <li class="nav-item active  ">
-                <a class="nav-link" href="manageTeacher.php">
-                  <i class="material-icons fas fa-chalkboard-teacher"></i>
-                    <p>Quản lí giáo viên</p>
-                </a>
-           		 </li>
-              
-            </ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+
+      <?php $active_menu = 'teacher'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -78,36 +52,13 @@
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	echo '<li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=view">
-                  <i class="material-icons">search</i>Xem danh sách
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=add">
-                  <i class="material-icons">add</i>Thêm giáo viên
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=edit">
-                  <i class="material-icons">edit</i>Sửa giáo viên
-                </a>
-              </li>
-              <li class="item active  ">
-                <a class="nav-link" href="manageTeacher.php?type=delete">
-                  <i class="material-icons">delete</i>Xoá giáo viên
-                </a>
-              </li>';
+        	require_once 'function/functions.php';
+        	require_once 'function/queryOnTeacher.php';
         	   $type = "";
         	   if (isset($_GET["type"])) {
         	       $type = $_GET["type"];
-        	   }
-        	   require_once 'functions.php';
-        	   if ($type == 'delete') {
-        	       doTask('delete', 'teacher');
-        	   } else {
-        	       doTask('view', 'teacher');
-        	       if ($type != 'view') doTask($type, 'teacher');
+        	       
+        	       queryOnTeacher($type);
         	   }
         	   
         	   

@@ -19,43 +19,12 @@
 <body>
 	<?php 
 	
-	   require_once 'functions.php';
+	   require_once 'function/functions.php';
 	   
 	?>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=person">
-                  <i class="material-icons">person</i>
-                  Xem điểm cá nhân
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=all">
-                  <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
-                  </a>
-             </li>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'score'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -86,12 +55,10 @@
         <div class="container-fluid">
         	<?php 
         	
-        	require_once 'configs.php';
+        	require_once 'connection.php';
         	
         	updateStudentOnGrade();
-        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
-            mysqli_set_charset($conn,'utf8');
-            mysqli_query($conn, "SET NAMES 'utf8' COLLATE 'utf8mb4_unicode_ci';");
+        	global $conn;
         	if ($conn->connect_error) {
         	    echo $conn->error;
         	}
@@ -102,12 +69,12 @@
                                         <th>Họ tên</th>
                                         <th>Lớp</th>
                                         <th>Tên môn học</th>
-                                        <th>Điểm</th>
-                                        <th>Sửa điểm</th>
+                                        <th>Mã môn</th>
+                                        <th>Số điểm</th>
                                     </tr>";
         	
         	
-        	    $sqlGetData = "SELECT * FROM `gradedata` WHERE 1";
+        	    $sqlGetData = "SELECT * FROM `scores` WHERE 1";
         	    
         	    if ($res = $conn->query($sqlGetData)) {
         	        $data = $res->fetch_all();
@@ -118,7 +85,9 @@
         	            $class = $data[$i][2];
         	            $courseName = $data[$i][3];
         	            $grade = $data[$i][4];
-        	            
+        	            if (!checkCourseInRegis($courseName, $id)) {
+        	                continue;
+        	            }
         	            
         	            $position = $courseName."_".$id;
         	            echo "
@@ -145,9 +114,9 @@
         	        $updateData = $_POST;
         	        foreach($updateData as $key=>$value) {
         	            $courseID = getDetailData($key);
-        	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
+        	            $sqlUpdate = "UPDATE `scores` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
         	            if ($conn->query($sqlUpdate)) {
-        	                echo "<p>Update thành công, vui lòng tải lại trang</p>";
+        	                echo "<p>Update thÃ nh cÃ´ng, vui lÃ²ng táº£i láº¡i trang</p>";
         	                echo "<button onClick='window.location.reload();'>Refresh Page</button>"; 
         	            } else {
         	               // echo "erroe at Update";
