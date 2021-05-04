@@ -1,4 +1,5 @@
 <?php $active_menu = isset($active_menu) ? $active_menu : 'index'; ?>
+<?php $sub_active = isset($sub_active) ? $sub_active : null; ?>
 <div class="sidebar" data-color="purple" data-background-color="white">
     <div class="logo">
         <a href="index.php" class="simple-text logo-normal">
@@ -14,11 +15,23 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+              
                 <li class="nav-item <?= $active_menu == 'student' ? 'active' : '' ?>">
-                    <a class="nav-link " href="manageStudent.php?type=view">
+            		<a class="nav-link" href="#">
                         <i class="material-icons">person</i>
                         <p>Quản lí sinh viên</p>
                     </a>
+                    <ul class="subs-menu">
+                      <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'view') ? 'active' : '' ?>">
+                      	<a href="manageStudent.php?type=view">Danh sách sinh viên</a>
+                      </li>
+                      <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'register') ? 'active' : '' ?>">
+                      	<a href="manageRegister.php?type=view">Danh sách đăng ký</a>
+                      </li>
+                        <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'score') ? 'active' : '' ?>">
+                            <a href="queryOnSchoolGrade.php">Danh sách điểm</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item <?= $active_menu == 'teacher' ? 'active' : '' ?>">
                     <a class="nav-link" href="manageTeacher.php?type=view">
@@ -44,12 +57,12 @@
                         <p>Đăng kí học</p>
                     </a>
                 </li>
-                <li class="nav-item <?= $active_menu == 'score' ? 'active' : '' ?>">
-                    <a class="nav-link" href="manageGrades.php">
-                        <i class="material-icons">grade</i>
-                        <p>Quản lí điểm</p>
-                    </a>
-                </li>
+<!--                <li class="nav-item --><?//= $active_menu == 'score' ? 'active' : '' ?><!--">-->
+<!--                    <a class="nav-link" href="manageGrades.php">-->
+<!--                        <i class="material-icons">grade</i>-->
+<!--                        <p>Quản lí điểm</p>-->
+<!--                    </a>-->
+<!--                </li>-->
             </ul>
         </form>
     </div>
