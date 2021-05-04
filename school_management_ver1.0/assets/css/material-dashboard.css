@@ -103,7 +103,8 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
+  padding-left: 0;
 }
 
 ol ol,
@@ -524,7 +525,6 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
 }
 
 ol ol,
@@ -16853,7 +16853,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 .table>thead>tr>td,
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
-  padding: 12px 8px;
+  padding: 8px 8px;
   vertical-align: middle;
   border-color: #ddd;
 }

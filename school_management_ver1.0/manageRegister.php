@@ -2,41 +2,40 @@
 <html lang="en">
 
 <head>
-  <title>Quản lí lớp học</title>
+  <title>Quản lí sinh viên</title>
   <!-- Required meta tags -->
-    <?php
-        ob_start();
-        require_once "includes/headContents.php"?>
+  <?php  require_once "includes/headContents.php"?>
+  
 </head>
 
 <body>
+	<?php 
+	ob_start();
+	   require_once 'function/queryOnRegister.php';
+	?>
   <div class="wrapper ">
 
-      <?php $active_menu = 'course'; ?>
+      <?php $active_menu = 'student'; $sub_active = 'register';?>
       <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
       <?php require_once "includes/header.php"?>
       <div class="content">
         <div class="container-fluid">
         	<?php 
-        	
-        	require_once 'function/queryOnCourse.php';
-        	require_once 'function/functions.php';
-        	   $type = "";
-        	   if (isset($_GET["type"])) {
-        	       $type = $_GET["type"];
-        	       queryOnCourse($type);
+        	   if (isset($_GET['type'])) {
+        	       $type = $_GET['type'];
+        	       queryOnRegister($type);
         	   }
         	   
+        	   ob_end_flush(); 
         	?>
         	
         </div>
       </div>
-      <?php require_once "includes/footer.php";
-        ob_end_flush();
-      ?>
+      <?php require_once "includes/footer.php"?>
     </div>
   </div>
+  
 </body>
 <script>
     function confirmDelete(url) {
