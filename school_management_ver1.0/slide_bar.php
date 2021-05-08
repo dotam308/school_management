@@ -2,7 +2,7 @@
 <?php $sub_active = isset($sub_active) ? $sub_active : null; ?>
 <div class="sidebar" data-color="purple" data-background-color="white">
     <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
+        <a href="process.php" class="simple-text logo-normal">
             Quản lí nhà trường
         </a>
     </div>
@@ -10,7 +10,7 @@
         <form class="main-form" method="get">
             <ul class="nav">
                 <li class="nav-item <?= $active_menu == 'index' ? 'active' : '' ?>">
-                    <a class="nav-link" href="index.php">
+                    <a class="nav-link" href="process.php">
                         <i class="material-icons">dashboard</i>
                         <p>Dashboard</p>
                     </a>
