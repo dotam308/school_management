@@ -9,7 +9,7 @@ if ($result->num_rows <= 0) {
 } else {
     ?>
     <form action='#' method='post'>
-        <table class='table'>
+        <table class='table table-bordered table-hover table-striped'>
             <tr>
                 <th>Chọn</th>
                 <th>Tên môn học</th>

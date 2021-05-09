@@ -4,7 +4,7 @@
     function getListTeachers() {
         global $conn;
         $myTable = 'teachers';
-        $sql = "SELECT * from $myTable";
+        $sql = "SELECT * from $myTable ORDER BY id DESC";
         $result = $conn->query($sql); 
         return $result;
     }

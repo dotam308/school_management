@@ -30,7 +30,7 @@ $myTable = STUDENT_TABLE;
 if (isset($_POST['filter'])) {
     $result = filterStudents();
 } else {
-    $result = selectElementFrom("$myTable", "*", "1");
+    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC");
 }
 
 if ($result->num_rows <= 0) {
@@ -57,7 +57,7 @@ if ($result->num_rows <= 0) {
             <th class="col-sm-2"><input name="className" class="form-control" type="text" placeholder="Lớp"></th>
             <th class="col-sm-2"><input name="contactNumber" class="form-control" type="text" placeholder="Số điện thoại"></th>
             <th class="col-sm-2"><input name="dob" class="form-control" type="text" placeholder="Ngày sinh"></th>
-            <th class="col-sm-2"><input type="submit" class="btn btn-info"
+            <th class="col-sm-2"><input type="submit" class="btn btn-success"
                                         style="padding: 7px 10px; margin: 0px 11px" name="filter"
                                         value="Lọc"></th>
 
