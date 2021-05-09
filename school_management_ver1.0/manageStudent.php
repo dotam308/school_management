@@ -1,3 +1,6 @@
+<?php
+require_once 'module/student/queryOnStudent.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,10 +12,6 @@
 </head>
 
 <body>
-	<?php 
-	ob_start();
-	   require_once 'function/queryOnStudent.php';
-	?>
   <div class="wrapper ">
 
       <?php $active_menu = 'student'; $sub_active = 'view';?>
@@ -21,18 +20,9 @@
      	<?php require_once 'includes/header.php';?>
       <div class="content">
         <div class="container-fluid">
-        	<?php
-        	   if (isset($_GET['type'])) {
-        	       $type = $_GET['type'];
-        	       queryOnStudent($type);
-        	   }
-
-        	   ob_end_flush();
-        	?>
-        	
+            <?php require_once $view_file_name; ?>
         </div>
       </div>
-      
      	<?php require_once 'includes/footer.php';?>
     </div>
   </div>
