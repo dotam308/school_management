@@ -9,7 +9,7 @@ if (isset($_GET['action'])) {
 }
 ?>
 <?php
-$sql = "SELECT * from $myTable";
+$sql = "SELECT * from $myTable ORDER BY id DESC";
 $result = $conn->query($sql);
 if (isset($_GET['action'])) {
     $action = $_GET['action'];

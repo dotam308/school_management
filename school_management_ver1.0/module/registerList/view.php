@@ -2,9 +2,6 @@
 global $conn;
 $myTable = REGISTER_TABLE;
 if (isset($_POST['filter'])) {
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
     $result = filterRegisterList();
 } else {
     $result = selectElementFrom("$myTable", "*", "1");
@@ -47,7 +44,7 @@ echo "0 results";
                                         value="<?= isset($_POST['courseClassCode'])? $_POST['courseClassCode'] : ''?>"/></td>
             <td class="col-sm-1"><input class="form-control"  type="text" name="credit" placeholder="Số tín"
                                         value="<?= isset($_POST['credit'])? $_POST['credit'] : ''?>"/></td>
-            <td class="col-sm-2"><input type="submit" class="btn btn-info"
+            <td class="col-sm-2"><input type="submit" class="btn btn-success"
                        style="padding: 7px 10px; margin: 0px 11px" name="filter"
                        value="Lọc"></td>
 

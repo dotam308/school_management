@@ -21,13 +21,13 @@
      	<?php require_once 'includes/header.php';?>
       <div class="content">
         <div class="container-fluid">
-        	<?php 
+        	<?php
         	   if (isset($_GET['type'])) {
         	       $type = $_GET['type'];
         	       queryOnStudent($type);
         	   }
-        	   
-        	   ob_end_flush(); 
+
+        	   ob_end_flush();
         	?>
         	
         </div>

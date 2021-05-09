@@ -556,7 +556,6 @@ function filterStudents()
     $condition = (strlen($condition) > 0) ? $condition : 1;
     $sqlSelectAll = "SELECT * FROM students
                             WHERE $condition";
-    echo $sqlSelectAll;
     $res = $conn->query($sqlSelectAll);
     return $res;
 

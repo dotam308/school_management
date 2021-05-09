@@ -1,1 +1,1 @@
-<?php
+<a href="process.php">Go to Admin Page </a>

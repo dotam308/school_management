@@ -17,7 +17,7 @@
                 </li>
               
                 <li class="nav-item <?= $active_menu == 'student' ? 'active' : '' ?>">
-            		<a class="nav-link" href="#">
+            		<a class="nav-link" href="manageStudent.php?type=view">
                         <i class="material-icons">person</i>
                         <p>Quản lí sinh viên</p>
                     </a>

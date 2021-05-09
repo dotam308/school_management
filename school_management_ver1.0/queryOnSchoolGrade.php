@@ -65,7 +65,7 @@ require_once 'function/functions.php';
                             <th class="col-sm-2"><input type="text" name="courseCode" placeholder="Mã môn" class="form-control"
                                                         value="<?= isset($_POST['courseCode']) ? $_POST['courseCode'] : '' ?>">
                             </th>
-                            <th class='col-sm-2'><input type="submit" class="btn btn-info"
+                            <th class='col-sm-2'><input type="submit" class="btn btn-success"
                                                         style="padding: 7px 10px; margin: 0px 11px" name="filter"
                                                         value="Lọc"></th>
                         </tr>
