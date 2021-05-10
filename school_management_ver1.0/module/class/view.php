@@ -1,23 +1,14 @@
 <?php
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
-    if ($action == 'added') {
-        echo "<div class='alert alert-success'>Thêm thành công</div>";
-    } else if ($action == 'deleted') {
-        echo "<div class='alert alert-success'>Xoá thành công</div>";
-    }
-}
-?>
-<?php
-$sql = "SELECT * from $myTable ORDER BY id DESC";
-$result = $conn->query($sql);
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
     if ($action == 'create') {
         echo "<div class='alert alert-success'>Thêm thành công</div>";
     } else if ($action == 'edited') {
 
         echo "<div class='alert alert-success'>Sửa thành công</div>";
+    } else if ($action == 'deleted') {
+
+        echo "<div class='alert alert-success'>Xoá thành công</div>";
     }
 }
 ?>
@@ -33,7 +24,7 @@ if (isset($_GET['action'])) {
 </div>
 
 <?php
-if ($result->num_rows <= 0) {
+if (count($classList) <= 0) {
 echo "0 results";
 } else {
 
@@ -54,36 +45,24 @@ echo "
             <th>Action</th>
         </tr>";
 
-        while ($row = $result->fetch_assoc()) {
+        foreach ($classList as $row) {
 
-        $query = getActionForm('manageClass.php', $row['id']);
-        $sqlFindTeacherNameThroughId = "SELECT `fullName` FROM `teachers` WHERE id ='$row[teacherId]'";
+            $query = getActionForm('manageClass.php', $row['id']);
+            $selectTeacher = selectElementFrom("teachers", "*", "id = $row[teacherId]");
+            $nameTeacher = $selectTeacher->fetch_assoc()['fullName'];
+            $selectStudentOfClass = selectElementFrom("students", "*", "`classId` IN
+            (SELECT c.id FROM classes c
+            WHERE c.className = '$row[className]')");
+            $countStudents = $selectStudentOfClass->num_rows;
 
-        global $teacherName;
-        if ($teacherName = $conn->query($sqlFindTeacherNameThroughId)) {
-
-        $nameTeacher = $teacherName->fetch_all()[0][0];
-        } else {
-        echo $conn->error;
-        }
-
-        $selectStudentOfClass = "SELECT *
-        FROM `students` s
-        WHERE `classId` IN
-        (SELECT c.id FROM classes c
-        WHERE c.className = '$row[className]')";
-
-        $students = $conn->query($selectStudentOfClass);
-        $countStudents = count($students->fetch_all());
-
-        echo "<tr>";
-            echo "<td>$row[id]</td>
-            <td>$row[className]</td>
-            <td>$row[maxStudent]</td>
-            <td>$countStudents</td>
-            <td>$nameTeacher</td>
-            <td>$query</td>
-        </tr>";
+            echo "<tr>";
+                echo "<td>$row[id]</td>
+                <td>$row[className]</td>
+                <td>$row[maxStudent]</td>
+                <td>$countStudents</td>
+                <td>$nameTeacher</td>
+                <td>$query</td>
+            </tr>";
         }
 
         echo "

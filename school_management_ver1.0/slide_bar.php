@@ -57,12 +57,6 @@
                         <p>Đăng kí học</p>
                     </a>
                 </li>
-<!--                <li class="nav-item --><?//= $active_menu == 'score' ? 'active' : '' ?><!--">-->
-<!--                    <a class="nav-link" href="manageGrades.php">-->
-<!--                        <i class="material-icons">grade</i>-->
-<!--                        <p>Quản lí điểm</p>-->
-<!--                    </a>-->
-<!--                </li>-->
             </ul>
         </form>
     </div>

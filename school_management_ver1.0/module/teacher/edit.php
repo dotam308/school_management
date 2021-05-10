@@ -1,10 +1,3 @@
-
-<?php
-    if (isset($_POST['fullName'])) {
-        editTeacher($id, $_POST['fullName'], $_POST['unit'], $_POST['contactNumber']);
-        header("location: manageTeacher.php?type=view&action=edited");
-    }
-?>
 <h3>Sửa giáo viên</h3>
 <form class="form-horizontal" action='' method='post'>
   <div class="form-group row">

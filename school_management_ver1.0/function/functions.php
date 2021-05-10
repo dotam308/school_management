@@ -17,7 +17,7 @@ function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedE
         } else {
             $url = "$originLink?type=delete&for=$id&ele=$deletedElement";
         }
-        $res .= '<li class="item" onClick="confirmDelete(\'' . $url . '\')">
+        $res .= '<li class="item" onClick="confirmDelete(\'' . $url . '\')" id="delete_item">
                 <i class="material-icons text-danger" style="cursor: pointer; padding: 0.25rem 0.5rem">delete</i>
                 </li>';
     }
@@ -25,13 +25,13 @@ function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedE
         $res .= "
                 <li class='item'>
                 
-                    <a class='btn btn-info' href='registerQuery.php?type=view&for=$studentId' style='color:black; padding: 0.25rem 0.5rem;'>ĐK học</a>
+                    <a class='btn btn-info' href='queryOnRegister.php?type=view&for=$studentId' style='color:black; padding: 0.25rem 0.5rem;'>ĐK học</a>
                 </li>";
     }
     if ($addCourse) {
         $res .= "
                 <li class='item'>
-                <a class='nav-link' href='registerQuery.php?type=add&for=$studentId'>
+                <a class='nav-link' href='queryOnRegister.php?type=add&for=$studentId'>
                 <i class='material-icons'>add</i>
                 </a></li>";
     }
@@ -255,7 +255,7 @@ function showScores($studentId)
         </table>
 
         <button type="submit" name="submit" value="submit" class="btn btn-primary">Ghi nhận</button>
-        <a type="submit" class="btn btn-info" href="registerQuery.php?type=view&for=<?= $studentId ?>">Quay lại</a>
+        <a type="submit" class="btn btn-info" href="queryOnRegister.php?type=view&for=<?= $studentId ?>">Quay lại</a>
         </form>
 
         <?php
@@ -592,5 +592,24 @@ function getHighestScoreStudents(){
 
 
 }
+
+function insertElementFrom($table, $dataArray) {
+    global $conn;
+    $sqlInsert = "INSERT INTO $table (";
+    foreach ($dataArray as $key=>$value) {
+        $sqlInsert .= "$key" . ", ";
+    }
+    $sqlInsert = substr($sqlInsert, 0, strlen($sqlInsert) - 2);
+    $sqlInsert .= ") VALUES (";
+    foreach ($dataArray as $key=>$value) {
+        $sqlInsert .= "'$value', ";
+    }
+    $sqlInsert = substr($sqlInsert, 0, strlen($sqlInsert) - 2);
+    $sqlInsert .= ")";
+    echo $sqlInsert;
+    $result = $conn->query("SELECT * FROM 'teachers'");
+    return $result;
+}
+
 
 ?>

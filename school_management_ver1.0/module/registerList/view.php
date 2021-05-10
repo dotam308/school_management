@@ -1,17 +1,15 @@
 <?php
-global $conn;
-$myTable = REGISTER_TABLE;
-if (isset($_POST['filter'])) {
-    $result = filterRegisterList();
-} else {
-    $result = selectElementFrom("$myTable", "*", "1");
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'deleted')
+        echo '<div class="alert alert-success">Xoá thành công.</div>';
+    else
+        echo '<div class="alert alert-danger">Xoá thất bại.</div>';
 }
-?>
-<?php
-if ($result->num_rows <= 0) {
+if (count($dataRegis) <= 0) {
 echo "0 results";
 } else {
     ?>
+    <h3>Danh sách đăng kí</h3>
 <form method='post' action="#">
     <table style='width:100%' class='table table-striped table-bordered table-hover'>
         <tr class="row">
@@ -50,35 +48,17 @@ echo "0 results";
 
         </tr>
 <?php
-        while ($row = $result->fetch_assoc()) {
+        foreach ($dataRegis as $row) {
         echo "<tr class='row'>";
-//            $selectClass = selectElementFrom('classes', "*", "studentId = $row[studentId] AND courseId = $row[]")
 
-            //             $sqlFindClassNameThroughId = "SELECT `className` FROM `classes` WHERE `id` = '$row[classId]'";
-            $queryStudent = selectElementFrom('students', "*", "id='$row[studentId]'");
-
-            $rowStudent = $queryStudent->fetch_assoc();
-
-            $classId = $rowStudent['classId'];
-
-            $queryClass = selectElementFrom('classes', "*", "id='$classId'");
-            $thisClass = $queryClass->fetch_assoc();
-            $className = $thisClass['className'];
-
-            $queryCourse = selectElementFrom('courses', "*", "id='$row[courseId]'");
-            $rowCourse = $queryCourse->fetch_assoc();
-
-
-            $query = getActionForm('manageRegister.php', $row['studentId'], false, true,
-                "$rowCourse[id]",true, false, $row['studentId']);
             echo "<td class='col-sm-1'>$row[studentId]</td>
-            <td class='col-sm-2'>$rowStudent[fullName]</td>
-            <td class='col-sm-1'>$className</td>
-            <td class='col-sm-1'>$rowCourse[courseCode]</td>
-            <td class='col-sm-2'>$rowCourse[courseName]</td>
-            <td class='col-sm-2'>$rowCourse[courseClassCode]</td>
-            <td class='col-sm-1'>$rowCourse[credit]</td>
-            <td class='col-sm-2'>$query</td>
+            <td class='col-sm-2'>$row[fullName]</td>
+            <td class='col-sm-1'>$row[className]</td>
+            <td class='col-sm-1'>$row[courseCode]</td>
+            <td class='col-sm-2'>$row[courseName]</td>
+            <td class='col-sm-2'>$row[courseClassCode]</td>
+            <td class='col-sm-1'>$row[credit]</td>
+            <td class='col-sm-2'>$row[query]</td>
 
         </tr>";
         }

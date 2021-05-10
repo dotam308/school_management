@@ -1,8 +1,7 @@
 <?php
-
     $message = null;
     if (isset($_GET['action'])) {
-        
+
         $action = $_GET['action'];
         if ($action == 'edited') {
             $message = 'Chỉnh sửa thành công';
@@ -10,14 +9,15 @@
         if ($action == 'deleted') {
             $message = 'Xoá thành công';
         }
+        if ($action == 'added') {
+            $message = 'Thêm thành công';
+        }
     }
     if (!empty($message)) {
         echo "<div class='alert alert-success'>$message</div>";
-    } 
-    
-    $teachers = getListTeachers();
-?>
-    <div class='row'>
+    }
+    ?>
+<div class='row'>
     	<div class='col-md-6'>
     		<h3>Danh sách giáo viên</h3>
     	</div>
@@ -27,8 +27,8 @@
     		</a>
     	</div>
     </div>
-<?php 
-    if ($teachers->num_rows <= 0) {
+<?php
+    if (count($teachers) <= 0) {
         echo "0 results";
     } else {
   ?>
@@ -43,7 +43,7 @@
 
 	</tr>
     <?php 
-        while ($row = $teachers->fetch_assoc()) {
+        foreach ($teachers as $row) {
             
             $query = getActionForm('manageTeacher.php', $row['id']);
             

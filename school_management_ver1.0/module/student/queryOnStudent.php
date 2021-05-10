@@ -4,17 +4,6 @@ require_once './function/functions.php';
 
 const STUDENT_TABLE = 'students';
 
-function updateStudent($id, $fullName, $phone, $dob, $classId)
-{
-    global $conn;
-    $myTable = STUDENT_TABLE;
-    $date = strtotime($dob);
-    $dob = date('Y-m-d', $date);
-
-    $sqlUpdate = "UPDATE `$myTable` SET `fullname`='$fullName',`classId`='$classId',`contactNumber`='$phone',`dob`='$dob' WHERE id='$id'";
-
-    return $conn->query($sqlUpdate);
-}
 
 if (isset($_GET['type'])) {
     $type = $_GET['type'];
@@ -41,9 +30,14 @@ if (isset($_GET['type'])) {
         $view_file_name = 'module/student/view.php';
     } else if ($type == 'add') {
         if (isset($_POST['fullName'])) {
-            // TODO convert to insert function
-            $sqlInsert = "INSERT INTO `$myTable` (`id`, `fullname`, `classId`, `contactNumber`, `dob`) VALUES (NULL, '$_POST[fullName]', '$_POST[selectedClass]', '$_POST[contactNumber]', '$_POST[dob]')";
-            $result = $conn->query($sqlInsert);
+            // TODO convert to insertStudent function->done
+            $dataStudent = array("id" => "NULL",
+                "fullname" => "$_POST[fullName]",
+                "classId" => "$_POST[selectedClass]",
+                "contactNumber" => "$_POST[contactNumber]",
+                "dob" => "$_POST[dob]");
+            $result = insertElementFrom("$myTable", $dataStudent);
+
             $methodCreate = $_POST['create'];
             if ($methodCreate == 'create') {
                 header("location: manageStudent.php?type=view&action=added");
@@ -56,23 +50,20 @@ if (isset($_GET['type'])) {
     } else if ($type == 'edit' && isset($_GET['for'])) {
         $updateStatus = - 1;
         $id = $_GET['for'];
-        // TODO convert to getStudent function
-        $sqlSelectStudent = "SELECT * FROM `$myTable` WHERE id=$id";
-        $res = $conn->query($sqlSelectStudent);
-        $oldData = $res->fetch_all()[0];
+        // TODO convert to getStudent function->done
+        $oldData = getStudent($id);
         if (isset($_POST['id1'])) {
             $updateStatus = updateStudent($id, $_POST['fullName'], $_POST['contactNumber'], $_POST['dob'], $_POST['selectedClass']);
             header("location: manageStudent.php?type=view&action=edited");
         }
-        $selectClass = createSelectClasses($oldData[2]);
+        $selectClass = createSelectClasses($oldData['classId']);
 
         $view_file_name = 'module/student/edit.php';
     } else if ($type == 'delete' && isset($_GET['for'])) {
         $updateStatus = - 1;
         $id = $_GET['for'];
-        // TODO convert to deleteStudent function
-        $sqlDelete = "DELETE FROM `$myTable` WHERE id=$id";
-        if ($conn->query($sqlDelete)) {
+        // TODO convert to deleteStudent function ->done
+        if (deleteStudent($id)) {
             header("location: manageStudent.php?type=view&action=deleted");
         } else {
             header("location: manageStudent.php?type=view&action=noAction");
@@ -80,4 +71,23 @@ if (isset($_GET['type'])) {
     } else {
         die('Unhandled');
     }
+}
+function getStudent($id){
+    return selectElementFrom("students", "*", "id='$id'")->fetch_assoc();
+}
+function deleteStudent($id) {
+    global $conn;
+    $sqlDelete = "DELETE FROM `students` WHERE id=$id";
+    return $conn->query($sqlDelete);
+}
+function updateStudent($id, $fullName, $phone, $dob, $classId)
+{
+    global $conn;
+    $myTable = STUDENT_TABLE;
+    $date = strtotime($dob);
+    $dob = date('Y-m-d', $date);
+
+    $sqlUpdate = "UPDATE `$myTable` SET `fullname`='$fullName',`classId`='$classId',`contactNumber`='$phone',`dob`='$dob' WHERE id='$id'";
+
+    return $conn->query($sqlUpdate);
 }

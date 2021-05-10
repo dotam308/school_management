@@ -10,9 +10,6 @@ if (isset($_GET['action'])) {
     }
 }
 ?>
-<?php $sql = "SELECT * from $myTable";
-$result = $conn->query($sql);
-?>
 <div class="row">
 
     <div class="col-sm-3">
@@ -25,7 +22,7 @@ $result = $conn->query($sql);
     </div>
 </div>
 <?php
-if ($result->num_rows <= 0) {
+if (count($courseList) <= 0) {
 echo "0 results";
 } else {
 ?>
@@ -47,18 +44,11 @@ echo "0 results";
 
         </tr>
 <?php
-        while ($row = $result->fetch_assoc()) {
+        foreach ($courseList as $row) {
 
         $query = getActionForm('manageCourse.php', $row['id']);
-        $sqlFindTeacherNameThroughId = "SELECT `fullName` FROM `teachers` WHERE id ='$row[teacherId]'";
-
-        global $teacherName;
-        if ($teacherName = $conn->query($sqlFindTeacherNameThroughId)) {
-
-        $nameTeacher = $teacherName->fetch_all()[0][0];
-        } else {
-        echo $conn->error;
-        }
+        $selectTeacher = selectElementFrom("teachers", "*", "id ='$row[teacherId]'");
+        $teacherName = $selectTeacher->fetch_assoc()['fullName'];
         echo "<tr>";
             echo "<td>$row[id]</td>
             <td>$row[credit]</td>
@@ -66,7 +56,7 @@ echo "0 results";
             <td>$row[courseName]</td>
             <td>$row[courseClassCode]</td>
             <td>$row[maxStudent]</td>
-            <td>$nameTeacher</td>
+            <td>$teacherName</td>
             <td>$row[startTime] -$row[endTime]  </td>
             <td>$row[place]</td>
             <td>$query</td>
