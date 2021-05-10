@@ -1,14 +1,16 @@
-
 <?php
-$sql = "SELECT * FROM `registers` WHERE studentId = '$id'";
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+    if ($action == 'deleted') {
+        echo "<div class='alert alert-success'>Xoá thành công</div>";
+    }
+}
+?>
 
-$queryStudent = selectElementFrom('students', '*', "id='$id'");
-$getStudent = $queryStudent->fetch_assoc();
-if ($result = $conn->query($sql)) {
-} else {
-    echo "error at View type";
-}?>
-
+<a class='btn btn-info' style="color: black; padding: 0.25rem 0.5rem;" href='manageStudent.php?type=view'>Quay về</a>
+<div style="text-align: center; color: red; font-weight: 800">
+    <h3>Danh sách đăng kí</h3>
+</div>
 <div class="row">
     <div class="col-sm-3">
         <h5 style="display: inline-block">Sinh viên: </h5> <?= isset($getStudent['fullName']) ? $getStudent['fullName'] : "" ?>
@@ -24,7 +26,7 @@ if ($result = $conn->query($sql)) {
     </div>
 </div>
 <?php
-if ($result->num_rows <= 0) {
+if (count($dataRegis) <= 0) {
     echo "Bạn chưa đăng ký môn học";
 } else {
     ?>
@@ -42,59 +44,22 @@ if ($result->num_rows <= 0) {
             <th>Action</th>
         </tr>
         <?php
-    while ($row = $result->fetch_assoc()) {
-
-        $sqlGetCourse = "SELECT  `credit`, `courseName`,
-    `courseClassCode`, startTime, endTime, place, `teacherId`
-    FROM `courses` WHERE `id` = '$row[courseId]'";
-
-
-        $registeredCourses = $conn->query($sqlGetCourse)->fetch_all();
-
-        for ($j = 0; $j < count($registeredCourses); $j++) {
-
-
-            $courseClassCode = $registeredCourses[$j][2];
-            $credit = $registeredCourses[$j][0];
-            $courseName = $registeredCourses[$j][1];
-            $time = $registeredCourses[$j][3] . "-" . $registeredCourses[$j][4];
-            $place = $registeredCourses[$j][5];
-
-            $idTeacher = $registeredCourses[$j][6];
-            $sqlSelectTeacher =
-                "SELECT fullName
-                    FROM teachers
-                    WHERE id = '$idTeacher'";
-            $teacher = $conn->query($sqlSelectTeacher)->fetch_all()[0][0];
-
-
-            $queryClass = selectElementFrom('classes', "*", "id='$getStudent[classId]'");
-            $getClass = $queryClass->fetch_assoc();
-
-            $courseId = $row['courseId'];
-            $queryAction = getActionForm('registerQuery.php', $row['studentId'], false, true, "$courseId", false);
-    ?>
-
-
-    <?php
-
-
+    foreach ($dataRegis as $row) {
         echo "<tr>
-        <td>$id</td>
-        <td>$getStudent[fullName]</td>
-        <td>$getClass[className]</td>
-        <td>$courseName</td>
-        <td>$courseClassCode</td>
-        <td>$credit</td>
-        <td>$teacher</td>
-        <td>$time</td>
-        <td>$place</td>
-        <td>$queryAction</td>
+        <td>$row[studentId]</td>
+        <td>$row[fullName]</td>
+        <td>$row[className]</td>
+        <td>$row[courseName]</td>
+        <td>$row[courseClassCode]</td>
+        <td>$row[credit]</td>
+        <td>$row[teacher]</td>
+        <td>$row[time]</td>
+        <td>$row[place]</td>
+        <td>$row[queryAction]</td>
 
     </tr>";
         }
 
     }
-} ?>
-
+?>
 </table>

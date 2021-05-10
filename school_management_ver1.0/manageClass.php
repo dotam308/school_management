@@ -1,3 +1,6 @@
+<?php
+    require_once "module/class/queryOnClass.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,18 +20,7 @@
       <?php require_once "includes/header.php"?>
       <div class="content">
         <div class="container-fluid">
-        	<?php 
-        	
-            	require_once 'function/functions.php';
-            	require_once 'function/queryOnClass.php';
-        	   $type = "";
-        	   if (isset($_GET["type"])) {
-        	       $type = $_GET["type"];
-        	       queryOnClass($type);
-        	   }
-                ob_end_flush();
-        	?>
-        	
+        	<?php require_once $view_file_name;?>
         </div>
       </div>
     <?php require_once "includes/footer.php"?>
@@ -38,19 +30,19 @@
 <script>
     function confirmDelete(url) {
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Xác nhận xoá?',
+            text: "Bạn không thể quay lại!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Xác nhận!',
+            confirmCancelText: 'Thoát!'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url;
             }
         })
     }
-
 </script>
 </html>

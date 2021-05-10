@@ -1,21 +1,3 @@
-<?php
-    $addStatus = -1;
-    if (isset($_POST['fullName'])) {
-        $addStatus = addTeacher( $_POST['fullName'], $_POST['unit'], $_POST['contactNumber']);
-        if ($_POST['button'] == 'create') {
-            header("location: manageTeacher.php?type=view");
-        }
-    }
-?>
-<?php 
-    if ($addStatus !== -1) {
-        if ($addStatus) {
-            echo "<div class='alert alert-success'>Added successfully</div>";
-        } else {
-            echo "<div class='alert alert-warning'>Added unsuccessfully</div> ";
-        }
-    }
-?>
 <h3>Thêm giáo viên</h3>
 <form class="form-horizontal" action='' method='post'>
   <div class="form-group row">
