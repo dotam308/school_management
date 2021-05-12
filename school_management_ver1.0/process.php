@@ -137,15 +137,24 @@
                                 <tbody>
                                 <?php
                                     $dataTopStudent = getHighestScoreStudents();
-                                    for ($i = 0; $i < count($dataTopStudent); $i++) {
-                                        echo "<tr>
-                                            <td>".$dataTopStudent[$i]["id"]."</td>
-                                            <td>".$dataTopStudent[$i]["name"]."</td>
-                                            <td>".$dataTopStudent[$i]["className"]."</td>
-                                            <td>".round($dataTopStudent[$i]["score"], 1)."</td>
-                                            </tr>";
-                                    }
+                                    if ($dataTopStudent[0]['score'] >= 8) {
 
+                                        for ($i = 0; $i < count($dataTopStudent); $i++) {
+                                            $id = $dataTopStudent[$i]["id"];
+                                            $score = $dataTopStudent[$i]["score"];
+                                            if ($score > 8) {
+                                                echo "<tr>
+                                                <td><a href='queryOnStudentGrade.php?for=$id'>$id</a></td>
+                                                <td>".$dataTopStudent[$i]["name"]."</td>
+                                                <td>".$dataTopStudent[$i]["className"]."</td>
+                                                <td>".round($dataTopStudent[$i]["score"], 1)."</td>
+                                                </tr>";
+                                            }
+                                        }
+                                     } else { ?>
+                                            <div>Chưa có kết quả</div>
+                                    <?php
+                                     }
                                 ?>
 
                                 </tbody>

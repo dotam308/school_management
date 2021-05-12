@@ -1,20 +1,17 @@
+<?php
+ob_start();
+require_once 'function/functions.php';?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>Quản lí điểm</title>
     <?php
-    ob_start();
     require_once "includes/headContents.php";
     ?>
 </head>
 
 <body>
-<?php
-
-require_once 'function/functions.php';
-
-?>
 <div class="wrapper ">
     <?php $active_menu = 'student';
     $sub_active = 'score' ?>
@@ -126,7 +123,6 @@ require_once 'function/functions.php';
                                 if ($conn->query($sqlUpdate)) {
                                     header("location: queryOnSchoolGrade.php?action=edited");
                                 } else {
-                                    // echo "erroe at Update";
                                 }
                             }
 
@@ -137,7 +133,6 @@ require_once 'function/functions.php';
     </div>
     <?php
     require_once "includes/footer.php";
-    ob_end_flush();
     ?>
 </div>
 </body>

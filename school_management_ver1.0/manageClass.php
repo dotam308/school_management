@@ -8,7 +8,6 @@
   <title>Quản lí lớp học</title>
   <!-- Required meta tags -->
     <?php
-    ob_start();
         require_once "includes/headContents.php"?>
 </head>
 

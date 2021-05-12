@@ -7,7 +7,6 @@ if (isset($_GET['action'])) {
 }
 ?>
 
-<a class='btn btn-info' style="color: black; padding: 0.25rem 0.5rem;" href='manageStudent.php?type=view'>Quay về</a>
 <div style="text-align: center; color: red; font-weight: 800">
     <h3>Danh sách đăng kí</h3>
 </div>

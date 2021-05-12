@@ -6,7 +6,6 @@ require_once "module/register/registerQuery.php";
 <head>
     <title>Đăng kí học</title>
     <?php
-    ob_start();
     require_once "includes/headContents.php" ?>
 </head>
 
@@ -20,11 +19,21 @@ require_once "module/register/registerQuery.php";
     <?php require_once "includes/header.php" ?>
     <div class="content">
         <div class="container-fluid">
-            <?php require_once "$view_file_name";?>
+            <?php
+
+            if (isset($_GET['type'])) {
+                if ($_GET['type'] == 'view') {
+                    echo "<a class='btn btn-info' style='color: black; padding: 0.25rem 0.5rem;' 
+                        href='manageStudent.php?type=view'>Quay về</a>";
+                }
+            }
+
+            $student = $_GET['for'];
+            if (isset($view_file_name)) require_once "$view_file_name";
+            ?>
         </div>
     </div>
     <?php require_once "includes/footer.php";
-        ob_end_flush();
     ?>
 </div>
 </div>

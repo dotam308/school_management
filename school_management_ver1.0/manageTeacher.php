@@ -9,7 +9,6 @@ require_once "module/teacher/queryOnTeacher.php";
 </head>
 <body>
 	<div class="wrapper ">
-	<?php ob_start();?>
     <?php $active_menu = 'teacher'; ?>
     <?php include_once 'slide_bar.php' ?>
     <div class="main-panel">
@@ -21,7 +20,7 @@ require_once "module/teacher/queryOnTeacher.php";
                         ?>
         		</div>
 			</div>
-      <?php include_once 'includes/footer.php'; ob_end_flush();?>
+      <?php include_once 'includes/footer.php'; ?>
     </div>
 	</div>
 </body>
