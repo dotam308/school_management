@@ -11,52 +11,21 @@ if (isset($_GET['for'])) {
         case "view":
             $queryStudent = selectElementFrom('students', '*', "id='$id'");
             $getStudent = $queryStudent->fetch_assoc();
-
-            $dataRegis = array();
-            $selectRegis = selectElementFrom("registers", "*", "studentId = '$id'");
-            while ($row = $selectRegis->fetch_assoc()) {
-
-                $registeredCourses = selectElementFrom("courses", "`credit`, `courseName`,
-                        `courseClassCode`, startTime, endTime, place, `teacherId`", "`id` = '$row[courseId]'")
-                    ->fetch_all();
-
-                for ($j = 0; $j < count($registeredCourses); $j++) {
-
-
-                    $courseClassCode = $registeredCourses[$j][2];
-                    $credit = $registeredCourses[$j][0];
-                    $courseName = $registeredCourses[$j][1];
-                    $time = $registeredCourses[$j][3] . "-" . $registeredCourses[$j][4];
-                    $place = $registeredCourses[$j][5];
-
-                    $idTeacher = $registeredCourses[$j][6];
-                    $teacher = selectElementFrom("teachers", "fullName", "id = '$idTeacher'")
-                        ->fetch_assoc()['fullName'];
-                    $queryClass = selectElementFrom('classes', "*", "id='$getStudent[classId]'");
-                    $getClass = $queryClass->fetch_assoc();
-                    $courseId = $row['courseId'];
-                    $queryAction = getActionForm('queryOnRegister.php', $row['studentId'], false, true,
-                        "$courseId", false);
-                    $dataRegis[] = [
-                        "studentId" => "$getStudent[id]",
-                        "fullName" => "$getStudent[fullName]",
-                        "className" => "$getClass[className]",
-                        "courseName" => "$courseName",
-                        "courseClassCode" => "$courseClassCode",
-                        "credit" => "$credit",
-                        "teacher" => "$teacher",
-                        "time" => "$time",
-                        "place" => "$place",
-                        "queryAction" => "$queryAction",
-                    ];
-
-
-                }
-            }
+            $dataRegis = getDataRegister($id);
             $view_file_name = 'module/register/view.php';
             break;
         case "add":
-            $courseData = selectElementFrom("courses", "*", "1");
+
+            $queryStudent = selectElementFrom('students', '*', "id='$id'");
+            $getStudent = $queryStudent->fetch_assoc();
+
+            $dataRegis = getDataRegister($id, "add");
+
+            $sqlSelectCourse = "SELECT * FROM courses c
+                        WHERE c.id NOT IN (SELECT registers.courseId
+                           FROM registers 
+                           WHERE registers.studentId='$id')";
+            $courseData = $conn->query($sqlSelectCourse);
             $courseList = array();
             while ($row = $courseData->fetch_assoc()) {
                 $idTeacher = $row['teacherId'];
@@ -79,12 +48,17 @@ if (isset($_GET['for'])) {
         case "delete":
             if (isset($_GET['for'])) {
                 $courseId = $_GET['ele'];
-                $sqlDeleteSelected = "DELETE FROM `registers` WHERE `courseId` = '$courseId'";
+                $studentId = $_GET['for'];
+                $sqlDeleteSelected = "DELETE FROM `registers` WHERE `courseId` = '$courseId' && studentId ='$studentId'";
                 $result = $conn->query($sqlDeleteSelected);
                 if ($result) {
-                    header("location: ./queryOnRegister.php?type=view&for=$_GET[for]&action=deleted");
+                    if (isset($_GET['combine'])) {
+                        header("location: registerCourses.php?type=add&for=$studentId&actionNow=added");
+                    }else {
+                        header("location: ./queryOnRegister.php?type=view&for=$studentId&action=deleted");
+                    }
 
-                } else {
+                }   else {
                     echo $conn->error;
                 }
             }
@@ -96,7 +70,7 @@ if (isset($_GET['for'])) {
     }
 }
 
-function checkExist( $data)
+function checkExist($data)
 {
     global $idStudent;
     global $conn;
@@ -140,8 +114,14 @@ function checkExist( $data)
 
                     $sqlUpdateScore = "INSERT INTO `scores` (`id`, `score`, `courseId`, `studentId`)
     VALUES (NULL,0, '$row[id]', '$idStudent');";
+
+                    $selectCourse = selectElementFrom("courses", "*", "id = '$row[id]'");
+                    $course = $selectCourse->fetch_assoc();
                     if ($conn->query($sqlUpdateRegisCourse) && $conn->query($sqlUpdateScore)) {
-                        header("location: queryOnRegister.php?type=view&for=$id");
+
+                        $thisId = $_GET['for'];
+                        header("location: registerCourses.php?type=add&for=$thisId&actionNow=added");
+
                     } else {
                         echo 'error AT UpdateRegisCourse' . $conn->error;
                     }
@@ -152,4 +132,60 @@ function checkExist( $data)
         $result = selectElementFrom("courses", "*", 1);
     }
     return $courseExits;
+}
+
+function getDataRegister($id, $position="")
+{
+    global $conn;
+    $queryStudent = selectElementFrom('students', '*', "id='$id'");
+    $getStudent = $queryStudent->fetch_assoc();
+
+    $dataRegis = array();
+    $selectRegis = selectElementFrom("registers", "*", "studentId = '$id'");
+    while ($row = $selectRegis->fetch_assoc()) {
+        $registeredCourses = selectElementFrom("courses", "`credit`, `courseName`,
+                        `courseClassCode`, startTime, endTime, place, `teacherId`", "`id` = '$row[courseId]'")
+            ->fetch_all();
+
+
+        for ($j = 0; $j < count($registeredCourses); $j++) {
+
+
+            $courseClassCode = $registeredCourses[$j][2];
+            $credit = $registeredCourses[$j][0];
+            $courseName = $registeredCourses[$j][1];
+            $time = $registeredCourses[$j][3] . "-" . $registeredCourses[$j][4];
+            $place = $registeredCourses[$j][5];
+
+            $idTeacher = $registeredCourses[$j][6];
+            $teacher = selectElementFrom("teachers", "fullName", "id = '$idTeacher'")
+                ->fetch_assoc()['fullName'];
+            $queryClass = selectElementFrom('classes', "*", "id='$getStudent[classId]'");
+            $getClass = $queryClass->fetch_assoc();
+            $courseId = $row['courseId'];
+            if ($position == "") {
+
+                $queryAction = getActionForm('queryOnRegister.php?', "$row[studentId]", false, true,
+                    "$courseId", false);
+            } else {
+                $queryAction = getActionForm("queryOnRegister.php?combine=$position", "$row[studentId]", false, true,
+                    "$courseId", false, false, "", "combine");
+            }
+            $dataRegis[] = [
+                "studentId" => "$getStudent[id]",
+                "fullName" => "$getStudent[fullName]",
+                "className" => "$getClass[className]",
+                "courseName" => "$courseName",
+                "courseClassCode" => "$courseClassCode",
+                "credit" => "$credit",
+                "teacher" => "$teacher",
+                "time" => "$time",
+                "place" => "$place",
+                "queryAction" => "$queryAction",
+            ];
+
+
+        }
+    }
+    return $dataRegis;
 }

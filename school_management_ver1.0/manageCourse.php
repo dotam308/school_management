@@ -9,7 +9,6 @@ require_once "module/course/queryOnCourse.php"
 </head>
 <body>
   <div class="wrapper ">
-      <?php ob_start();?>
       <?php $active_menu = 'course'; ?>
       <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">

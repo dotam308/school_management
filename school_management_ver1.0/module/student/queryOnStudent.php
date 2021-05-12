@@ -12,10 +12,48 @@ if (isset($_GET['type'])) {
     if ($type == 'view') {
         if (isset($_POST['filter'])) {
             $result = filterStudents();
+        } else if (isset($_GET['order'])) {
+            $method = $_GET['order'];
+            switch ($method) {
+                case "studentIdOrderUp":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` ASC");
+                    break;
+                case "studentIdOrderDown":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC");
+                    break;
+                case "studentNameOrderUp":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` ASC");
+                    break;
+                case "studentNameOrderDown":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` DESC");
+                    break;
+                case "classOrderUp":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` ASC");
+                    break;
+                case "classOrderDown":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` DESC");
+                    break;
+                case "contactNumOrderUp":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` ASC");
+                    break;
+                case "contactNumOrderDown":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` DESC");
+                    break;
+                case "dobOrderUp":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` ASC");
+                    break;
+                case "dobOrderDown":
+                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` DESC");
+                    break;
+                default:
+                    break;
+            }
         } else {
             $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC");
         }
+
         $students = [];
+        $index = 0;
         while ($row = $result->fetch_assoc()) {
             $queryClass = selectElementFrom('classes', "*", "id = '$row[classId]'");
             $rowClass = $queryClass->fetch_assoc();
@@ -25,7 +63,9 @@ if (isset($_GET['type'])) {
                 'className' =>  $rowClass['className'],
                 'contactNumber' =>  $row['contactNumber'],
                 'dob' =>  $row['dob'],
+                'index'=> $index
             ];
+            $index++;
         }
         $view_file_name = 'module/student/view.php';
     } else if ($type == 'add') {

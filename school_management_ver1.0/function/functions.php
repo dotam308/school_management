@@ -1,7 +1,7 @@
 <?php
 
 
-function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "")
+function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine="")
 {
     $res = "<ul style='display: flex'>";
     if ($edit) {
@@ -14,8 +14,11 @@ function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedE
     if ($delete) {
         if ($deletedElement == '') {
             $url = "$originLink?type=delete&for=$id";
-        } else {
+        } else if ($deletedElement != ''){
             $url = "$originLink?type=delete&for=$id&ele=$deletedElement";
+        }
+        if ($combine != '') {
+            $url = "$originLink&type=delete&for=$id&ele=$deletedElement";
         }
         $res .= '<li class="item" onClick="confirmDelete(\'' . $url . '\')" id="delete_item">
                 <i class="material-icons text-danger" style="cursor: pointer; padding: 0.25rem 0.5rem">delete</i>
@@ -70,7 +73,7 @@ function updateStudentOnGrade()
             $score = $conn->query($sqlScore);
             $sizeR = $register->num_rows;
             $sizeS = $score->num_rows;
-            echo "score: $sizeS .. regis: $sizeR <br />";
+//            echo "score: $sizeS .. regis: $sizeR <br />";
         }
 //         while ($sizeS < $sizeR) {
 //
@@ -606,8 +609,7 @@ function insertElementFrom($table, $dataArray) {
     }
     $sqlInsert = substr($sqlInsert, 0, strlen($sqlInsert) - 2);
     $sqlInsert .= ")";
-    echo $sqlInsert;
-    $result = $conn->query("SELECT * FROM 'teachers'");
+    $result = $conn->query($sqlInsert);
     return $result;
 }
 

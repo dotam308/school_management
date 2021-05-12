@@ -4,7 +4,6 @@
 <head>
   <title>Quản lí điểm</title>
     <?php
-        ob_start();
         require_once "includes/headContents.php";
     ?>
 </head>
@@ -35,7 +34,7 @@
       </div>
 
         <?php require_once "includes/footer.php";
-            ob_end_flush();?>
+        ?>
     </div>
   </div>
 </body>
