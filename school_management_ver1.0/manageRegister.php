@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once "module/registerList/queryOnRegister.php";
 ?>
 <!DOCTYPE html>

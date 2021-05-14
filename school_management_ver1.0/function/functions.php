@@ -53,7 +53,6 @@ function updateStudentOnGrade()
     $score = $conn->query($sqlScore);
     $sizeR = $register->num_rows;
     $sizeS = $score->num_rows;
-//    echo "score: $sizeS .. regis: $sizeR <br />";
         if ($sizeS == 0) {
 
             echo "1";
@@ -73,74 +72,7 @@ function updateStudentOnGrade()
             $score = $conn->query($sqlScore);
             $sizeR = $register->num_rows;
             $sizeS = $score->num_rows;
-//            echo "score: $sizeS .. regis: $sizeR <br />";
         }
-//         while ($sizeS < $sizeR) {
-//
-//            echo "2";
-//
-//
-//            $register = $conn->query($sqlRegister);
-//            $score = $conn->query($sqlScore);
-//            $dataRegister = $register->fetch_all();
-//            for ($i = count($dataRegister) - 1; $i >= count($dataRegister) - ($sizeR-$sizeS) - 1; $i--) {
-//                $ci = $dataRegister[$i][1];
-//                $si = $dataRegister[$i][2];
-////                echo "active";
-////                echo "<pre>";
-////                print_r($dataRegister[$i]);
-////                echo "</pre>";
-//                $sqlInsert = "INSERT INTO `scores`(`id`, `score`, `courseId`, `studentId`)
-//                VALUES (NULL,0,'$ci','$si')";
-//
-//                if ($conn->query($sqlInsert)) {
-//                } else {
-//                    echo $conn->error;
-//                }
-//
-//                $register = $conn->query($sqlRegister);
-//                $score = $conn->query($sqlScore);
-//                $sizeR = $register->num_rows;
-//                $sizeS = $score->num_rows;
-////                echo "score: $sizeS .. regis: $sizeR <br />";
-//            }
-//        }
-//         if ($sizeS > $sizeR) { //xu li duplicate, xoa o regis nhung chua update tai score
-//            echo "3";
-//
-//            //xu li duplicate
-//            $queryStadardScore = "SELECT *, CONCAT(courseId, '_', studentId) cs FROM `scores`
-//                    GROUP BY cs"; //lay cac phan tu phan biet
-//            $data = $conn->query($queryStadardScore)->fetch_all();
-//
-//            $conn->query("DELETE FROM scores WHERE 1");
-//
-//            for ($i = 0; $i < count($data); $i++) {
-//                $id = $data[$i][0];
-//                $score = $data[$i][1];
-//                $ci = $data[$i][2];
-//                $si = $data[$i][3];
-//                $sqlInsert = "INSERT INTO `scores`(`id`, `score`, `courseId`, `studentId`)
-//                VALUES ('$id','$score','$ci','$si')";
-//
-//                if ($conn->query($sqlInsert)) {
-//                } else {
-//                    echo $conn->error;
-//                }
-//            }
-//
-//            //xu li xoa o regis nhung chua update tai score
-//            $sqlRegister = 'SELECT * FROM `registers` WHERE 1 ORDER BY studentId ASC';
-//            $sqlScore = 'SELECT * FROM `scores` ORDER BY studentId ASC';
-//            $register = $conn->query($sqlRegister);
-//            $score = $conn->query($sqlScore);
-//
-//
-//
-//        }
-//
-//
-
 
 }
 
@@ -148,12 +80,13 @@ function selectElementFrom($table, $element = '*', $condition = "1")
 {
     global $conn;
     $sqlSelect = "SELECT $element FROM $table WHERE $condition";
+//    echo $sqlSelect;
     $query = $conn->query($sqlSelect);
     return $query;
 
 }
 
-function createSelectClasses($oldClass = 0)
+function createSelectClasses($oldClass = 0, $disabled = false)
 {
     global $conn;
 
@@ -168,7 +101,11 @@ function createSelectClasses($oldClass = 0)
         for ($i = 0; $i < count($classData); $i++) {
             $classes[$classData[$i][0]] = $classData[$i][1];
         }
-        $selectClass = "<select name='selectedClass' class='form-select form-control'>";
+        if ($disabled) {
+            $selectClass = "<select name='selectedClass' class='form-select form-control' disabled>";
+        } else {
+            $selectClass = "<select name='selectedClass' class='form-select form-control'>";
+        }
         $selectClass .= "<ul class='dropdown-menu' aria-labelledby='dropdownMenuOffset'>";
 
         $selectClass .= "<li class='dropdown-item'><option selected>Chọn</option></li>";
@@ -242,10 +179,16 @@ function showScores($studentId)
         	            <tr>
         	            <td>$courseData[5]</td>
         	            <td>$courseData[6]</td>
-        	            <td>$courseData[1]</td>
-        	            <td><input type='text' name='$courseData[0]_$studentId' style='width: 50px;' value='$valueT'></td>
-        	            </tr>
-        	            ";
+        	            <td>$courseData[1]</td>";
+            global $title;
+            if ($title == 'admin') {
+                echo "<td><input type='text' name='$courseData[0]_$studentId' style='width: 50px;' value='$valueT'></td>
+        	            </tr>";
+            } else if ($title == 'student') {
+                echo "<td>$valueT</td>
+        	            </tr>";
+            }
+        	            
         }
 
         $res = 0;
@@ -255,13 +198,20 @@ function showScores($studentId)
         }
         echo "Điểm trung bình: $res <br />";
         ?>
-        </table>
+        </table> <?php
+        if ($title == 'admin') {
+            echo '<button type="submit" name="submit" value="submit" class="btn btn-primary">Ghi nhận</button>';
+             echo "<a type='submit' class='btn btn-info'
+                href='queryOnRegister.php?type=view&for=$studentId'>Quay lại</a>";
 
-        <button type="submit" name="submit" value="submit" class="btn btn-primary">Ghi nhận</button>
-        <a type="submit" class="btn btn-info" href="queryOnRegister.php?type=view&for=<?= $studentId ?>">Quay lại</a>
+        } else if ($title == 'student') {
+
+            echo "<a type='submit' class='btn btn-info'
+               href='process.php'>Quay lại</a>";
+
+        } ?>
         </form>
-
-        <?php
+<?php
     } else {
         echo "error at GetData";
     }

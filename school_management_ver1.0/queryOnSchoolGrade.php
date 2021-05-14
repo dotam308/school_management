@@ -1,4 +1,5 @@
 <?php
+session_start();
 ob_start();
 require_once 'function/functions.php';?>
 <!DOCTYPE html>

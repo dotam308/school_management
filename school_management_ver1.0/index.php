@@ -1,1 +1,3 @@
-<a href="process.php">Go to Admin Page </a>
+<?php
+    header("location: login/index.php");
+?>

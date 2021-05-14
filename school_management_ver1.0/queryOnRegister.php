@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "module/register/registerQuery.php";
 ?>
 <!DOCTYPE html>

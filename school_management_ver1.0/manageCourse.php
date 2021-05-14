@@ -1,5 +1,6 @@
 <?php
-require_once "module/course/queryOnCourse.php"
+require_once "module/course/queryOnCourse.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">

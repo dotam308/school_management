@@ -1,5 +1,6 @@
 <?php
 ob_start();
+session_start();
 require_once 'function/functions.php';
 ?>
 <!DOCTYPE html>
