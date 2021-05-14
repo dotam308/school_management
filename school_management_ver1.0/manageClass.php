@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once "module/class/queryOnClass.php";
 ?>
 <!DOCTYPE html>

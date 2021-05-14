@@ -2,8 +2,29 @@
 <nav
 	class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
 	<div class="container-fluid">
-		<div class="navbar-wrapper">
-			<a class="navbar-brand" href="javascript:;">Dashboard</a>
+		<div class="navbar-wrapper" id="div-img">
+			<a class="navbar-brand" href="process.php" id="welcome">Welcome
+                <?php
+                if (isset($_SESSION['username'])) {
+                    $selectUser = selectElementFrom("users", "*", "username = '$_SESSION[username]'");
+                    $user = $selectUser->fetch_assoc();
+                    if (isset($user['img-personal'])) {
+                        $srcImg = $user['img-personal'];
+                    } else {
+                        $srcImg = "";
+                    }
+                    if (isset($user['representName'])){
+                        echo "$user[representName]!";
+                        echo "<img src='$srcImg' id='img-user'/>";
+                    } else {
+                        echo "$user[username]!";
+                    }
+
+                } else {
+                    $_SESSION['permission'] = false;
+                }
+                ?>
+            </a>
 		</div>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			aria-controls="navigation-index" aria-expanded="false"
@@ -18,7 +39,11 @@
 				<li class="nav-item"><a class="nav-link" href="javascript:;"> <i
 						class="material-icons">notifications</i> Notifications
 				</a></li>
-				<!-- your navbar here -->
+                <form method="post">
+                <li class="nav-item">
+                    <button type="submit" name="logout" class="btn btn-primary"> <i class="material-icons">logout</i> Logout
+                    </button></li>
+                </form>
 			</ul>
 		</div>
 	</div>

@@ -1,6 +1,13 @@
 <?php
 ob_start();
+session_start();
+if (isset($_POST['logout'])) {
+    $_SESSION['permission'] = false;
+    header("location: process.php");
+}
 require_once "module/register/registerQuery.php";
+
+$active_menu = 'register';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,27 +16,28 @@ require_once "module/register/registerQuery.php";
     <title>Đăng ký học</title>
     <?php
     require_once "includes/headContents.php" ?>
-<!--    <script>-->
-<!--        $(document).ready(function () {-->
-<!--            $("input[type='checkbox']").change(function() {-->
-<!--                $("#addNewCourses").html($(this).val());-->
-<!--            })-->
-<!--        })-->
-<!--    </script>-->
 </head>
 
+<style>
+    #img-user, #inputImg {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    #div-img{
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
 <body>
 <div class="wrapper ">
-    <?php $active_menu = 'register'; ?>
     <?php require_once 'slide_bar.php' ?>
+    <div>abc</div>
     <div class="main-panel">
         <?php require_once "includes/header.php" ?>
         <div class="content">
             <div class="container-fluid">
                 <?php
-                if (isset($_GET['type']) && $_GET['type'] == 'login') {
-                    echo "<div class='alert alert-warning'>Chức năng này dành cho sinh viên</div>";
-                } else
+                    global $title;
                     require_once "$view_file_name";
                 ?>
 
