@@ -1,122 +1,43 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <title>Quản lí điểm</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
-  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <?php
+        require_once "includes/headContents.php";
+    ?>
 </head>
 
 <body>
-	<?php 
-	
-	   require_once 'functions.php';
-	   
-	?>
+
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=person">
-                  <i class="material-icons">person</i>
-                  Xem điểm cá nhân
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=school">
-                  <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
-                  </a>
-             </li>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+      <?php $active_menu = 'score'; ?>
+      <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">Dashboard</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="javascript:;">
-                  <i class="material-icons">notifications</i> Notifications
-                </a>
-              </li>
-              <!-- your navbar here -->
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End Navbar -->
+      <?php require_once "includes/header.php"?>
       <div class="content">
         <div class="container-fluid">
         	<?php    
         	
-        	require_once 'functions.php';
-        	if (isset($_GET['view'])) {
-        	    $view = $_GET['view'];
-            	doTask($view, "");
-        	}
-        	  
+        	require_once 'function/functions.php';
+        	echo "<h3>Sinh viên đăng nhập</h3>";
+        	echo "
+                 <form method='post' action='queryOnStudentGrade.php'>
+                    Mã sinh viên<input name='id' type='text'/>
+                    <button type='submit'>Go</button>
+                  </form>
+                ";
+
         	?>
         	
         </div>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright float-right">
-            &copy;
-            <script>
-              document.write(new Date().getFullYear())
-            </script>, made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
-          </div>
-          <!-- your footer here -->
-        </div>
-      </footer>
+
+        <?php require_once "includes/footer.php";
+        ?>
     </div>
   </div>
 </body>

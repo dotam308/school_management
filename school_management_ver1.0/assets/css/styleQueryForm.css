@@ -2,5 +2,36 @@
 .item {
 	list-style: none;
 	display: inline-block;
-	width: 
+}
+
+.item a.nav-link {
+	padding: 0.25rem 0.5rem !important;
+}
+
+.subs-menu {
+	display: none;
+	list-style: none;
+	padding-left: 0px;
+}
+
+
+.nav-item.active .subs-menu,
+.nav-item:hover .subs-menu {
+	display: block
+}
+
+
+.sub-item a {
+	display: block;
+	background: white !important;
+	color: black !important;
+}
+
+.sub-item.active a,
+.sub-item:hover a {
+	background: purple !important;
+	color: white !important;
+}
+.active-page {
+	background: purple !important;
 }

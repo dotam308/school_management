@@ -1,181 +1,140 @@
+<?php
+session_start();
+ob_start();
+require_once 'function/functions.php';?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <title>Quản lí điểm</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <!-- Material Kit CSS -->
-  <link rel="stylesheet" type="text/css" href="assets/css/material-dashboard.css" />
-  <link href="assets/css/styleQueryForm.css" rel="stylesheet" type="text/css"/>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Quản lí điểm</title>
+    <?php
+    require_once "includes/headContents.php";
+    ?>
 </head>
 
 <body>
-	<?php 
-	
-	   require_once 'functions.php';
-	   
-	?>
-  <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white">
-      <div class="logo">
-        <a href="index.php" class="simple-text logo-normal">
-         Quản lí điểm
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-      	<form class="main-form" method="get">
-      		<ul class="nav">
-              	<li class="nav-item active  ">
-                <a class="nav-link" href="index.php">
-              	<i class="material-icons">dashboard</i>
-              	Dashboard
-                </a>
-              </li>
-              <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=person">
-                  <i class="material-icons">person</i>
-                  Xem điểm cá nhân
-                  </a>
-                </li>
-             <li class="nav-item active  ">
-                  <a class="nav-link" href="manageGrades.php?view=all">
-                  <i class="material-icons">circle</i>
-                  Xem điểm toàn trường
-                  </a>
-             </li>
-          	</ul>
-      	
-      	</form>
-            
-      </div>
-    </div>
+<div class="wrapper ">
+    <?php $active_menu = 'student';
+    $sub_active = 'score' ?>
+    <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">Dashboard</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="javascript:;">
-                  <i class="material-icons">notifications</i> Notifications
-                </a>
-              </li>
-              <!-- your navbar here -->
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End Navbar -->
-      <div class="content">
-        <div class="container-fluid">
-        	<?php 
-        	
-        	require_once 'configs.php';
-        	
-        	updateStudentOnGrade();
-        	$conn = new mysqli(SERVER_NAME, USER_NAME, PASSWORD, DATABASE);
-            mysqli_set_charset($conn,'utf8');
-            mysqli_query($conn, "SET NAMES 'utf8' COLLATE 'utf8mb4_unicode_ci';");
-        	if ($conn->connect_error) {
-        	    echo $conn->error;
-        	}
-        	echo "<form  method='post' action='#'>
-                                <table class='table' style='width:  100%;'>
-                                    <tr>
-                                        <th>Mã sinh viên</th>
-                                        <th>Họ tên</th>
-                                        <th>Lớp</th>
-                                        <th>Tên môn học</th>
-                                        <th>Điểm</th>
-                                        <th>Sửa điểm</th>
-                                    </tr>";
-        	
-        	
-        	    $sqlGetData = "SELECT * FROM `gradedata` WHERE 1";
-        	    
-        	    if ($res = $conn->query($sqlGetData)) {
-        	        $data = $res->fetch_all();
-        	        
-        	        for ($i = 0; $i < count($data); $i++) {
-        	            $id = $data[$i][0];
-        	            $name = $data[$i][1];
-        	            $class = $data[$i][2];
-        	            $courseName = $data[$i][3];
-        	            $grade = $data[$i][4];
-        	            
-        	            
-        	            $position = $courseName."_".$id;
-        	            echo "
-        	            <tr>
-        	            <td>$id</td>
-        	            <td>$name</td>
-        	            <td>$class</td>
-        	            <td>$courseName</td>
-        	            <td>$grade</td>
-        	            <td><input type='text' name='$position' style='width: 50px;'></td>
+        <div class="content">
+            <div class="container-fluid">
+                <?php
+
+                require_once 'connection.php';
+                updateStudentOnGrade();
+                global $conn;
+                if ($conn->connect_error) {
+                    echo $conn->error;
+                } ?>
+
+                <?php
+                if (isset($_GET['action'])) {
+                    $action = $_GET['action'];
+                    if ($action == 'edited') {
+                        echo "<div class='alert alert-success'>Sửa điểm thành công</div>";
+                    }
+                }
+                ?>
+                <form method='post' action='#'>
+                    <table class='table table-striped table-hover table-bordered' style='width:  100%;'>
+                        <tr class="row">
+                            <th class="col-sm-2">Mã sinh viên</th>
+                            <th class="col-sm-2">Họ tên</th>
+                            <th class="col-sm-2">Lớp</th>
+                            <th class="col-sm-2">Tên môn học</th>
+                            <th class="col-sm-2">Mã môn</th>
+                            <th class="col-sm-2">Số điểm</th>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-sm-2"><input type="text" name="studentId" placeholder="Mã sinh viên" class="form-control"
+                                                        value="<?= isset($_POST['studentId']) ? $_POST['studentId'] : '' ?>">
+                            </th>
+                            <th class="col-sm-2"><input type="text" name="studentName" placeholder="Họ tên" class="form-control"
+                                                        value="<?= isset($_POST['studentName']) ? $_POST['studentName'] : '' ?>">
+                            </th>
+                            <th class="col-sm-2"><input type="text" name="className" placeholder="Lớp" class="form-control"
+                                                        value="<?= isset($_POST['className']) ? $_POST['className'] : '' ?>">
+                            </th>
+                            <th class="col-sm-2"><input type="text" name="courseName" placeholder="Tên môn học" class="form-control"
+                                                        value="<?= isset($_POST['courseName']) ? $_POST['courseName'] : '' ?>">
+                            </th>
+                            <th class="col-sm-2"><input type="text" name="courseCode" placeholder="Mã môn" class="form-control"
+                                                        value="<?= isset($_POST['courseCode']) ? $_POST['courseCode'] : '' ?>">
+                            </th>
+                            <th class='col-sm-2'><input type="submit" class="btn btn-success"
+                                                        style="padding: 7px 10px; margin: 0px 11px" name="filter"
+                                                        value="Lọc"></th>
+                        </tr>
+
+
+                        <?php
+                        //check lai table
+                        if (isset($_POST['filter'])) {
+                            $res = filterScores();
+
+                        } else {
+                            $res = selectElementFrom('scores', "*", "1");
+                        }
+
+                        if ($res) {
+                            while ($data = $res->fetch_assoc()) {
+                                $selectStudent = selectElementFrom('students', "*", "id = '$data[studentId]'");
+                                $student = $selectStudent->fetch_assoc();
+                                $name = $student['fullName'];
+                                $classId = $student['classId'];
+
+                                $selectClass = selectElementFrom('classes', "*", "id = '$classId'");
+                                $class = $selectClass->fetch_assoc();
+
+                                $class = $class['className'];
+
+                                $selectCourse = selectElementFrom('courses', "*", "id = '$data[courseId]'");
+                                $course = $selectCourse->fetch_assoc();
+                                $courseName = $course['courseName'];
+
+                                $position = $course['id'] . "_" . "$data[studentId]";
+                                echo "
+        	            <tr class='row'>
+        	            <td class='col-sm-2'>$data[studentId]</td>
+        	            <td class='col-sm-2'>$name</td>
+        	            <td class='col-sm-2'>$class</td>
+        	            <td class='col-sm-2'>$courseName</td>
+        	            <td class='col-sm-2'>$course[courseCode]</td>
+        	            <td class='col-sm-2'><input type='text' name='$position' style='width: 50px;' value='$data[score]'></td>
         	            </tr>
         	            ";
-        	        }
-        	        
-        	        echo "</table>
-                     <button type='submit'>Ghi nhận</button>
+                            }
+
+                            echo "</table>
+                     <button type='submit' class='btn btn-primary' name='submit' value='submit'>Ghi nhận</button>
                      </form>";
-        	        
-        	    } else {
-        	        echo "error at GetData";
-        	    }
-        	    
-        	    if (count($_POST) != "") {
-        	        $updateData = $_POST;
-        	        foreach($updateData as $key=>$value) {
-        	            $courseID = getDetailData($key);
-        	            $sqlUpdate = "UPDATE `gradedata` SET `grade`=$value WHERE `courseName`='$courseID[0]' AND `id` = '$courseID[1]'";
-        	            if ($conn->query($sqlUpdate)) {
-        	                echo "<p>Update thành công, vui lòng tải lại trang</p>";
-        	                echo "<button onClick='window.location.reload();'>Refresh Page</button>"; 
-        	            } else {
-        	               // echo "erroe at Update";
-        	            }
-        	        }
-        	        
-        	    }
-        	    
-        	
-        	function getDetailData($data) {
-        	    
-        	    $info = explode("_", $data);
-        	    $id = $info[sizeof($info) - 1];
-        	    array_pop($info);
-        	    $courseName = implode(" ", $info);
-        	    
-        	    
-        	    $res = array();
-        	    $res[] = $courseName;
-        	    $res[] = $id;
-        	    return $res;
-        	}
-        	
-        	?>
-        	
+
+                        } else {
+                            echo "error at GetData";
+                        }
+
+                        if (count($_POST) != "" && isset($_POST['submit'])) {
+                            $updateData = $_POST;
+                            foreach ($updateData as $key => $value) {
+                                $courseID = getDetailData($key);
+                                $sqlUpdate = "UPDATE `scores` SET `score`=$value WHERE `courseId`='$courseID[0]' AND `studentId` = '$courseID[1]'";
+
+                                if ($conn->query($sqlUpdate)) {
+                                    header("location: queryOnSchoolGrade.php?action=edited");
+                                } else {
+                                }
+                            }
+
+                        }
+                        ?>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <?php
+    require_once "includes/footer.php";
+    ?>
+</div>
 </body>
 </html>
