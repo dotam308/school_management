@@ -9,8 +9,15 @@ if (isset($_GET["type"])) {
     $type = $_GET["type"];
     $sqlGetTeachers = 'SELECT * FROM `teachers` WHERE 1';
     $teachersData = $conn->query($sqlGetTeachers);
-    $teachers = $teachersData->fetch_all();
-
+    $teachers = array();
+    while ($teacher = $teachersData->fetch_assoc()) {
+         $teachers[] = [
+             'id'=>$teacher['id'],
+             'fullName' => $teacher['fullName'],
+             'unit'=> $teacher['unit'],
+             'contactNumber'=>$teacher['contactNumber']
+         ];
+    }
     if ($type == 'view') {
         $classData = selectElementFrom("$myTable", "*", "1 ORDER BY id DESC");
         $classList = array();
@@ -23,10 +30,11 @@ if (isset($_GET["type"])) {
                 "teacherId" => "$class[teacherId]"
             ];
         }
-        $view_file_name = "module/user/view.php";
+        $view_file_name = "module/teacher/view.php";
     }
     if ($type == 'add') {
         $addStatus = -1;
+        $teachers = $conn->query($sqlGetTeachers)->fetch_all();
         $selectTeachers = "
         <select name='selectTeacher' class='form-control'>
             <option value='' selected>----select----</option>";
