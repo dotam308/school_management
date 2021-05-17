@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @param $value
+ */
+function dd($value) {
+    echo '<pre>';
+    print_r($value);
+    echo '</pre>';
+    die("");
+}
 
 function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine="")
 {

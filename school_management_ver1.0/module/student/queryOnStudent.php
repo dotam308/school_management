@@ -1,6 +1,9 @@
 <?php
 require_once './connection.php';
 require_once './function/functions.php';
+require_once './models/Student.php';
+
+$studentModel = new Student();
 
 const STUDENT_TABLE = 'students';
 const LIMIT = 10;
