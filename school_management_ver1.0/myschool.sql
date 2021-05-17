@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2021 at 04:55 AM
+-- Generation Time: May 17, 2021 at 09:05 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.14
 
@@ -46,8 +46,8 @@ INSERT INTO `classes` (`id`, `className`, `maxStudent`, `numOfStudents`, `teache
 (110, 'K64-CK', 50, 0, 13),
 (112, 'K65-CB', 50, 0, 16),
 (116, 'K64-CN', 50, 0, 10),
-(123, 'K65-CM', 45, 0, 14),
-(127, 'K65-CT', 46, 0, 15);
+(127, 'K65-CT', 46, 0, 15),
+(170, 'K66-CL', 50, 0, 27);
 
 -- --------------------------------------------------------
 
@@ -96,8 +96,6 @@ CREATE TABLE `registers` (
 --
 
 INSERT INTO `registers` (`id`, `courseId`, `studentId`) VALUES
-(266, 65, 19020482),
-(267, 66, 19020482),
 (268, 7, 19020480),
 (269, 66, 19020480),
 (270, 7, 19020475),
@@ -131,8 +129,6 @@ INSERT INTO `registers` (`id`, `courseId`, `studentId`) VALUES
 (328, 7, 19020488),
 (329, 9, 19020488),
 (332, 66, 19020488),
-(333, 7, 19020482),
-(334, 9, 19020482),
 (335, 7, 19020441),
 (336, 9, 19020441),
 (337, 65, 19020441),
@@ -162,8 +158,6 @@ CREATE TABLE `scores` (
 --
 
 INSERT INTO `scores` (`id`, `score`, `courseId`, `studentId`) VALUES
-(6890, '9.0', 65, 19020482),
-(6891, '8.0', 66, 19020482),
 (6892, '8.0', 7, 19020480),
 (6893, '9.0', 66, 19020480),
 (6894, '0.0', 7, 19020475),
@@ -197,8 +191,6 @@ INSERT INTO `scores` (`id`, `score`, `courseId`, `studentId`) VALUES
 (6922, '0.0', 7, 19020488),
 (6923, '0.0', 9, 19020488),
 (6924, '0.0', 66, 19020488),
-(6925, '0.0', 7, 19020482),
-(6926, '0.0', 9, 19020482),
 (6927, '10.0', 7, 19020441),
 (6928, '10.0', 9, 19020441),
 (6929, '9.0', 65, 19020441),
@@ -229,7 +221,7 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `fullName`, `classId`, `contactNumber`, `dob`) VALUES
-(19020441, 'Đỗ Đức Tâm', 1, '012345678', '2001-08-07'),
+(19020441, 'Đỗ Đức Tâm', 1, '012345678', '2001-08-12'),
 (19020445, 'Nguyễn Bá', 1, '0123456789', '2021-04-01'),
 (19020446, 'Nguyễn Bá Vinh', 1, '0343543199', '2021-04-01'),
 (19020447, 'Nguyễn Bá Vinh', 1, '0123456789', '2021-04-01'),
@@ -250,12 +242,10 @@ INSERT INTO `students` (`id`, `fullName`, `classId`, `contactNumber`, `dob`) VAL
 (19020474, 'Nguyễn Văn B', 116, '0798689', '2021-05-09'),
 (19020475, 'Lò Thị Sáo', 116, '01288121', '2021-05-13'),
 (19020476, 'Đinh Thị Hinh', 116, '058584585', '2001-05-12'),
-(19020477, 'Trần Thị Hạnh', 123, '019291211', '2021-05-12'),
 (19020478, 'Nguyễn Thị Hợp', 116, '091299192', '2021-05-12'),
 (19020479, 'Trần Văn Hiên', 110, '091828121', '2001-05-21'),
 (19020480, 'Nguyễn Bá Thành Bắc', 1, '019291212', '2001-05-13'),
 (19020481, 'Lê Văn Sáng', 1, '0192912111', '2001-05-06'),
-(19020482, 'Dương Đình Nghệ', 123, '091821921', '2001-05-21'),
 (19020483, 'ABC', 116, '097878787', '2021-05-28'),
 (19020488, 'Trần Quốc Vượng', 1, '0718292111', '2001-04-27'),
 (19020492, 'Tô Viết Ninh', 110, '01299192', '2001-05-09'),
@@ -333,8 +323,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `title`, `username`, `pass`, `representName`, `img-personal`) VALUES
-(1, 'admin', 'admin', '1234', 'Admin', NULL),
-(2, 'student', '19020441', '12345678', 'Đỗ Đức Tâm', 'images/Jellyfish.jpg');
+(19, 'admin', 'admin', '81dc9bdb52d04dc20036dbd8313ed055', '', NULL),
+(21, 'admin', 'admin1', '81dc9bdb52d04dc20036dbd8313ed055', '1234', NULL),
+(22, 'student', '19020441', '827ccb0eea8a706c4c34a16891f84e7b', 'Đỗ Đức Tâm', 'images/Penguins.jpg'),
+(25, 'admin', 'admin2', '81dc9bdb52d04dc20036dbd8313ed055', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -401,7 +393,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -437,7 +429,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
