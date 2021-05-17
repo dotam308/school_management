@@ -67,12 +67,14 @@
 					</span>
 
                 <div class="wrap-input100 validate-input" data-validate = "Enter username">
-                    <input class="input100" type="text" name="username" placeholder="Username">
+                    <input class="input100" type="text" name="username" placeholder="Username"
+                           value="<?=isset($_POST['username']) ? $_POST['username'] : ""?>">
                     <span class="focus-input100" data-placeholder="&#xf207;"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
-                    <input class="input100" type="password" name="pass" placeholder="Password">
+                    <input class="input100" type="password" name="pass" placeholder="Password"
+                           value="<?=isset($_POST['pass']) ? $_POST['pass'] : ""?>">
                     <span class="focus-input100" data-placeholder="&#xf191;"></span>
                 </div>
 
