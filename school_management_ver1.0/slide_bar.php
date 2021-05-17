@@ -1,10 +1,3 @@
-<?php
-
-if (isset($_POST['logout'])) {
-    $_SESSION['permission'] = false;
-    header("location: login/index.php");
-}
-?>
 <?php $active_menu = isset($active_menu) ? $active_menu : 'index'; ?>
 <?php $sub_active = isset($sub_active) ? $sub_active : null; ?>
 <?php
