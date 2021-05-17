@@ -3,7 +3,7 @@ require_once './connection.php';
 require_once './function/functions.php';
 
 const STUDENT_TABLE = 'students';
-
+const LIMIT = 10;
 
 if (isset($_GET['type'])) {
     $type = $_GET['type'];
@@ -14,40 +14,17 @@ if (isset($_GET['type'])) {
             $result = filterStudents();
         } else if (isset($_GET['order'])) {
             $method = $_GET['order'];
-            switch ($method) {
-                case "studentIdOrderUp":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` ASC");
-                    break;
-                case "studentIdOrderDown":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC");
-                    break;
-                case "studentNameOrderUp":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` ASC");
-                    break;
-                case "studentNameOrderDown":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` DESC");
-                    break;
-                case "classOrderUp":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` ASC");
-                    break;
-                case "classOrderDown":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` DESC");
-                    break;
-                case "contactNumOrderUp":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` ASC");
-                    break;
-                case "contactNumOrderDown":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` DESC");
-                    break;
-                case "dobOrderUp":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` ASC");
-                    break;
-                case "dobOrderDown":
-                    $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` DESC");
-                    break;
-                default:
-                    break;
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+                $start = ($page-1)*LIMIT;
+                $limit = LIMIT;
+                $result = selectStudentWithCondition($method, "LIMIT $start, $limit");
             }
+        } else if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $start = ($page-1)*LIMIT;
+            $limit = LIMIT;
+            $result = selectStudentWithCondition("studentIdOrderDown", "LIMIT $start, $limit");
         } else {
             $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC");
         }
@@ -130,4 +107,43 @@ function updateStudent($id, $fullName, $phone, $dob, $classId)
     $sqlUpdate = "UPDATE `$myTable` SET `fullname`='$fullName',`classId`='$classId',`contactNumber`='$phone',`dob`='$dob' WHERE id='$id'";
 
     return $conn->query($sqlUpdate);
+}
+
+function selectStudentWithCondition($method, $limit="") {
+    $myTable = 'students';
+    switch ($method) {
+        case "studentIdOrderUp":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` ASC $limit");
+            break;
+        case "studentIdOrderDown":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`id` DESC $limit");
+            break;
+        case "studentNameOrderUp":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` ASC $limit");
+            break;
+        case "studentNameOrderDown":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`fullName` DESC $limit");
+            break;
+        case "classOrderUp":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` ASC $limit");
+            break;
+        case "classOrderDown":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`classId` DESC $limit");
+            break;
+        case "contactNumOrderUp":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` ASC $limit");
+            break;
+        case "contactNumOrderDown":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`contactNumber` DESC $limit");
+            break;
+        case "dobOrderUp":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` ASC $limit");
+            break;
+        case "dobOrderDown":
+            $result = selectElementFrom("$myTable", "*", "1 ORDER BY `students`.`dob` DESC $limit");
+            break;
+        default:
+            break;
+    }
+    return $result;
 }

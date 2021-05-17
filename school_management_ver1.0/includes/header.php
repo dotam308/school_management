@@ -8,18 +8,18 @@
                 if (isset($_SESSION['username'])) {
                     $selectUser = selectElementFrom("users", "*", "username = '$_SESSION[username]'");
                     $user = $selectUser->fetch_assoc();
-                    if (isset($user['img-personal'])) {
-                        $srcImg = $user['img-personal'];
-                    } else {
-                        $srcImg = "";
-                    }
                     if (isset($user['representName'])){
                         echo "$user[representName]!";
-                        echo "<img src='$srcImg' id='img-user'/>";
                     } else {
                         echo "$user[username]!";
                     }
 
+                    if (isset($user['img-personal'])) {
+                        $srcImg = $user['img-personal'];
+                        echo "<img src='$srcImg' id='img-user'/>";
+                    } else {
+                        $srcImg = "";
+                    }
                 } else {
                     $_SESSION['permission'] = false;
                 }

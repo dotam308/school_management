@@ -79,22 +79,22 @@ if (count($students) <= 0) {
             </tr>
             <?php
 
-         if (isset($_GET['page'])) {
-             $page = $_GET['page'];
-             foreach ($students as $row) {
-                 if ($row['index'] >= ($page - 1)*10 && $row['index'] <= $page*10 - 1) {
-                     echo "<tr class='row'>";
-                     $query = getActionForm('manageStudent.php', $row['id'], true, true, "", true, false, $row['id']);
-                     echo "<td class='col-sm-2'>$row[id]</td>
-                        <td class='col-sm-2'>$row[fullName]</td>
-                        <td class='col-sm-2'>$row[className]</td>
-                        <td class='col-sm-2'>$row[contactNumber]</td>
-                        <td class='col-sm-2'>$row[dob]</td>
-                        <td class='col-sm-2'>$query</td>
-                        </tr>";
-                 }
-             }
-         } else {
+//         if (isset($_GET['page'])) {
+//             $page = $_GET['page'];
+//             foreach ($students as $row) {
+//                 if ($row['index'] >= ($page - 1)*10 && $row['index'] <= $page*10 - 1) {
+//                     echo "<tr class='row'>";
+//                     $query = getActionForm('manageStudent.php', $row['id'], true, true, "", true, false, $row['id']);
+//                     echo "<td class='col-sm-2'>$row[id]</td>
+//                        <td class='col-sm-2'>$row[fullName]</td>
+//                        <td class='col-sm-2'>$row[className]</td>
+//                        <td class='col-sm-2'>$row[contactNumber]</td>
+//                       <td class='col-sm-2'>$row[dob]</td>
+            ////                        <td class='col-sm-2'>$query</td>
+            ////                        </tr>";
+            ////                 }
+            ////             }
+            ////         } else {
              foreach ($students as $row) {
                  echo "<tr class='row'>";
                  $query = getActionForm('manageStudent.php', $row['id'], true, true, "", true, false, $row['id']);
@@ -106,7 +106,7 @@ if (count($students) <= 0) {
                         <td class='col-sm-2'>$query</td>
                         </tr>";
              }
-         }
+//         }
 
             ?>
         </table>
@@ -122,7 +122,8 @@ if (count($students) <= 0) {
         }
     </style>
 <?php
-    $total_pages = ceil(count($students) / 10);
+    $selectStudents = selectElementFrom("students", "*", "1");
+    $total_pages = ceil($selectStudents->num_rows / 10);
     $pagLink = "<ul class='pagination'>";
         for ($i=1; $i<=$total_pages; $i++) {
             $pagLink .= "<li class='page-item'>";

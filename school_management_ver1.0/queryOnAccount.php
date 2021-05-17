@@ -1,32 +1,32 @@
 <?php
-    ob_start();
-    session_start();
-    require_once "module/class/queryOnClass.php";
+session_start();
+require_once "module/user/queryOnUserAccount.php";
+require_once "connection.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <title>Quản lí lớp học</title>
-  <!-- Required meta tags -->
+    <title>Thêm tài khoản</title>
+    <!-- Required meta tags -->
     <?php
-        require_once "includes/headContents.php"?>
+    require_once "includes/headContents.php"?>
 </head>
 
 <body>
-  <div class="wrapper ">
-      <?php $active_menu = 'class'; ?>
-      <?php require_once 'slide_bar.php' ?>
+<div class="wrapper ">
+    <?php $active_menu = 'account'; ?>
+    <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
-      <?php require_once "includes/header.php"?>
-      <div class="content">
-        <div class="container-fluid">
-        	<?php require_once $view_file_name;?>
+        <?php require_once "includes/header.php"?>
+        <div class="content">
+            <div class="container-fluid">
+                <?php require_once $view_file_name;?>
+            </div>
         </div>
-      </div>
-    <?php require_once "includes/footer.php"?>
+        <?php require_once "includes/footer.php"?>
     </div>
-  </div>
+</div>
 </body>
 <script>
     function confirmDelete(url) {

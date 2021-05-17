@@ -1,88 +1,94 @@
 <?php
-    require_once './connection.php';
-    require_once 'function/functions.php';
-    $type = "";
 
-    global $conn;
-    if (isset($_GET["type"])) {
-        $type = $_GET["type"];
-        $myTable = "teachers";
-        if ($type == 'view') {
+require_once './connection.php';
+require_once 'function/functions.php';
+global $conn;
 
-            $selectTeacher = selectElementFrom("teachers", "*", "1 ORDER BY id DESC");
-            $teachers = array();
-            while ($row = $selectTeacher->fetch_assoc()) {
-                $teachers[] = [
-                    "id" => $row['id'],
-                    "fullName" => $row['fullName'],
-                    "unit"=> $row['unit'],
-                    "contactNumber"=> $row['contactNumber']
-                ];
-            }
-            $view_file_name =  'module/teacher/view.php';
+$myTable = "classes";
+if (isset($_GET["type"])) {
+    $type = $_GET["type"];
+    $sqlGetTeachers = 'SELECT * FROM `teachers` WHERE 1';
+    $teachersData = $conn->query($sqlGetTeachers);
+    $teachers = $teachersData->fetch_all();
+
+    if ($type == 'view') {
+        $classData = selectElementFrom("$myTable", "*", "1 ORDER BY id DESC");
+        $classList = array();
+        while ($class = $classData->fetch_assoc()) {
+            $classList[] = [
+                "id" => "$class[id]",
+                "className" => "$class[className]",
+                "maxStudent" => "$class[maxStudent]",
+                "numOfStudents" => "$class[numOfStudents]",
+                "teacherId" => "$class[teacherId]"
+            ];
         }
-        if ($type == 'add') {
-            $addStatus = -1;
-            if (isset($_POST['fullName'])) {
-                $addStatus = addTeacher( $_POST['fullName'], $_POST['unit'], $_POST['contactNumber']);
-                if ($_POST['button'] == 'create') {
-                    header("location: manageTeacher.php?type=view&action=added");
-                }
+        $view_file_name = "module/user/view.php";
+    }
+    if ($type == 'add') {
+        $addStatus = -1;
+        $selectTeachers = "
+        <select name='selectTeacher' class='form-control'>
+            <option value='' selected>----select----</option>";
+            for ($i = 0; $i < count($teachers); $i++) {
+                $fullName = $teachers[$i][1];
+                $id = $teachers[$i][0];
+                $showTeacher = $fullName . "-" . $id;
+                $selectTeachers .= "<option  value='$id'>$showTeacher</option>";
             }
-            ?> alert( $addStatus); <?php
-            if ($addStatus !== -1) {
-                if ($addStatus) {
-                    echo "<div class='alert alert-success'>Added successfully</div>";
-                } else {
-                    echo "<div class='alert alert-warning'>Added unsuccessfully</div> ";
-                }
-            }
-            $view_file_name = 'module/teacher/add.php';
-        }
+        $selectTeachers .= '</select>';
+        $view_file_name = "module/class/add.php";
 
-        if (isset($_GET['for'])) {
-            if ($type != 'view') {
-                $id = $_GET['for'];
-                $teacher = selectElementFrom('teachers', "*", "id='$id'")->fetch_assoc();
-                if ($type == 'edit') {
-                    if (isset($_POST['fullName'])) {
-                        editTeacher($id, $_POST['fullName'], $_POST['unit'], $_POST['contactNumber']);
-                        header("location: manageTeacher.php?type=view&action=edited");
-                    }
-                    $view_file_name = 'module/teacher/edit.php';
-                } else if ($type == 'delete') {
-                    if (deleteTeacher($id)) {
-                        header("location: manageTeacher.php?type=view&action=deleted");
-                    } else {
-                        echo $conn->error . " error at delete";
-                    }
-                }
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $error = array();
+            if (empty($_POST['selectTeacher'])) {
+                $error['selectTeacher'] = "Bạn cần chọn giáo viên";
             } else {
-                echo $conn->error . " error at selectTeachers";
+                $selected = $_POST['selectTeacher'];
+            }
+            if (empty($error)) {
+            }
+        }
+
+        if (isset($_POST['className'])) {
+            $sqlInsert = "INSERT INTO `classes`(`id`, `className`, `maxStudent`, `numOfStudents`, `teacherId`)
+VALUES (NULL,'$_POST[className]','$_POST[maxStudent]','0','$_POST[selectTeacher]')";
+
+            if ($addStatus = $conn->query($sqlInsert)) {
+                if (isset($_POST['create'])) {
+                    header("location: manageClass.php?type=view&action=create");
+                } else if (isset($_POST['continue'])) {
+                    header("location: manageClass.php?type=add&action=create");
+                }
+            } else if (isset($_POST['back'])) {
+                header("location: manageClass.php?type=view");
             }
         }
     }
-    function addTeacher($name, $unit, $contactNumber) {
-        global $conn;
-        $myTable = 'teachers';
-        $sqlInsert = "INSERT INTO `$myTable` (`id`, `fullname`, `unit`, `contactNumber`)
-        VALUES (null, '$name', '$unit', '$contactNumber')";
-        $result = $conn->query($sqlInsert);
-        
-        return $result ? true : false;
+
+    if (isset($_GET['type']) && isset($_GET['for'])) {
+        $t = $_GET['type'];
+        if ($t != 'view') {
+            $id = $_GET['for'];
+
+            $sqlSelectTeacher = "SELECT * FROM `$myTable` WHERE id=$id";
+
+            $res = $conn->query($sqlSelectTeacher);
+            $oldData = $res->fetch_assoc();
+            if ($t == 'edit') {
+                $view_file_name = "module/class/edit.php";
+            } else if ($t == 'delete') {
+
+                $sqlDelete = "DELETE FROM `$myTable` WHERE id=$oldData[id]";
+
+                if ($conn->query($sqlDelete)) {
+                    header("location: manageClass.php?type=view&action=deleted");
+                } else {
+                    header("location: manageClass.php?type=view&action=deletedError");
+                }
+            }
+        } else {
+            echo $conn->error . " error at selectCourse";
+        }
     }
-    function editTeacher($id, $name, $unit, $contactNumber) {
-        global $conn;
-        $myTable = 'teachers';
-        $sqlUpdate = "UPDATE `$myTable` SET `fullName`='$name',`unit`='$unit',`contactNumber`='$contactNumber'
-        WHERE id='$id'";
-        $query = $conn->query($sqlUpdate);
-        
-        return $query ? true : false;
-    }
-    function deleteTeacher($id) {
-        global $conn;
-        $sqlDelete = "DELETE FROM `teachers` WHERE id='$id'";
-        $query = $conn->query($sqlDelete);
-        return ($query) ? true : false;
-    }
+}
