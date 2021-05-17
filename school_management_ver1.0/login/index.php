@@ -7,8 +7,11 @@
     require_once "../connection.php";
     if (isset($_POST['login'])) {
         $username = $_POST['username'];
-        $password = $_POST['pass'];
+        $password = md5($_POST['pass']);
+//        $password = $_POST['pass'];
         $selectUser = selectElementFrom('users', "*", "username='$username' AND pass='$password'");
+
+
         if ($selectUser->num_rows == 1) {
             $_SESSION['username'] = $username;
             $_SESSION['pass'] = $password;

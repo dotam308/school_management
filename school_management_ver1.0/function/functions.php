@@ -563,5 +563,57 @@ function insertElementFrom($table, $dataArray) {
     return $result;
 }
 
+function uploadImage($usernameORId, $nameInput) {
+    global $conn;
+    // File name
+    $filename = $_FILES["$nameInput"]['name'];
+    // Valid extension
+    $valid_ext = array('png','jpeg','jpg');
+
+    // Location
+    $location = "images/".$filename;
+    $thumbnail_location = "images/thumbnail/".$filename;
+
+    // file extension
+    $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+    $file_extension = strtolower($file_extension);
+
+    // Check extension
+    if(in_array($file_extension,$valid_ext)){
+
+        // Upload file
+        if(move_uploaded_file($_FILES[$nameInput]['tmp_name'],$location)){
+
+            // Compress Image
+            compressImage($_FILES[$nameInput]['type'],$location,$thumbnail_location,60);
+
+            echo "<script>alert('Successfully Uploaded')</script>";
+
+            $sqlInsertImageToDB = "UPDATE `users` SET `img-personal` = '$location' 
+WHERE `users`.`username` = '$usernameORId' OR `users`.`id` = '$usernameORId'";
+
+            if($conn->query($sqlInsertImageToDB)) {
+                return $location;
+            }
+        }
+
+    }
+}
+function compressImage($type,$source, $destination, $quality) {
+
+    $info = getimagesize($source);
+
+    if ($type == 'image/jpeg')
+        $image = imagecreatefromjpeg($source);
+
+    elseif ($type == 'image/gif')
+        $image = imagecreatefromgif($source);
+
+    elseif ($type == 'image/png')
+        $image = imagecreatefrompng($source);
+
+    imagejpeg($image, $destination, $quality);
+
+}
 
 ?>

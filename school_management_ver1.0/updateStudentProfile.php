@@ -4,63 +4,15 @@ session_start();
 require_once 'function/functions.php';
 require_once './connection.php';
 if (isset($_POST['upload'])) {
-    $uploadStatus = uploadImage();
+    $uploadStatus = uploadImage($_GET['for'], 'imagefiles');
 }
-function uploadImage() {
-    global $conn;
-    // File name
-    $filename = $_FILES['imagefiles']['name'];
-    // Valid extension
-    $valid_ext = array('png','jpeg','jpg');
 
-    // Location
-    $location = "images/".$filename;
-    $thumbnail_location = "images/thumbnail/".$filename;
-
-    // file extension
-    $file_extension = pathinfo($location, PATHINFO_EXTENSION);
-    $file_extension = strtolower($file_extension);
-
-    // Check extension
-    if(in_array($file_extension,$valid_ext)){
-
-        // Upload file
-        if(move_uploaded_file($_FILES['imagefiles']['tmp_name'],$location)){
-
-            // Compress Image
-            compressImage($_FILES['imagefiles']['type'],$location,$thumbnail_location,60);
-
-            echo "<script>alert('Successfully Uploaded')</script>";
-
-            $sqlInsertImageToDB = "UPDATE `users` SET `img-personal` = '$location' WHERE `users`.`username` = '$_GET[for]'";
-
-            if($conn->query($sqlInsertImageToDB)) {
-            return $location;
-            }
-        }
-
-    }
-}
-function compressImage($type,$source, $destination, $quality) {
-
-    $info = getimagesize($source);
-
-    if ($type == 'image/jpeg')
-        $image = imagecreatefromjpeg($source);
-
-    elseif ($type == 'image/gif')
-        $image = imagecreatefromgif($source);
-
-    elseif ($type == 'image/png')
-        $image = imagecreatefrompng($source);
-
-    imagejpeg($image, $destination, $quality);
-
-}
 if (isset($_POST['update'])) {
     global $conn;
+
     $sqlUpdate = "UPDATE `students` SET `contactNumber` = '$_POST[contactNumber]', `dob` = '$_POST[dob]' WHERE `students`.`id` = '$_GET[for]'";
-    if ($conn->query($sqlUpdate)) {
+    $sqlUpdateRepresentName = "UPDATE users SET representName = '$_POST[representName]' WHERE username='$_SESSION[username]'";
+    if ($conn->query($sqlUpdate) && $conn->query($sqlUpdateRepresentName)) {
         echo "<script>alert('Cập nhật thành công')</script>";
     }
 
@@ -70,7 +22,7 @@ if (isset($_POST['update'])) {
 <html lang="en">
 
 <head>
-    <title>Quản lí điểm</title>
+    <title>Cập nhật hồ sơ</title>
     <?php
     require_once "includes/headContents.php";
     ?>
@@ -90,13 +42,13 @@ if (isset($_POST['update'])) {
 
 require_once 'function/functions.php';
 $active_menu = 'profile';
+$sub_active = 'viewProfile';
 require_once 'slide_bar.php';
 
 
 ?>
 <div class="wrapper ">
 
-    <?php $active_menu = 'score'; ?>
     <?php require_once 'slide_bar.php' ?>
 
     <div class="main-panel">
@@ -106,7 +58,7 @@ require_once 'slide_bar.php';
         <div class="content">
             <div class="container-fluid">
 
-                <p>Thông tin cá nhân</p>
+                <h3>Thông tin cá nhân</h3>
                 <div class="row">
                     <div class="col-sm-3">
                         <form method="post" enctype="multipart/form-data">
@@ -135,6 +87,10 @@ require_once 'slide_bar.php';
                                     $contactNumber = $student['contactNumber'];
 
                                     $selectedClass = createSelectClasses($class['id'], true);
+
+                                    $selectUser = selectElementFrom("users", "*", "username='$_SESSION[username]'");
+                                    $user = $selectUser->fetch_assoc();
+                                    $representName = $user['representName'];
                                 ?>
 
                                 <tr><th>Mã sinh viên</th>
@@ -144,13 +100,17 @@ require_once 'slide_bar.php';
                                     <td><input type="text" value="<?=$fullName?>" class="form-control" name="fullName" disabled></td>
                                 </tr>
                                 <tr><th>Ngày sinh</th>
-                                    <td><input type="text" value="<?=$dob?>" class="form-control" name="dob"></td>
+                                    <td><input type="date" value="<?=$dob?>" class="form-control" name="dob"></td>
                                 </tr>
                                 <tr><th>Lớp</th>
                                     <td><?=$selectedClass?></td>
                                 </tr>
                                 <tr><th>Số điện thoại</th>
                                     <td><input type="text" value="<?=$contactNumber?>" class="form-control" name="contactNumber"></td>
+                                </tr>
+
+                                <tr><th>Tên đại diện</th>
+                                    <td><input type="text" value="<?=$representName?>" class="form-control" name="representName"></td>
                                 </tr>
                             </table>
                             <button type="submit" class="btn btn-primary" name="update">Cập nhật</button>
