@@ -7,16 +7,22 @@
     require_once "../connection.php";
     if (isset($_POST['login'])) {
         $username = $_POST['username'];
-        $password = md5($_POST['pass']);
-//        $password = $_POST['pass'];
-        $selectUser = selectElementFrom('users', "*", "username='$username' AND pass='$password'");
-
-
+        $password = $_POST['pass'];
+        $selectUser = selectElementFrom('users', '*', "username='$username'");
+        $user = $selectUser->fetch_assoc();
         if ($selectUser->num_rows == 1) {
-            $_SESSION['username'] = $username;
-            $_SESSION['pass'] = $password;
-            $_SESSION['permission'] = true;
-            header("location: ../process.php");
+            $salt = $user['salt'];
+            $encodePass = md5($password.$salt);
+
+            if ($encodePass == $user['pass']) {
+                $_SESSION['username'] = $username;
+                $_SESSION['pass'] = $password;
+                $_SESSION['permission'] = true;
+                header("location: ../process.php");
+            } else {
+                echo "<script>alert('Mật khẩu sai')</script>";
+                $_SESSION['permission'] = false;
+            }
         } else {
             echo "<script>alert('Tên đăng nhập hoặc mật khẩu sai')</script>";
             $_SESSION['permission'] = false;
@@ -73,8 +79,7 @@
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
-                    <input class="input100" type="password" name="pass" placeholder="Password"
-                           value="<?=isset($_POST['pass']) ? $_POST['pass'] : ""?>">
+                    <input class="input100" type="password" name="pass" placeholder="Password">
                     <span class="focus-input100" data-placeholder="&#xf191;"></span>
                 </div>
 

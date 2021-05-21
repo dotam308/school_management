@@ -30,7 +30,7 @@ if (count($courseList) <= 0) {
         foreach ($courseList as $row) {
 
             echo "<tr>
-                <td><input type='checkbox' name='$row[courseCode]' id='new_$row[courseClassCode]' value='$row[courseClassCode]'/></td>
+                <td><input type='checkbox' name='$row[courseCode]' id='new_$row[courseClassCode]' value='$row[courseId]'/></td>
                 <td>$row[courseName]</td>
                 <td>$row[courseCode]</td>
                 <td>$row[courseClassCode]</td>
@@ -42,17 +42,6 @@ if (count($courseList) <= 0) {
             </tr>";
         }
         global $idStudent;
-        }
-        if (count($_POST) > 0) {
-            $courseExits = checkExist($_POST);
-            if (isset($courseExits) && count($courseExits) > 0) {
-                foreach ($courseExits as $row) {
-
-                    $selectCourse = selectElementFrom("courses", "*", "courseCode = '$row'");
-                    $course = $selectCourse->fetch_assoc();
-                    echo "<div class='alert alert-danger'>Bạn đã đăng ký khoá học $course[courseName] - $course[courseClassCode] </div>";
-                }
-            }
         }
         ?>
 
@@ -99,7 +88,7 @@ if (count($courseList) <= 0) {
 <?php
 echo "
         </table>
-        <button type='submit' class='btn btn-primary' name='btnSubmit' value='submit'/>Xác nhận</button>
+        <button type='submit' class='btn btn-primary' name='btnSubmit'/>Xác nhận</button>
         <a class='btn btn-dark' href='queryOnRegister.php?type=view&for=$id'>Quay về</a>
     </form>";
 

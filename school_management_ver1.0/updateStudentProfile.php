@@ -26,6 +26,11 @@ if (isset($_POST['update'])) {
     <?php
     require_once "includes/headContents.php";
     ?>
+    <script>
+        $(document).ready(function() {
+            $("#inputImg").html("Chọn ảnh");
+        })
+    </script>
 </head>
 <style>
     #img-user, #inputImg {
@@ -66,7 +71,7 @@ require_once 'slide_bar.php';
                                 <div class="img-container">
                                     Cập nhật ảnh đại diện<img src="<?= $srcImg?>" id='img-user'>
                                     <input type='file' name='imagefiles' id="inputImg">
-                                    <input type='submit' value='Upload' name='upload'>
+                                    <input type='submit' value='Upload' name='upload' class="btn btn-dark">
                                 </div>
                             </div>
                         </form>

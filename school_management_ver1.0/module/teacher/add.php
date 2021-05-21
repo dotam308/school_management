@@ -1,3 +1,10 @@
+<?php
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'created') {
+        echo "<div class='alert alert-success'>Thêm thành công</div>";
+    }
+}
+?>
 <h3>Thêm giáo viên</h3>
 <form class="form-horizontal" action='' method='post'>
   <div class="form-group row">
@@ -27,7 +34,8 @@
     </div>
   </div>
   
-  <button class='btn btn-primary' name='button' type='submit' value='create'>Tạo</button>
-  <button class='btn btn-info' name='button' type='submit' value='continue'>Tạo và tiếp tục</button>
+  <button class='btn btn-primary' name='create' type='submit' value='create'>Tạo</button>
+  <button class='btn btn-info' name='continue' type='submit' value='continue'>Tạo và tiếp tục</button>
 </form>
+    <a class="btn btn-dark" href="manageTeacher.php?type=view&page=1&order=id&direction=DESC">Back</a>
 

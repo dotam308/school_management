@@ -17,7 +17,7 @@ require_once "module/teacher/queryOnTeacher.php";
     	<div class="content">
 				<div class="container-fluid">
         	        <?php
-                        if (isset($view_file_name)) require_once "$view_file_name";
+                        require_once "$view_file_name";
                         ?>
         		</div>
 			</div>
@@ -35,7 +35,7 @@ require_once "module/teacher/queryOnTeacher.php";
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Xác nhận!',
-            confirmCancelText: 'Thoát!'
+            confirmCancelText: 'Huỷ!'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url;

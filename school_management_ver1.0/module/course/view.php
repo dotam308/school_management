@@ -67,3 +67,41 @@ echo "0 results";
     </table>
 </form>";
 }
+
+
+$total_pages = ceil($selectedCourses->get()->num_rows / LIMIT);
+
+//$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
+$pagLink = "<ul class='pagination'>";
+$page = isset($_GET['page']) ? $_GET['page'] : 0;
+if ($page > 1) {
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='manageCourse.php?type=view&page=" . ($page - 1) . "'>" . 'prev' . "
+        </a>
+    </li>";
+}
+for ($i = 1; $i <= $total_pages; $i++) {
+    $pagLink .= "<li class='page-item'>";
+
+    $toLink = "manageCourse.php?type=view";
+
+    if (isset($_GET['page']) && $_GET['page'] == $i) {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link active' href='$toLink'>" . $i . "</a>";
+
+    } else {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link' href='$toLink'>" . $i . "</a>";
+    }
+    $pagLink .= "</li>";
+}
+if ($page < $total_pages) {
+
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='manageCourse.php?type=view&page=" . ($page + 1) . "'>" . 'next' . "
+        </a>
+    </li>";
+}
+echo $pagLink . "</ul>";

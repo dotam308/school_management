@@ -12,16 +12,15 @@ if (isset($_GET['action'])) {
 </div>
 <div class="row">
     <div class="col-sm-3">
-        <h5 style="display: inline-block">Sinh viên: </h5> <?= isset($getStudent['fullName']) ? $getStudent['fullName'] : "" ?>
+        <h5 style="display: inline-block">Sinh viên:<?= isset($getStudent['fullName']) ? $getStudent['fullName'] : "" ?> </h5>
     </div>
     <div class="col-sm-3">
-        <h5 style="display: inline-block">Mã sinh viên: </h5><?= isset($getStudent['id']) ? $getStudent['id'] : ""  ?>
+        <h5 style="display: inline-block">Mã sinh viên: <?= isset($getStudent['id']) ? $getStudent['id'] : "" ?></h5> </div>
+    <div  class="col-sm-3">
+        <a href="registerCourses.php?type=add&for=<?=$id?>"><i class='material-icons' style="margin-bottom: 3px">add</i>Thêm môn học</a>
     </div>
-    <div  class="col-sm-2">
-        <a href="registerCourses.php?type=add&for=<?=$id?>"><i class='material-icons' style="margin-bottom: 3px">add</i>Thêm môn học</a></button>
-    </div>
-    <div  class="col-sm-2">
-        <a href="queryOnStudentGrade.php?for=<?=$id?>"><i class='material-icons' style="margin-bottom: 3px">grade</i>Xem điểm</a></button>
+    <div  class="col-sm-3">
+        <a href="queryOnStudentGrade.php?for=<?=$id?>"><i class='material-icons' style="margin-bottom: 3px">grade</i>Xem điểm</a>
     </div>
 </div>
 <?php

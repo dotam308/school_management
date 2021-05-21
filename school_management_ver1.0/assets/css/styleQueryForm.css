@@ -44,9 +44,28 @@
 
 .sub-item.active a,
 .sub-item:hover a {
-	background: purple !important;
-	color: white !important;
+	color: purple !important;
 }
 .active-page {
 	background: purple !important;
 }
+.activeDir {
+	color: red !important;
+}
+.activeDir:hover {
+	display: none;
+}
+
+.pagination {
+	position: relative;
+	left: 50%;
+	top: 50%;
+}
+.page-link.active{
+	color: white;
+	background: purple;
+}
+
+/*#inputImg:hover, #inputImg{*/
+/*	color: rgb(76,175,80)*/
+/*}*/

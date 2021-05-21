@@ -28,22 +28,19 @@ if (count($classList) <= 0) {
 echo "0 results";
 } else {
 
-
-
-// output data of each row
-echo "
+?>
 <form method='get'>
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
-        <tr>";
-
-            echo "<th>Mã ID</th>
+        <tr>
+            <th>Mã ID</th>
             <th>Tên lớp</th>
 
             <th>Sĩ số tối đa</th>
             <th>Sĩ số hiện tại</th>
             <th>Cố vấn học tập</th>
             <th>Action</th>
-        </tr>";
+        </tr>
+        <?php
 
         foreach ($classList as $row) {
 
@@ -64,8 +61,46 @@ echo "
                 <td>$query</td>
             </tr>";
         }
-
-        echo "
+?>
     </table>
-</form>";
+</form>
+
+<?php } ?>
+<?php
+$total_pages = ceil($selectClass->get()->num_rows/ LIMIT);
+
+//$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
+$pagLink = "<ul class='pagination'>";
+$page = isset($_GET['page']) ? $_GET['page'] : 0;
+if ($page > 1) {
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='manageClass.php?type=view&page=" . ($page - 1) . "'>" . 'prev' . "
+        </a>
+    </li>";
 }
+for ($i=1; $i<=$total_pages; $i++) {
+    $pagLink .= "<li class='page-item'>";
+
+    $toLink = "manageClass.php?type=view";
+
+    if (isset($_GET['page']) && $_GET['page'] == $i) {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link active' href='$toLink'>" . $i . "</a>";
+
+    } else {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link' href='$toLink'>" . $i . "</a>";
+    }
+    $pagLink .= "</li>";
+}
+if ($page < $total_pages) {
+
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='manageClass.php?type=view&page=" . ($page + 1) . "'>" . 'next' . "
+        </a>
+    </li>";
+}
+echo $pagLink . "</ul>";
+

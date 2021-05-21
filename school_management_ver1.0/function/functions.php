@@ -1,16 +1,15 @@
 <?php
-
 /**
  * @param $value
  */
-function dd($value) {
+function dd($value)
+{
     echo '<pre>';
     print_r($value);
     echo '</pre>';
-    die("");
 }
 
-function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine="")
+function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine = "")
 {
     $res = "<ul style='display: flex'>";
     if ($edit) {
@@ -23,7 +22,7 @@ function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedE
     if ($delete) {
         if ($deletedElement == '') {
             $url = "$originLink?type=delete&for=$id";
-        } else if ($deletedElement != ''){
+        } else if ($deletedElement != '') {
             $url = "$originLink?type=delete&for=$id&ele=$deletedElement";
         }
         if ($combine != '') {
@@ -62,33 +61,33 @@ function updateStudentOnGrade()
     $score = $conn->query($sqlScore);
     $sizeR = $register->num_rows;
     $sizeS = $score->num_rows;
-        if ($sizeS == 0) {
+    if ($sizeS == 0) {
 
-            echo "1";
+        echo "1";
 
 
-            $register = $conn->query($sqlRegister);
-            while ($rowR = $register->fetch_assoc()) {
-                $sqlInsert = "INSERT INTO `scores`(`id`, `score`, `courseId`, `studentId`)
+        $register = $conn->query($sqlRegister);
+        while ($rowR = $register->fetch_assoc()) {
+            $sqlInsert = "INSERT INTO `scores`(`id`, `score`, `courseId`, `studentId`)
                 VALUES (NULL,0,$rowR[courseId],$rowR[studentId])";
-                if ($conn->query($sqlInsert)) {
-                } else {
-                    echo $conn->error;
-                }
+            if ($conn->query($sqlInsert)) {
+            } else {
+                echo $conn->error;
             }
-
-            $register = $conn->query($sqlRegister);
-            $score = $conn->query($sqlScore);
-            $sizeR = $register->num_rows;
-            $sizeS = $score->num_rows;
         }
+
+        $register = $conn->query($sqlRegister);
+        $score = $conn->query($sqlScore);
+        $sizeR = $register->num_rows;
+        $sizeS = $score->num_rows;
+    }
 
 }
 
-function selectElementFrom($table, $element = '*', $condition = "1")
+function selectElementFrom($table, $element = '*', $condition = "1", $limit = "")
 {
     global $conn;
-    $sqlSelect = "SELECT $element FROM $table WHERE $condition";
+    $sqlSelect = "SELECT $element FROM $table WHERE $condition $limit";
 //    echo $sqlSelect;
     $query = $conn->query($sqlSelect);
     return $query;
@@ -149,7 +148,7 @@ function showScores($studentId)
 
                         </div>";
     echo "<form  method='post' action='#'>
-                                <table class='table' style='width:  100%;'>
+                                <table class='table table-bordered table-hover table-striped' style='width:  100%;'>
                                     <tr>
                                         <th>Mã môn học</th>
                                         <th>Tên môn học</th>
@@ -197,7 +196,7 @@ function showScores($studentId)
                 echo "<td>$valueT</td>
         	            </tr>";
             }
-        	            
+
         }
 
         $res = 0;
@@ -208,9 +207,10 @@ function showScores($studentId)
         echo "Điểm trung bình: $res <br />";
         ?>
         </table> <?php
+        global $title;
         if ($title == 'admin') {
             echo '<button type="submit" name="submit" value="submit" class="btn btn-primary">Ghi nhận</button>';
-             echo "<a type='submit' class='btn btn-info'
+            echo "<a type='submit' class='btn btn-info'
                 href='queryOnRegister.php?type=view&for=$studentId'>Quay lại</a>";
 
         } else if ($title == 'student') {
@@ -220,7 +220,7 @@ function showScores($studentId)
 
         } ?>
         </form>
-<?php
+        <?php
     } else {
         echo "error at GetData";
     }
@@ -242,7 +242,7 @@ function getDetailData($data)
     return $res;
 }
 
-function filterScores()
+function filterScores($limit = "")
 {
     global $conn;
     $studentId = isset($_POST['studentId']) ? $_POST['studentId'] : '';
@@ -322,13 +322,14 @@ function filterScores()
                                                 ON scores.studentId = students.id
                                                     LEFT JOIN courses
                                                     ON scores.courseId = courses.id
-                                            WHERE $condition";
+                                            WHERE $condition $limit";
     $res = $conn->query($sqlSelectAll);
     return $res;
 
 
 }
-function filterRegisterList()
+
+function filterRegisterList($limit = "")
 {
     global $conn;
     $studentId = isset($_POST['studentId']) ? $_POST['studentId'] : '';
@@ -378,7 +379,7 @@ function filterRegisterList()
     }
     if ($courseCode != '') {
         if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' ||
-            $statusFilter['cl'] == 'yes' ) {
+            $statusFilter['cl'] == 'yes') {
 
             $condition .= " AND courseCode = '$courseCode'";
         } else {
@@ -390,7 +391,7 @@ function filterRegisterList()
     }
     if ($courseName != '') {
         if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' ||
-            $statusFilter['cl'] == 'yes'|| $statusFilter['cc'] == 'yes') {
+            $statusFilter['cl'] == 'yes' || $statusFilter['cc'] == 'yes') {
 
             $condition .= " AND courseName = '$courseName'";
         } else {
@@ -404,7 +405,7 @@ function filterRegisterList()
 
     if ($courseClassCode != '') {
         if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' ||
-            $statusFilter['cl'] == 'yes'|| $statusFilter['cc'] == 'yes' || $statusFilter['cn'] == 'yes' ) {
+            $statusFilter['cl'] == 'yes' || $statusFilter['cc'] == 'yes' || $statusFilter['cn'] == 'yes') {
 
             $condition .= " AND courseClassCode = '$courseClassCode'";
         } else {
@@ -416,7 +417,7 @@ function filterRegisterList()
         $statusFilter['ccl'] = 'no';
     }
     if ($credit != '') {
-        if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' || $statusFilter['cl'] == 'yes'||
+        if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' || $statusFilter['cl'] == 'yes' ||
             $statusFilter['cc'] == 'yes' || $statusFilter['cn'] == 'yes' || $statusFilter['ccl'] == 'yes') {
 
             $condition .= " AND credit = '$credit'";
@@ -436,7 +437,8 @@ function filterRegisterList()
                                                 ON registers.studentId = students.id
                                                     LEFT JOIN courses
                                                     ON registers.courseId = courses.id
-                                            WHERE $condition";
+                                            WHERE $condition
+                                            $limit";
     $res = $conn->query($sqlSelectAll);
     return $res;
 
@@ -446,12 +448,11 @@ function filterRegisterList()
 function filterStudents()
 {
     global $conn;
-    $studentId = isset($_POST['studentId']) ? $_POST['studentId'] : '';
-    $studentName = isset($_POST['studentName']) ? $_POST['studentName'] : '';
-    $className = isset($_POST['className']) ? $_POST['className'] : '';
-    $contactNumber = isset($_POST['contactNumber']) ? $_POST['contactNumber'] : '';
-    $dob = isset($_POST['dob']) ? $_POST['dob'] : '';
-
+    $studentId = isset($_POST['studentId']) ? trim($_POST['studentId']) : '';
+    $studentName = isset($_POST['studentName']) ? trim($_POST['studentName']) : '';
+    $className = isset($_POST['className']) ? trim($_POST['className']) : '';
+    $contactNumber = isset($_POST['contactNumber']) ? trim($_POST['contactNumber']) : '';
+    $dob = isset($_POST['dob']) ? trim($_POST['dob']) : '';
     $condition = "";
     $statusFilter = array();
     if ($studentId != '') {
@@ -472,10 +473,10 @@ function filterStudents()
     } else {
         $statusFilter['sn'] = 'no';
     }
-    if ($className != '') {
-        $sqlSelectClass = "SELECT * FROM classes WHERE className='$className'";
+    $sqlSelectClass = "SELECT * FROM classes WHERE className='$className'";
+    $selectClass = $conn->query($sqlSelectClass);
+    if ($className != '' && ($selectClass->num_rows == 1)) {
 
-        $selectClass = $conn->query($sqlSelectClass);
         $class = $selectClass->fetch_assoc();
         $classId = $class['id'];
 
@@ -504,7 +505,7 @@ function filterStudents()
     }
     if ($dob != '') {
         if ($statusFilter['sn'] == 'yes' || $statusFilter['si'] == 'yes' || $statusFilter['cl'] == 'yes' ||
-                $statusFilter['ctn'] == 'yes') {
+            $statusFilter['ctn'] == 'yes') {
             $condition .= " AND dob='$dob'";
         } else {
             $condition .= " dob='$dob'";
@@ -515,16 +516,25 @@ function filterStudents()
         $statusFilter['dob'] = 'no';
     }
 
-    $condition = (strlen($condition) > 0) ? $condition : 1;
-    $sqlSelectAll = "SELECT * FROM students
+    if (strlen($condition) > 0)
+    {
+        $sqlSelectAll = "SELECT * FROM students
                             WHERE $condition";
+    } else {
+
+        $sqlSelectAll = "SELECT * FROM students
+                            WHERE id='19020441'";
+//        header("location : manageStudent.php?type=view&page=1&order=id&direction=DESC&action=filterFailed");
+    }
+    echo $condition;
     $res = $conn->query($sqlSelectAll);
     return $res;
 
 
 }
 
-function getHighestScoreStudents(){
+function getHighestScoreStudents()
+{
     global $conn;
     $sqlSelectTop = "SELECT  total.studentId, total.totalScores/total.totalCredits gpa
             FROM (SELECT scores.id, score, courses.credit ,studentId, SUM(score*credit) totalScores, SUM(credit) totalCredits
@@ -545,8 +555,8 @@ function getHighestScoreStudents(){
         $selectClass = selectElementFrom('classes', "*", "id='$classID'");
         $class = $selectClass->fetch_assoc();
 
-        $listTopStudents[] = array("id"=>$studentId, "name"=>$student['fullName'],
-            "className"=>$class['className'], "score"=>$row['gpa']);
+        $listTopStudents[] = array("id" => $studentId, "name" => $student['fullName'],
+            "className" => $class['className'], "score" => $row['gpa']);
         $numTop--;
         if ($numTop <= 0) break;
     }
@@ -555,60 +565,47 @@ function getHighestScoreStudents(){
 
 }
 
-function insertElementFrom($table, $dataArray) {
-    global $conn;
-    $sqlInsert = "INSERT INTO $table (";
-    foreach ($dataArray as $key=>$value) {
-        $sqlInsert .= "$key" . ", ";
-    }
-    $sqlInsert = substr($sqlInsert, 0, strlen($sqlInsert) - 2);
-    $sqlInsert .= ") VALUES (";
-    foreach ($dataArray as $key=>$value) {
-        $sqlInsert .= "'$value', ";
-    }
-    $sqlInsert = substr($sqlInsert, 0, strlen($sqlInsert) - 2);
-    $sqlInsert .= ")";
-    $result = $conn->query($sqlInsert);
-    return $result;
-}
 
-function uploadImage($usernameORId, $nameInput) {
+function uploadImage($usernameORId, $nameInput)
+{
     global $conn;
     // File name
     $filename = $_FILES["$nameInput"]['name'];
     // Valid extension
-    $valid_ext = array('png','jpeg','jpg');
+    $valid_ext = array('png', 'jpeg', 'jpg');
 
     // Location
-    $location = "images/".$filename;
-    $thumbnail_location = "images/thumbnail/".$filename;
+    $location = "images/" . $filename;
+    $thumbnail_location = "images/thumbnail/" . $filename;
 
     // file extension
     $file_extension = pathinfo($location, PATHINFO_EXTENSION);
     $file_extension = strtolower($file_extension);
 
     // Check extension
-    if(in_array($file_extension,$valid_ext)){
+    if (in_array($file_extension, $valid_ext)) {
 
         // Upload file
-        if(move_uploaded_file($_FILES[$nameInput]['tmp_name'],$location)){
+        if (move_uploaded_file($_FILES[$nameInput]['tmp_name'], $location)) {
 
             // Compress Image
-            compressImage($_FILES[$nameInput]['type'],$location,$thumbnail_location,60);
+            compressImage($_FILES[$nameInput]['type'], $location, $thumbnail_location, 60);
 
             echo "<script>alert('Successfully Uploaded')</script>";
 
             $sqlInsertImageToDB = "UPDATE `users` SET `img-personal` = '$location' 
 WHERE `users`.`username` = '$usernameORId' OR `users`.`id` = '$usernameORId'";
 
-            if($conn->query($sqlInsertImageToDB)) {
+            if ($conn->query($sqlInsertImageToDB)) {
                 return $location;
             }
         }
 
     }
 }
-function compressImage($type,$source, $destination, $quality) {
+
+function compressImage($type, $source, $destination, $quality)
+{
 
     $info = getimagesize($source);
 
@@ -623,6 +620,87 @@ function compressImage($type,$source, $destination, $quality) {
 
     imagejpeg($image, $destination, $quality);
 
+}
+
+function generateRandomString($length = 5)
+{
+    $characters = "1234567890qwertyuiopasdfghjklzxcvbnm";
+    $characters = str_shuffle($characters);
+
+    $res = "";
+    for ($i = 0; $i < $length; $i++) {
+        $res .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $res;
+}
+
+function selectLastElement($table)
+{
+    $selectLastId = selectElementFrom("$table", "*", "id = (SELECT MAX(id) FROM $table)");
+    $lastId = $selectLastId->fetch_assoc();
+    return $lastId;
+}
+
+function convert_vi_to_en($str)
+{
+    $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
+    $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
+    $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", "i", $str);
+    $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", "o", $str);
+    $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", "u", $str);
+    $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", "y", $str);
+    $str = preg_replace("/(đ)/", "d", $str);
+    $str = preg_replace("/(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)/", "A", $str);
+    $str = preg_replace("/(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)/", "E", $str);
+    $str = preg_replace("/(Ì|Í|Ị|Ỉ|Ĩ)/", "I", $str);
+    $str = preg_replace("/(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)/", "O", $str);
+    $str = preg_replace("/(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)/", "U", $str);
+    $str = preg_replace("/(Ỳ|Ý|Ỵ|Ỷ|Ỹ)/", "Y", $str);
+    $str = preg_replace("/(Đ)/", "D", $str);
+    $str = preg_replace("/\s/", "", $str);
+    $str = strtolower($str);
+    return $str;
+}
+
+function checkStatusOrder($order, $direction)
+{
+    if (isset($_GET['order']) && $_GET['order'] == $order &&
+        isset($_GET['direction']) && $_GET['direction'] == $direction) {
+        return true;
+    }
+    return false;
+}
+
+function createSelectTeachers($teachers, $selected="", $fetchassoc = true) {
+    $selectTeachers = "
+                    <select name='selectTeacher' class='form-control'>
+                        <option value='' selected='selected'>----select----</option>";
+    if ($fetchassoc) {
+        while ($row = $teachers->fetch_assoc()) {
+            $fullName = $row['fullName'];
+            $id = $row['id'];
+            $showTeacher = $fullName . "-" . $id;
+            if ($selected == $id) {
+                $selectTeachers .= "<option value='$id' selected>$showTeacher</option>";
+            } else {
+                $selectTeachers .= "<option value='$id'>$showTeacher</option>";
+            }
+        }
+    } else {
+
+        foreach ($teachers as $row) {
+            $fullName = $row['fullName'];
+            $id = $row['id'];
+            $showTeacher = $fullName . "-" . $id;
+            if ($selected == $id) {
+                $selectTeachers .= "<option value='$id' selected>$showTeacher</option>";
+            } else {
+                $selectTeachers .= "<option value='$id'>$showTeacher</option>";
+            }
+        }
+    }
+    $selectTeachers .= '</select>';
+    return $selectTeachers;
 }
 
 ?>

@@ -1,6 +1,8 @@
 <?php
+
+$salt = $userC['salt'];
 if (isset($_POST['confirm'])) {
-    if (md5($_POST['pass']) == $_SESSION['pass']) {
+    if (md5($_POST['pass'].$salt) == $userC['pass']) {
         header("location: queryOnAccount.php?type=edit&for=$id&check=true");
     } else {
         echo  "<script>alert('Sai mật khẩu')</script>";

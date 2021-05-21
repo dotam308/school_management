@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once 'module/student/queryOnStudent.php';
+require_once "function/functions.php";
+require_once "connection.php";
+require_once "models/Student.php";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,13 +23,14 @@ require_once 'module/student/queryOnStudent.php';
      	<?php require_once 'includes/header.php';?>
       <div class="content">
         <div class="container-fluid">
-            <?php require_once $view_file_name; ?>
+            <?php require_once $view_file_name;
+
+            ?>
         </div>
       </div>
      	<?php require_once 'includes/footer.php';?>
     </div>
   </div>
-
 </body>
 <script>
     function confirmDelete(url) {
@@ -37,7 +42,7 @@ require_once 'module/student/queryOnStudent.php';
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Xác nhận!',
-            confirmCancelText: 'Thoát!'
+            confirmCancelText: 'Huỷ!'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url;
