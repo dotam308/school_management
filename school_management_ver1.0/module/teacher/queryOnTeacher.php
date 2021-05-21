@@ -35,14 +35,12 @@ if (isset($_GET["type"])) {
         if (isset($_POST['fullName'])) {
 
             $insertTeacherData = array(
-                'id' => 'NULL',
                 'fullName' => "$_POST[fullName]",
                 'unit' => "$_POST[unit]",
                 "contactNumber" => "$_POST[contactNumber]"
             );
 
             if ($addStatus = $teacherModel->insert($insertTeacherData)) {
-
                 $lastInsertTeacher = selectLastElement('teachers');
                 $lastNameTeacher = $lastInsertTeacher['fullName'];
 
@@ -50,17 +48,15 @@ if (isset($_GET["type"])) {
                 $username = convert_vi_to_en($lastNameTeacher);
                 $passSalt = md5($username . $salt);
 
-                $insertUserData = array("id" => "NULL",
+                $insertUserData = array(
                     "title" => "admin",
                     "username" => "$username",
                     "pass" => "$passSalt",
                     "salt" => "$salt",
-                    "representName" => "$lastNameTeacher",
-                    "img-personal" => NULL
+                    "representName" => "$lastNameTeacher"
                 );
                 $userAdd = new User();
                 if ($userAdd->insert($insertUserData)) {
-
                     if (isset($_POST['create'])) {
                         header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=created");
                     } else if (isset($_POST['continue'])) {
@@ -71,7 +67,6 @@ if (isset($_GET["type"])) {
                     header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC");
                 }
             }
-            dd($_POST);
         }
     }
     if (isset($_GET['type']) && isset($_GET['for'])) {

@@ -13,26 +13,20 @@ if (isset($_GET['type'])) {
     $myTable = STUDENT_TABLE;
     if ($type == 'view') {
         if (isset($_POST['filter'])) {
-            $result = filterStudents();
-        } else if (isset($_GET['order']) && isset($_GET['direction'])) {
-            $orderBy = $_GET['order'];
-            $direction = $_GET['direction'];
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-                $start = ($page - 1) * LIMIT;
-                $limit = LIMIT;
-                $result = $studentModels->filter("$orderBy", "$direction", LIMIT, "$page");
-            }
-        } else if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-            $start = ($page - 1) * LIMIT;
-            $limit = LIMIT;
-            $result = $studentModels->filter("id", "DESC", LIMIT, "$page");
-
-        } else {
-            $result = $studentModels->filter("id", "DESC", LIMIT, "1");
-
+            $merged = array_merge($_GET, $_POST);
+            header('location: managerStudent.php?' . http_build_query($merged));
         }
+        $orderBy = $_GET['order'];
+        $direction = $_GET['direction'];
+        $page = $_GET['page'];
+        $start = ($page - 1) * LIMIT;
+        $limit = LIMIT;
+        $class = $_GET['class'];
+        $wheres = [];
+        if (!empty($class)) {
+            $wheres = ['classId' => $class];
+        }
+        $result = $studentModels->filter($_GET, $wheres);
 
         $students = [];
         $index = 0;

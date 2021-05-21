@@ -6,29 +6,71 @@ abstract class BaseModel
 {
     protected $conn;
     protected $table = 'table';
+    protected $searchable = ['id', 'fullName', 'dkdkk'];
     protected $id = 0;
 
 
-    public function __construct()
+    public function __construct($id = '')
     {
         global $conn;
         $this->conn = $conn;
+        $student = new Student();
+        $results = $student->filter($_GET);
     }
-    public function filter($column, $direction = 'DESC', $limit = 10, $page = 1, $table="")
+
+    public function filter($params, $wheres = [])
+    {
+        $orderBy = $params['order'] ?? 'id';
+        $directBy = $params['order'] ?? 'desc';
+        $page = $params['page'] ?? 1;
+        $limit = 10;
+        $search = [];
+        foreach ($this->searchable as $field) {
+            if (isset($params[$field])) {
+                $search[$field] = $params[$field];
+            }
+        }
+        $searchQuery = $this->buildSearchQuery($search);
+        $whereQuery = $this->buildQuery($wheres);
+
+        $fullQuery = 'xxxx';
+        return $this->conn->query($sqlSelect);
+    }
+
+    private function buildQuery($wheres)
+    {
+        $res = [];
+        foreach ($wheres as $field => $value) {
+            $res[] = $field . ' = "%' . $value . '%"';
+        }
+        $res = join(' AND ', $res);
+        return $res;
+    }
+
+    private function buildSearchQuery($search)
+    {
+        if (empty($search)) {
+            return null;
+        }
+        $res = [];
+        foreach ($search as $field => $value) {
+            $res[] = $field . ' like "%' . $value . '%"';
+        }
+        $res = join(' AND ', $res);
+        return "(" . $res . ")";
+    }
+
+    public function filter($column, $direction = 'DESC', $limit = 10, $page = 1, $table = "")
     {
         $condition = '1';
-        if ($limit != -1)
-        {
+        if ($limit != -1) {
             $condition .= ' ORDER BY ' . $column . ' ' . $direction . ' LIMIT ' . ($limit * ($page - 1)) . ', ' . $limit;
         } else {
             $condition .= ' ORDER BY ' . $column . ' ' . $direction;
         }
-        if ($table == "" )
-        {
+        if ($table == "") {
             $sqlSelect = "SELECT * FROM {$this->table} WHERE $condition";
-        }
-        else
-        {
+        } else {
             $sqlSelect = "$table";
             if ($limit != -1) {
                 $sqlSelect .= " LIMIT " . ($limit * ($page - 1)) . ', ' . $limit;
@@ -68,11 +110,17 @@ abstract class BaseModel
         return $this->conn->query($sqlGet);
     }
 
+    public function countAll()
+    {
+
+    }
+
     public function delete()
     {
         $sqlDelete = "DELETE from {$this->table} where id= '{$this->id}'";
         echo $sqlDelete;
         return $this->conn->query($sqlDelete);
     }
+
     public abstract function update($params);
 }

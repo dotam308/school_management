@@ -2,11 +2,14 @@
 /**
  * @param $value
  */
-function dd($value)
+function dd($value, $die = false)
 {
     echo '<pre>';
     print_r($value);
     echo '</pre>';
+    if ($die) {
+        die("");
+    }
 }
 
 function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine = "")

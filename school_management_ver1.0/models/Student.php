@@ -5,11 +5,9 @@ require_once 'BaseModel.php';
 class Student extends BaseModel
 {
     protected $table = 'students';
-    public function __construct($id)
+    public function __construct($id = '')
     {
-        global $conn;
-        $this->conn = $conn;
-        $this->id = $id;
+        parent::__construct($id);
     }
 
 

@@ -24,7 +24,7 @@ if (isset($_GET['action'])) {
         <h3>Danh sách sinh viên</h3>
     </div>
     <div class='col-sm-6 text-right'>
-        <div class="btn btn-primary">
+        <div class="btn btn-sm btn-primary">
             <a class='nav-link' href='manageStudent.php?type=add' style="color: white">
                 Thêm sinh viên
             </a>
@@ -40,7 +40,7 @@ if (count($students) <= 0) {
         <table style='width: 100%' class='table table-striped table-bordered table-hover'>
             <tr class="row">
                 <th class="col-sm-2">Mã sinh viên
-                    <a href="manageStudent.php?type=view&page=1&order=id&direction=ASC"
+                    <a href="<?= regenerate('manageStudent.php', $_GET, ['order' => 'id', 'direction' => 'desc'])?>"
                        class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
@@ -51,12 +51,12 @@ if (count($students) <= 0) {
                 </th>
                 <th class="col-sm-2">Họ tên
 
-                    <a href="manageStudent.php?type=view&page=1&order=name&direction=ASC"
-                       class="<?= (checkStatusOrder('name', 'ASC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=fullName&direction=ASC"
+                       class="<?= (checkStatusOrder('fullName', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageStudent.php?type=view&page=1&order=name&direction=DESC"
-                       class="<?= (checkStatusOrder('name', 'DESC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=fullName&direction=DESC"
+                       class="<?= (checkStatusOrder('fullName', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
                 </th>
@@ -97,13 +97,16 @@ if (count($students) <= 0) {
             </tr>
             <tr class="row">
                 <th class="col-sm-2">
-                    <input name="studentId" class="form-control" type="text" placeholder="Mã sinh viên">
+                    <input name="studentId" class="form-control" type="text" value="<?=$_GET['studentId'] ?? ''?>" placeholder="Mã sinh viên">
                 </th>
                 <th class="col-sm-2">
                     <input name="studentName" class="form-control" type="text" placeholder="Họ tên">
                 </th>
                 <th class="col-sm-2">
-                    <input name="className" class="form-control" type="text" placeholder="Lớp">
+                    <select name="class">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                    </select>
                 </th>
                 <th class="col-sm-2">
                     <input name="contactNumber" class="form-control" type="text" placeholder="Số điện thoại">
@@ -134,6 +137,7 @@ if (count($students) <= 0) {
 <?php
     $selectStudents = selectElementFrom("students", "*", "1");
     $total_pages = ceil($selectStudents->num_rows / 10);
+    echo genPaging('manageStudent.php', $_GET, $total_pages);
     $pagLink = "<ul class='pagination'>";
     $page = isset($_GET['page']) ? $_GET['page'] : 0;
     if ($page > 1) {
