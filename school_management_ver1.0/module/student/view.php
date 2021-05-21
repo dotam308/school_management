@@ -12,6 +12,9 @@ if (isset($_GET['action'])) {
         case "edited":
             echo "<div class='alert alert-success'>Cập nhật sinh viên thành công</div>";
             break;
+        case "filterFailed":
+            echo "<div class='alert alert-danger'>Dữ liệu không tồn tại</div>";
+            break;
     }
 }
 ?>
@@ -21,9 +24,11 @@ if (isset($_GET['action'])) {
         <h3>Danh sách sinh viên</h3>
     </div>
     <div class='col-sm-6 text-right'>
-        <a class='nav-link' href='manageStudent.php?type=add'>
-            <button class="btn btn-primary">Thêm sinh viên</button>
-        </a>
+        <div class="btn btn-primary">
+            <a class='nav-link' href='manageStudent.php?type=add' style="color: white">
+                Thêm sinh viên
+            </a>
+        </div>
     </div>
 </div>
 <?php
@@ -35,26 +40,59 @@ if (count($students) <= 0) {
         <table style='width: 100%' class='table table-striped table-bordered table-hover'>
             <tr class="row">
                 <th class="col-sm-2">Mã sinh viên
-                    <a href="manageStudent.php?type=view&page=1&order=studentIdOrderUp"><i class="material-icons">arrow_upward</i></a>
-                    <a href="manageStudent.php?type=view&page=1&order=studentIdOrderDown"><i class="material-icons">arrow_downward</i></a>
+                    <a href="manageStudent.php?type=view&page=1&order=id&direction=ASC"
+                       class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="manageStudent.php?type=view&page=1&order=id&direction=DESC"
+                       class="<?= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?>">
+                         <i class="material-icons">arrow_downward</i>
+                    </a>
                 </th>
                 <th class="col-sm-2">Họ tên
 
-                    <a href="manageStudent.php?type=view&page=1&order=studentNameOrderUp"><i class="material-icons">arrow_upward</i></a>
-                    <a href="manageStudent.php?type=view&page=1&order=studentNameOrderDown"><i class="material-icons">arrow_downward</i></a>
+                    <a href="manageStudent.php?type=view&page=1&order=name&direction=ASC"
+                       class="<?= (checkStatusOrder('name', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="manageStudent.php?type=view&page=1&order=name&direction=DESC"
+                       class="<?= (checkStatusOrder('name', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
                 </th>
                 <th class="col-sm-2">Lớp
 
-                    <a href="manageStudent.php?type=view&page=1&order=classOrderUp"><i class="material-icons">arrow_upward</i></a>
-                    <a href="manageStudent.php?type=view&page=1&order=classOrderDown"><i class="material-icons">arrow_downward</i></a></th>
+                    <a href="manageStudent.php?type=view&page=1&order=class&direction=ASC"
+                       class="<?= (checkStatusOrder('class', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="manageStudent.php?type=view&page=1&order=class&direction=DESC"
+                       class="<?= (checkStatusOrder('class', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </th>
                 <th class="col-sm-2">Số điện thoại
 
-                    <a href="manageStudent.php?type=view&page=1&order=contactNumOrderUp"><i class="material-icons">arrow_upward</i></a>
-                    <a href="manageStudent.php?type=view&page=1&order=contactNumOrderDown"><i class="material-icons">arrow_downward</i></a></th>
+                    <a href="manageStudent.php?type=view&page=1&order=contactNumber&direction=ASC"
+                       class="<?= (checkStatusOrder('contactNumber', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="manageStudent.php?type=view&page=1&order=contactNumber&direction=DESC"
+                       class="<?= (checkStatusOrder('contactNumber', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </th>
                 <th class="col-sm-2">Ngày sinh
 
-                    <a href="manageStudent.php?type=view&page=1&order=dobOrderUp"><i class="material-icons">arrow_upward</i></a>
-                    <a href="manageStudent.php?type=view&page=1&order=dobOrderDown"><i class="material-icons">arrow_downward</i></a></th>
+                    <a href="manageStudent.php?type=view&page=1&order=dob&direction=ASC"
+                       class="<?= (checkStatusOrder('dob', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="manageStudent.php?type=view&page=1&order=dob&direction=DESC"
+                       class="<?= (checkStatusOrder('dob', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </th>
                 <th class="col-sm-2">Action</th>
             </tr>
             <tr class="row">
@@ -78,23 +116,6 @@ if (count($students) <= 0) {
                 </th>
             </tr>
             <?php
-
-//         if (isset($_GET['page'])) {
-//             $page = $_GET['page'];
-//             foreach ($students as $row) {
-//                 if ($row['index'] >= ($page - 1)*10 && $row['index'] <= $page*10 - 1) {
-//                     echo "<tr class='row'>";
-//                     $query = getActionForm('manageStudent.php', $row['id'], true, true, "", true, false, $row['id']);
-//                     echo "<td class='col-sm-2'>$row[id]</td>
-//                        <td class='col-sm-2'>$row[fullName]</td>
-//                        <td class='col-sm-2'>$row[className]</td>
-//                        <td class='col-sm-2'>$row[contactNumber]</td>
-//                       <td class='col-sm-2'>$row[dob]</td>
-            ////                        <td class='col-sm-2'>$query</td>
-            ////                        </tr>";
-            ////                 }
-            ////             }
-            ////         } else {
              foreach ($students as $row) {
                  echo "<tr class='row'>";
                  $query = getActionForm('manageStudent.php', $row['id'], true, true, "", true, false, $row['id']);
@@ -106,41 +127,47 @@ if (count($students) <= 0) {
                         <td class='col-sm-2'>$query</td>
                         </tr>";
              }
-//         }
 
             ?>
         </table>
     </form>
-    <style>
-        .pagination {
-            position: relative;
-            left: 50%;
-            top: 50%;
-        }
-        .page-link.active{
-            background: purple;
-        }
-    </style>
 <?php
     $selectStudents = selectElementFrom("students", "*", "1");
     $total_pages = ceil($selectStudents->num_rows / 10);
     $pagLink = "<ul class='pagination'>";
+    $page = isset($_GET['page']) ? $_GET['page'] : 0;
+    if ($page > 1) {
+        $pagLink .= "<li class='page-item'>
+        <a class='page-link' 
+                href='manageStudent.php?type=view&direction=$_GET[direction]&order=$_GET[order]&page=".($page - 1)."'>".'prev'."
+        </a>
+    </li>";
+    }
         for ($i=1; $i<=$total_pages; $i++) {
+
             $pagLink .= "<li class='page-item'>";
             if (isset($_GET['page']) && $_GET['page'] == $i) {
                 if (isset($_GET['order'])) {
-                    $pagLink .= "<a class='page-link active' href='manageStudent.php?type=view&order=$_GET[order]&page=".$i."'>".$i."</a>";
+                    $pagLink .= "<a class='page-link active' href='manageStudent.php?type=view&order=$_GET[order]&direction=$_GET[direction]&page=".$i."'>".$i."</a>";
                 } else {
                     $pagLink .= "<a class='page-link active' href='manageStudent.php?type=view&page=".$i."'>".$i."</a>";
                 }
             } else {
                 if (isset($_GET['order'])) {
-                    $pagLink .= "<a class='page-link' href='manageStudent.php?type=view&order=$_GET[order]&page=".$i."'>".$i."</a>";
+                    $pagLink .= "<a class='page-link' href='manageStudent.php?type=view&direction=$_GET[direction]&order=$_GET[order]&page=".$i."'>".$i."</a>";
                 } else {
                     $pagLink .= "<a class='page-link' href='manageStudent.php?type=view&page=".$i."'>".$i."</a>";
                 }
             }
             $pagLink .= "</li>";
         }
+    if ($page < $total_pages) {
+
+        $pagLink .= "<li class='page-item'>
+        <a class='page-link' 
+                href='manageStudent.php?type=view&direction=$_GET[direction]&order=$_GET[order]&page=".($page + 1)."'>".'next'."
+        </a>
+    </li>";
+    }
         echo $pagLink . "</ul>";
      }

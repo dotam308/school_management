@@ -8,6 +8,21 @@
 	padding: 0.25rem 0.5rem !important;
 }
 
+.sidebar .nav svg {
+	font-size: 24px;
+	float: left;
+	margin-right: 15px;
+	line-height: 30px;
+	width: 30px;
+	padding: 5px;
+	text-align: center;
+	color: #a9afbb;
+}
+
+.sidebar .nav li.active>a svg {
+	color: #fff;
+}
+
 .subs-menu {
 	display: none;
 	list-style: none;
@@ -29,9 +44,28 @@
 
 .sub-item.active a,
 .sub-item:hover a {
-	background: purple !important;
-	color: white !important;
+	color: purple !important;
 }
 .active-page {
 	background: purple !important;
 }
+.activeDir {
+	color: red !important;
+}
+.activeDir:hover {
+	display: none;
+}
+
+.pagination {
+	position: relative;
+	left: 50%;
+	top: 50%;
+}
+.page-link.active{
+	color: white;
+	background: purple;
+}
+
+/*#inputImg:hover, #inputImg{*/
+/*	color: rgb(76,175,80)*/
+/*}*/

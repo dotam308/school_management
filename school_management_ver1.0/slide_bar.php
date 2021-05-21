@@ -1,10 +1,3 @@
-<?php
-
-if (isset($_POST['logout'])) {
-    $_SESSION['permission'] = false;
-    header("location: login/index.php");
-}
-?>
 <?php $active_menu = isset($active_menu) ? $active_menu : 'index'; ?>
 <?php $sub_active = isset($sub_active) ? $sub_active : null; ?>
 <?php
@@ -61,43 +54,43 @@ $title = $user['title'];
                 global $title;
                 if ($title == 'admin') { ?>
                     <li class="nav-item <?= $active_menu == 'student' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageStudent.php?type=view&page=1">
+                        <a class="nav-link" href="manageStudent.php?type=view&page=1&order=id&direction=DESC">
                             <i class="material-icons">person</i>
                             <p>Quản lí sinh viên</p>
                         </a>
                         <ul class="subs-menu">
                             <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'view') ? 'active' : '' ?>">
-                                <a href="manageStudent.php?type=view&page=1">Danh sách sinh viên</a>
+                                <a href="manageStudent.php?type=view&page=1&order=id&direction=DESC">Danh sách sinh viên</a>
                             </li>
                             <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'register') ? 'active' : '' ?>">
-                                <a href="manageRegister.php?type=view">Danh sách đăng ký</a>
+                                <a href="manageRegister.php?type=view&page=1&order=studentId&direction=DESC">Danh sách đăng ký</a>
                             </li>
                             <li class="sub-item <?= ($active_menu == 'student' && $sub_active == 'score') ? 'active' : '' ?>">
-                                <a href="queryOnSchoolGrade.php">Danh sách điểm</a>
+                                <a href="queryOnSchoolGrade.php?type=view&page=1&order=studentId&direction=DESC">Danh sách điểm</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item <?= $active_menu == 'teacher' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageTeacher.php?type=view">
+                        <a class="nav-link" href="manageTeacher.php?type=view&page=1&order=id&direction=DESC">
                             <i class="material-icons fas fa-chalkboard-teacher"></i>
                             <p>Quản lí giáo viên</p>
                         </a>
                     </li>
                     <li class="nav-item <?= $active_menu == 'course' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageCourse.php?type=view">
+                        <a class="nav-link" href="manageCourse.php?type=view&page=1">
                             <i class="material-icons">book</i>
                             <p>Quản lí khoá học</p>
                         </a>
                     </li>
                     <li class="nav-item <?= $active_menu == 'class' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageClass.php?type=view">
+                        <a class="nav-link" href="manageClass.php?type=view&page=1">
                             <i class="material-icons fas fa-chalkboard"></i>
                             <p>Quản lí lớp học</p>
                         </a>
                     </li>
 
                     <li class="nav-item <?= $active_menu == 'account' ? 'active' : '' ?>">
-                        <a class="nav-link" href="queryOnAccount.php?type=view">
+                        <a class="nav-link" href="queryOnAccount.php?type=view&page=1">
                             <i class="material-icons">add</i>
                             <p>Quản lí tài khoản</p>
                         </a>

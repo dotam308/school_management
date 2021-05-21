@@ -1,51 +1,35 @@
 <?php
 require_once './connection.php';
 require_once 'function/functions.php';
+require_once './models/Teacher.php';
+require_once './models/Course.php';
 $type = "";
 
 global $conn;
-
+const LIMIT = 10;
 $myTable = "courses";
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
-    $sqlGetTeachers = 'SELECT * FROM `teachers` WHERE 1';
-    $teachersData = $conn->query($sqlGetTeachers);
-    $teachers = $teachersData->fetch_all();
+    $newTeacher = new Teacher('');
+    $teachers = $newTeacher->get();
 
-
+    $selectedCourses = new Course("");
     if ($type == 'view') {
-        $selectCourses = selectElementFrom("$myTable", "*", "1");
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        }
+        $selectCourses = $selectedCourses->filter("id", "DESC", LIMIT, "$page");
         $courseList = array();
         while ($course = $selectCourses->fetch_assoc()) {
-            $courseList[] = [
-                "id" => "$course[id]",
-                "credit" => "$course[credit]",
-                "startTime" => "$course[startTime]",
-                "endTime" => "$course[endTime]",
-                "place" => "$course[place]",
-                "courseName" => "$course[courseName]",
-                "courseCode" => "$course[courseCode]",
-                "courseClassCode" => "$course[courseClassCode]",
-                "maxStudent" => "$course[maxStudent]",
-                "teacherId" => "$course[teacherId]"
-
-            ];
+            $newCourse = new Course("$course[id]");
+            $courseList[] = $newCourse->get();
         }
         $view_file_name = "module/course/view.php";
     }
 
     if ($type == 'add') {
-        $selectTeachers = "
-        <select name='selectTeacher' class='form-control'>
-        <option value='' selected>----select----</option>";
-        for ($i = 0; $i < count($teachers); $i++) {
-            $fullName = $teachers[$i][1];
-            $id = $teachers[$i][0];
-            $showTeacher = $fullName . "-" . $id;
-            $flag = '';
-            $selectTeachers .= "<option value='$id'>$showTeacher</option>";
-        }
-        $selectTeachers .= '</select>';
+        $selectTeachers = createSelectTeachers($teachers);
         $view_file_name = "module/course/add.php";
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -59,10 +43,25 @@ if (isset($_GET["type"])) {
             }
         }
         if (isset($_POST['credit'])) {
-            $sqlInsert = "INSERT INTO `courses` (`id`, `credit`, `startTime`, `endTime`, `place`, `courseCode`, `courseName`, `courseClassCode`, `maxStudent`, `teacherId`)
-                VALUES (NULL, '$_POST[credit]', '$_POST[startTime]', '$_POST[endTime]', '$_POST[place]', '$_POST[courseCode]', '$_POST[courseName]', '$_POST[courseClassCode]', '$_POST[maxStudent]', '$_POST[selectTeacher]')";
 
-            if ($result = $conn->query($sqlInsert)) {
+            $insertData = array(
+                "id"=>"NULL",
+                "credit"=>"$_POST[credit]",
+                "startTime"=>"$_POST[startTime]",
+                "endTime"=>"$_POST[endTime]",
+                "place"=>"$_POST[place]",
+                "courseCode"=>"$_POST[courseCode]",
+                "courseName"=>"$_POST[courseName]",
+                "courseClassCode"=>"$_POST[courseClassCode]",
+                "maxStudent"=>"$_POST[maxStudent]",
+                "teacherId"=>"$_POST[selectTeacher]",
+            );
+
+//            $sqlInsert = "INSERT INTO `courses` (`id`, `credit`, `startTime`, `endTime`, `place`, `courseCode`, `courseName`,
+//                       `courseClassCode`, `maxStudent`, `teacherId`)
+//                VALUES (NULL, '$_POST[credit]', '$_POST[startTime]', '$_POST[endTime]', '$_POST[place]', '$_POST[courseCode]', '$_POST[courseName]', '$_POST[courseClassCode]', '$_POST[maxStudent]', '$_POST[selectTeacher]')";
+
+            if ($selectedCourses->insert($insertData)) {
                 if (isset($_POST['create'])) {
                     header("location: manageCourse.php?type=view&action=added");
                 } else if (isset($_POST['continue'])) {
@@ -82,22 +81,10 @@ if (isset($_GET["type"])) {
             $id = $_GET['for'];
 
             $oldData = selectElementFrom("$myTable", "*", "id='$id'")->fetch_assoc();
-            if ($t == 'edit') {
-                $selectTeachers = "
-                    <select name='selectTeacher' class='form-control'>
-                        <option value='' selected='selected'>----select----</option>";
-                for ($i = 0; $i < count($teachers); $i++) {
-                    $fullName = $teachers[$i][1];
-                    $id = $teachers[$i][0];
-                    $showTeacher = $fullName . "-" . $id;
-                    $flag = '';
-                    if ((isset($selected) && $selected == $id) || $oldData['teacherId'] == $id) {
-                        $flag = 'selected';
-                    }
 
-                    $selectTeachers .= "<option $flag value='$id'>$showTeacher</option>";
-                }
-                $selectTeachers .= '</select>';
+            $updatedCourse = new Course("$oldData[id]");
+            if ($t == 'edit') {
+                $selectTeachers = createSelectTeachers($teachers, "$oldData[teacherId]");
                 $view_file_name = "module/course/edit.php";
 
                 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -112,20 +99,26 @@ if (isset($_GET["type"])) {
                     }
                 }
                 if (isset($_POST['credit'])) {
-
-
-                    $sqlUpdate = "UPDATE `courses` SET`credit`='$_POST[credit]',`startTime`='$_POST[startTime]',
-                    `endTime`='$_POST[endTime]',`place`='$_POST[place]',`courseCode`='$_POST[courseCode]',`courseName`='$_POST[courseName]',
-                    `courseClassCode`='$_POST[courseClassCode]',`maxStudent`='$_POST[maxStudent]',`teacherId`='$_POST[selectTeacher]' WHERE id='$oldData[id]'";
-                    if ($conn->query($sqlUpdate)) {
+                    $editData = array(
+                        "id"=>"$oldData[id]",
+                        "credit"=>"$_POST[credit]",
+                        "startTime"=>"$_POST[startTime]",
+                        "endTime"=>"$_POST[endTime]",
+                        "place"=>"$_POST[place]",
+                        "courseCode"=>"$_POST[courseCode]",
+                        "courseName"=>"$_POST[courseName]",
+                        "courseClassCode"=>"$_POST[courseClassCode]",
+                        "maxStudent"=>"$_POST[maxStudent]",
+                        "teacherId"=>"$_POST[selectTeacher]",
+                    );
+                    if ($updatedCourse->update($editData)) {
                         header("location: manageCourse.php?type=view&action=edited");
                     } else {
                         echo $conn->error . "error at update Course";
                     }
                 }
             } else if ($t == 'delete') {
-                $sqlDelete = "DELETE FROM `$myTable` WHERE id=$oldData[id]";
-                if ($conn->query($sqlDelete)) {
+                if ($updatedCourse->delete()) {
                     header("location: manageCourse.php?type=view&action=deleted");
                 } else {
                     echo $conn->error . " error at delete";

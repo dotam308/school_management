@@ -9,6 +9,9 @@ if (isset($_GET['action'])) {
     } else if ($action == 'deleted') {
 
         echo "<div class='alert alert-success'>Xoá thành công</div>";
+    } else if ($action == 'deletedRestrict') {
+
+        echo "<script>alert('Không được phép xoá tài khoản này')</script>";
     }
 }
 ?>
@@ -40,7 +43,6 @@ if (count($usersAccount) <= 0) {
             <th>Chức vụ</th>
 
             <th>Tên đăng nhập</th>
-            <th>Mật khẩu(md5)</th>
             <th>Tên đại diện</th>
             <th>Ảnh đại diện(source)</th>
             <th>Action</th>
@@ -49,19 +51,55 @@ if (count($usersAccount) <= 0) {
     foreach ($usersAccount as $row) {
 
         $query = getActionForm('queryOnAccount.php', $row['id']);
-        $imgSRC = $row['img-personal'];
-        echo "<tr>";
-        echo "<td>$row[id]</td>
-                <td>$row[title]</td>
-                <td>$row[username]</td>
-                <td>$row[pass]</td>
-                <td>$row[representName]</td>
-                <td>$imgSRC</td>
-                <td>$query</td>
-            </tr>";
-    }
+        $imgSRC = $row['img-personal'];?>
+        <tr>
+            <td><?=$row['id']?></td>
+            <td><?=$row['title']?></td>
+            <td><?=$row['username']?></td>
+            <td><?= ($row['representName'] == "NULL") ? "" : $row['representName'] ?></td>
+            <td><?= ($imgSRC == "NULL") ? "" : $imgSRC?></td>
+            <td><?=$query?></td>
+        </tr>
+    <?php } ?>
 
-    echo "
     </table>
-</form>";
-}
+</form>
+<?php } ?>
+<?php
+
+$total_pages = ceil($users->get()->num_rows/ LIMIT);
+
+//$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
+$pagLink = "<ul class='pagination'>";
+    $page = isset($_GET['page']) ? $_GET['page'] : 0;
+    if ($page > 1) {
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='queryOnAccount.php?type=view&page=" . ($page - 1) . "'>" . 'prev' . "
+        </a>
+    </li>";
+    }
+    for ($i=1; $i<=$total_pages; $i++) {
+    $pagLink .= "<li class='page-item'>";
+
+        $toLink = "queryOnAccount.php?type=view";
+
+        if (isset($_GET['page']) && $_GET['page'] == $i) {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link active' href='$toLink'>" . $i . "</a>";
+
+        } else {
+        $toLink .= "&page=$i";
+        $pagLink .= "<a class='page-link' href='$toLink'>" . $i . "</a>";
+        }
+        $pagLink .= "</li>";
+    }
+    if ($page < $total_pages) {
+
+    $pagLink .= "<li class='page-item'>
+        <a class='page-link'
+           href='queryOnAccount.php?type=view&page=" . ($page + 1) . "'>" . 'next' . "
+        </a>
+    </li>";
+    }
+    echo $pagLink . "</ul>";

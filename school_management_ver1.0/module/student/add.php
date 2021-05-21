@@ -26,6 +26,16 @@ if (isset($_GET['action'])) {
 			<td class="col-sm-9"><input type='date' name='dob' class="form-control" autocomplete="off"/></td>
 
 		</tr>
+<!--        <tr class="row">-->
+<!--            <th class="col-sm-3">Tên đăng nhập</th>-->
+<!--            <td class="col-sm-9"><input type='text' name='username' class="form-control" autocomplete="off"/></td>-->
+<!---->
+<!--        </tr>-->
+<!--        <tr class="row">-->
+<!--            <th class="col-sm-3">Mật khẩu</th>-->
+<!--            <td class="col-sm-9"><input type='password' name='pass' class="form-control" autocomplete="off"/></td>-->
+<!---->
+<!--        </tr>-->
 	</table>
 	<button type='submit' class="btn btn-primary" name="create" value="create">Tạo</button>
     <button type='submit' class="btn btn-info" name="create" value="continue">Tạo và tiếp tục</button>

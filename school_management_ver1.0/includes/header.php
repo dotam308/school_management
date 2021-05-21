@@ -34,18 +34,22 @@
 				class="navbar-toggler-icon icon-bar"></span> <span
 				class="navbar-toggler-icon icon-bar"></span>
 		</button>
-		<div class="collapse navbar-collapse justify-content-end">
-			<ul class="navbar-nav">
-				<li class="nav-item"><a class="nav-link" href="javascript:;"> <i
-						class="material-icons">notifications</i> Notifications
-				</a></li>
-                <form method="post">
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <button type="submit" name="logout" class="btn btn-primary"> <i class="material-icons">logout</i> Logout
-                    </button></li>
-                </form>
-			</ul>
-		</div>
-	</div>
+                    <a class="nav-link" href="javascript:;">
+                        <i class="material-icons">notifications</i> Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="logout.php">
+                        <button type="button" name="logout" class="btn btn-primary">
+                            <i class="material-icons">logout</i> Logout
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
 <!-- End Navbar -->

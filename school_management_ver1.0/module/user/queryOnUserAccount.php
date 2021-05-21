@@ -2,33 +2,53 @@
 ob_start();
 require_once './connection.php';
 require_once 'function/functions.php';
+require_once './models/User.php';
 global $conn;
-
+const LIMIT = 10;
 $myTable = "users";
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
+    $username = $_SESSION['username'];
+    $userModel = new User($username);
+    $userC = $userModel->get();
 
+    $users = new User("");
     if ($type == 'view') {
-        $usersAccount = getUsersAccount();
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        }
+        $selectUsers = $users->filter("id", "DESC", "10", "$page");
+        $usersAccount = getUsersAccount($selectUsers);
         $view_file_name = "module/user/view.php";
     }
     if ($type == 'add') {
         $addStatus = -1;
         $view_file_name = "module/user/add.php";
         if (isset($_POST['create']) || isset($_POST['continue'])) {
-            $encodePass = md5($_POST['pass']);
-            $sqlInsert = "INSERT INTO `users`(`id`, `title`, `username`, `pass`, `representName`, `img-personal`) 
-            VALUES (NULL,'$_POST[title]','$_POST[username]','$encodePass',NULL,NULL)";
-            if ($addStatus = $conn->query($sqlInsert)) {
+            $salt = generateRandomString();
+            $passSalt = $_POST['pass'] . $salt;
+
+            $encodePass = md5($passSalt);
+            $insertData = array(
+                'id' => "NULL",
+                "title" => "$_POST[title]",
+                "username" => "$_POST[username]",
+                "pass" => "$encodePass",
+                "salt" => "$salt",
+                "representName" => "NULL",
+                "img-personal" => "NULL"
+            );
+
+            if ($users->insert($insertData)) {
                 if (isset($_POST['create'])) {
-                    header("location: queryOnAccount.php?type=view&action=create");
+                    header("location: queryOnAccount.php?type=view&page=1&action=create");
                 } else if (isset($_POST['continue'])) {
                     header("location: queryOnAccount.php?type=add&action=create");
                 }
             }
         }
         if (isset($_POST['back'])) {
-            header("location: queryOnAccount.php?type=view");
+            header("location: queryOnAccount.php?type=view&page=1");
         }
     }
 
@@ -37,33 +57,57 @@ if (isset($_GET["type"])) {
         if ($t != 'view') {
             $id = $_GET['for'];
 
-            $selectUser = selectElementFrom('users', '*', "id = '$_GET[for]'");
-            $oldData = $selectUser->fetch_assoc();
+            $updatedUser = new User("", "$id");
+            $oldData = $updatedUser->get();
             if ($t == 'edit') {
                 if (isset($_GET['check'])) {
                     $view_file_name = "module/user/edit.php";
+                    $editStatus = 0;
+                    $editData = array();
+                    if (isset($_POST['edit'])) {
+                        if ($_POST['pass'] != '') {
+                            $encodePass = md5($_POST['pass']);
+                            array_push($editData, array(
+                                'updatePass'=>'true',
+                                'title'=>"$_POST[title]",
+                                'pass'=>"$encodePass",
+                                'representName'=>"$_POST[representName]"
+                            ));
+
+                        } else {
+                            array_push($editData, array(
+                                'updatePass'=>'true',
+                                'title'=>"$_POST[title]",
+                                'representName'=>"$_POST[representName]"
+                            ));
+                        }
+
+                        if (isset($_FILES['imgSrc'])) {
+                            array_push($editData, array(
+                                'updateImg'=>'true',
+                                'nameInput'=>'imgSrc'
+                            ));
+                        }
+                        if ($updatedUser->update($editData)) {
+                            header("location: queryOnAccount.php?type=view&page=1&action=edited");
+                        }
+                    }
+
                 } else {
                     $view_file_name = "module/user/preEdit.php";
                 }
             } else if ($t == 'delete') {
                 $id = $oldData['id'];
-                $username = $oldData['username'];
-                if (checkListRestrictAccount($username, $_SESSION['username'])) {
-                    echo "<script>alert('Không được phép xoá tài khoản này')</script>";
-
-                    $usersAccount = getUsersAccount();
-                    $view_file_name = "module/user/view.php";
+                if (checkListRestrictAccount($oldData['username'], $_SESSION['username'])) {
+                    header("location: queryOnAccount.php?type=view&page=1&action=deletedRestrict");
                 } else {
-                    $sqlDelete = "DELETE FROM `$myTable` WHERE id=$id";
 
-                    if ($conn->query($sqlDelete)) {
-                        header("location: queryOnAccount.php?type=view&action=deleted");
+                    if ($updatedUser->delete()) {
+                        header("location: queryOnAccount.php?type=view&page=1&action=deleted");
                     } else {
-                        header("location: queryOnAccount.php?type=view&action=deletedError");
+                        header("location: queryOnAccount.php?type=view&page=1&action=deletedError");
                     }
                 }
-
-
             }
         } else {
             echo $conn->error . " error at selectCourse";
@@ -71,8 +115,8 @@ if (isset($_GET["type"])) {
     }
 }
 
-function getUsersAccount() {
-    $selectUserAccount = selectElementFrom("users", "*", "1 ORDER BY id DESC");
+function getUsersAccount($selectUserAccount)
+{
     $usersAccount = array();
     while ($user = $selectUserAccount->fetch_assoc()) {
 
@@ -91,7 +135,8 @@ function getUsersAccount() {
 
 //list khong cho phep bat cu ai duoc xoa tai khoan
 //kiem tra user muon xoa co trong list nay khong
-function checkListRestrictAccount($username, $sessionUserName) {
+function checkListRestrictAccount($username, $sessionUserName)
+{
     $restrictList = array("admin", "admin1", "admin2");
     if (in_array($username, $restrictList) || $username == $sessionUserName) {
         return true;

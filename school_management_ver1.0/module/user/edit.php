@@ -1,28 +1,4 @@
 <?php
-    global $conn;
-    $editStatus = 0;
-    if (isset($_POST['edit'])) {
-        if ($_POST['pass'] != '') {
-            $encodePass = md5($_POST['pass']);
-            $sqlUpdate = "UPDATE `users` 
-                SET `title`='$_POST[title]',`pass`='$encodePass',
-                  `representName`='$_POST[representName]' WHERE id = '$_GET[for]'";
-        } else {
-            $sqlUpdate = "UPDATE `users` 
-                SET `title`='$_POST[title]',
-                  `representName`='$_POST[representName]' WHERE id = '$_GET[for]'";
-        }
-        if ($conn->query($sqlUpdate)) {
-            $editStatus++;
-        }
-    }
-    if (isset($_FILES['imgSrc'])) {
-        uploadImage("$_GET[for]", "imgSrc");
-        $editStatus++;
-    }
-    if ($editStatus == 2) {
-        header("location: queryOnAccount.php?type=view&action=edited");
-    }
 ?>
 <h3>Chỉnh sửa tài khoản</h3>
 <form method='post' enctype="multipart/form-data">
@@ -41,7 +17,7 @@ $imgSRC = $oldData['img-personal'];
 
                 <select name="title" class="form-control">
 
-                    <option value="abc">select</option>
+                    <option value="">select</option>
                     <option <?= ($oldData['title'] == 'admin' ? 'selected' : '') ?>>admin</option>
                     <option <?= ($oldData['title'] == 'student' ? 'selected' : '') ?>>student</option>
                 </select>
@@ -50,7 +26,8 @@ $imgSRC = $oldData['img-personal'];
             <tr>
             
             <th>Tên đăng nhập</th>
-                <td><input type='text' value='<?=$oldData['username'] ?>' class='form-control' disabled></td>
+                <td><input type='text' value='<?=$oldData['username'] ?>' class='form-control'
+                        <?= ($oldData['title'] == 'admin') ? '' : 'disabled'?>></td>
             </tr>
             <tr>
             <th>Mật khẩu mới</th>

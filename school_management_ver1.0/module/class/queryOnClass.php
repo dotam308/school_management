@@ -1,42 +1,32 @@
 <?php
-
 require_once './connection.php';
 require_once 'function/functions.php';
+require_once "./models/Teacher.php";
+require_once "./models/ClassModel.php";
 global $conn;
-
+const LIMIT = 10;
 $myTable = "classes";
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
-    $sqlGetTeachers = 'SELECT * FROM `teachers` WHERE 1';
-    $teachersData = $conn->query($sqlGetTeachers);
-    $teachers = $teachersData->fetch_all();
+    $selectTeachers = new Teacher("");
+    $teachers = $selectTeachers->get();
 
+    $selectClass = new ClassModel("");
     if ($type == 'view') {
-        $classData = selectElementFrom("$myTable", "*", "1 ORDER BY id DESC");
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        }
+        $classData = $selectClass->filter("id", "DESC", LIMIT, "$page");
         $classList = array();
         while ($class = $classData->fetch_assoc()) {
-            $classList[] = [
-                "id" => "$class[id]",
-                "className" => "$class[className]",
-                "maxStudent" => "$class[maxStudent]",
-                "numOfStudents" => "$class[numOfStudents]",
-                "teacherId" => "$class[teacherId]"
-            ];
+            $newClass = new ClassModel("$class[id]");
+            $classList[] = $newClass->get();
         }
         $view_file_name = "module/class/view.php";
     }
     if ($type == 'add') {
         $addStatus = -1;
-        $selectTeachers = "
-        <select name='selectTeacher' class='form-control'>
-            <option value='' selected>----select----</option>";
-            for ($i = 0; $i < count($teachers); $i++) {
-                $fullName = $teachers[$i][1];
-                $id = $teachers[$i][0];
-                $showTeacher = $fullName . "-" . $id;
-                $selectTeachers .= "<option  value='$id'>$showTeacher</option>";
-            }
-        $selectTeachers .= '</select>';
+        $selectTeachers = createSelectTeachers($teachers);
         $view_file_name = "module/class/add.php";
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -51,17 +41,23 @@ if (isset($_GET["type"])) {
         }
 
         if (isset($_POST['className'])) {
-            $sqlInsert = "INSERT INTO `classes`(`id`, `className`, `maxStudent`, `numOfStudents`, `teacherId`)
-VALUES (NULL,'$_POST[className]','$_POST[maxStudent]','0','$_POST[selectTeacher]')";
 
-            if ($addStatus = $conn->query($sqlInsert)) {
+            $insertData = array(
+                'id' => "NULL",
+                "className" => "$_POST[className]",
+                'maxStudent' => "$_POST[maxStudent]",
+                "numOfStudents" => "0",
+                'teacherId' => "$_POST[selectTeacher]"
+            );
+
+            if ($selectClass->insert($insertData)) {
                 if (isset($_POST['create'])) {
-                    header("location: manageClass.php?type=view&action=create");
+                    header("location: manageClass.php?type=view&page=1&action=create");
                 } else if (isset($_POST['continue'])) {
                     header("location: manageClass.php?type=add&action=create");
                 }
             } else if (isset($_POST['back'])) {
-                header("location: manageClass.php?type=view");
+                header("location: manageClass.php?type=view&page=1");
             }
         }
     }
@@ -71,20 +67,41 @@ VALUES (NULL,'$_POST[className]','$_POST[maxStudent]','0','$_POST[selectTeacher]
         if ($t != 'view') {
             $id = $_GET['for'];
 
-            $sqlSelectTeacher = "SELECT * FROM `$myTable` WHERE id=$id";
+            $selectedClass = new ClassModel("$id");
+            $oldData = $selectedClass->get();
+            $selectTeachers = createSelectTeachers($teachers, $oldData['teacherId']);
 
-            $res = $conn->query($sqlSelectTeacher);
-            $oldData = $res->fetch_assoc();
             if ($t == 'edit') {
                 $view_file_name = "module/class/edit.php";
+                if ($_SERVER['REQUEST_METHOD'] == "POST") {
+// Thiết lập mảng lưu lỗi => Mặc định rỗng
+                    $error = array();
+                    if (empty($_POST['selectTeacher'])) {
+                        $error['selectTeacher'] = "Bạn cần chọn giáo viên";
+                    } else {
+                        $selected = $_POST['selectTeacher'];
+                    }
+                    if (empty($error)) {
+                    }
+                }
+                if (isset($_POST['className'])) {
+                    $editData = array(
+                      "className"=>"$_POST[className]",
+                      "maxStudent"=>"$_POST[maxStudent]",
+                      "teacherId"=> "$_POST[selectTeacher]"
+
+                    );
+                    if ($selectedClass->update($editData)) {
+                        header("location: manageClass.php?type=view&page=1&action=edited");
+                    } else {
+                        echo $conn->error . "error at update Course";
+                    }
+                }
             } else if ($t == 'delete') {
-
-                $sqlDelete = "DELETE FROM `$myTable` WHERE id=$oldData[id]";
-
-                if ($conn->query($sqlDelete)) {
-                    header("location: manageClass.php?type=view&action=deleted");
+                if ($selectedClass->delete()) {
+                    header("location: manageClass.php?type=view&page=1&action=deleted");
                 } else {
-                    header("location: manageClass.php?type=view&action=deletedError");
+                    header("location: manageClass.php?type=view&page=1&action=deletedError");
                 }
             }
         } else {
