@@ -27,6 +27,11 @@ if (isset($_GET['action'])) {
 
 		</tr>
 <!--        <tr class="row">-->
+<!--            <th class="col-sm-3">Tạo mật khẩu</th>-->
+<!--            <td class="col-sm-9"><input type='password' name='pass' class="form-control" autocomplete="off"/></td>-->
+<!---->
+<!--        </tr>-->
+<!--        <tr class="row">-->
 <!--            <th class="col-sm-3">Tên đăng nhập</th>-->
 <!--            <td class="col-sm-9"><input type='text' name='username' class="form-control" autocomplete="off"/></td>-->
 <!---->

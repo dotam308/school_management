@@ -16,11 +16,12 @@ class User extends BaseModel
     {
         if ($this->username != '' || $this->id != '') {
             $sqlGet = "select * from {$this->table} where username= '{$this->username}' OR id='$this->id'";
+
+//            echo $sqlGet;
             return $this->conn->query($sqlGet)->fetch_assoc();
         } else {
             $sqlGet = "select * from {$this->table}";
         }
-//        echo $sqlGet;
         return $this->conn->query($sqlGet);
     }
     public function update($params)
@@ -48,5 +49,25 @@ class User extends BaseModel
             uploadImage("$this->id", "$nameInput");
         }
         return $this->conn->query($sqlUpdate);
+    }
+//    public function getIdTeacher(){
+//        for ($i = 0; $i < strlen($this->username); $i++) {
+//            if ($this->isNumber($this->username[$i])) {
+//                return substr($this->username, $i);
+//            }
+//        }
+//        return 'not_teacher';
+//    }
+//    private function isNumber($str) {
+//        if ($str == '0' || $str == '1' ||$str == '2' ||$str == '3' ||$str == '4' ||$str == '5' ||$str == '6'
+//                                    ||$str == '7' ||$str == '8' ||$str == '9')
+//        {
+//            return true;
+//        }
+//        return false;
+//    }
+    public function setTable($table) {
+        $this->table = $table;
+//        echo $table;
     }
 }

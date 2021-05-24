@@ -43,9 +43,9 @@ if (isset($_POST['filter'])) {
                            ON students.classId = classes.id  ) studentList
                            ON scores.studentId = studentList.studentId
                 LEFT JOIN courses ON scores.courseId = courses.id ";
-    $result = $scoreModel->filter("$orderBy", "$orderBy", -1, "$page", "$table");
+    $result = $scoreModel->filter("$orderBy", "$direction", -1, "$page", "$table");
     $totalRes = $result->num_rows;
-    $result = $scoreModel->filter("$orderBy", "$orderBy", LIMIT, "$page", "$table");
+    $result = $scoreModel->filter("$orderBy", "$direction", LIMIT, "$page", "$table");
 } else {
     $result = selectElementFrom('scores', "*", "1");
 }

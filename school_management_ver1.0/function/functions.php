@@ -2,6 +2,7 @@
 /**
  * @param $value
  */
+//require_once "./models/BaseModel.php";
 function dd($value)
 {
     echo '<pre>';
@@ -584,7 +585,6 @@ function uploadImage($usernameORId, $nameInput)
 
     // Check extension
     if (in_array($file_extension, $valid_ext)) {
-
         // Upload file
         if (move_uploaded_file($_FILES[$nameInput]['tmp_name'], $location)) {
 

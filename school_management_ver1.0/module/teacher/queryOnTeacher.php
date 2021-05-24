@@ -45,9 +45,9 @@ if (isset($_GET["type"])) {
 
                 $lastInsertTeacher = selectLastElement('teachers');
                 $lastNameTeacher = $lastInsertTeacher['fullName'];
-
+                $idLastTeacher = $lastInsertTeacher['id'];
                 $salt = generateRandomString(5);
-                $username = convert_vi_to_en($lastNameTeacher);
+                $username = convert_vi_to_en($lastNameTeacher).$idLastTeacher;
                 $passSalt = md5($username . $salt);
 
                 $insertUserData = array("id" => "NULL",

@@ -81,6 +81,28 @@
 		<th>Action</th>
 
 	</tr>
+
+        <tr>
+            <th>
+                <input type="text" name="id" placeholder="Mã giáo viên" class="form-control"
+                                        value="<?= isset($_POST['id']) ? $_POST['id'] : '' ?>">
+            </th>
+            <th>
+                <input type="text" name="fullName" placeholder="Họ tên"class="form-control"
+                                        value="<?= isset($_POST['fullName']) ? $_POST['fullName'] : '' ?>">
+            </th>
+            <th>
+                <input type="text" name="unit" placeholder="Đơn vị"  class="form-control"
+                                        value="<?= isset($_POST['unit']) ? $_POST['unit'] : '' ?>">
+            </th>
+            <th>
+                <input type="text" name="contactNumber" placeholder="Số điện thoại" class="form-control"
+                                        value="<?= isset($_POST['contactNumber']) ? $_POST['contactNumber'] : '' ?>">
+            </th>
+            <th><input type="submit" class="btn btn-success"
+                                        style="padding: 7px 10px; margin: 0px 11px" name="filter"
+                                        value="Lọc"></th>
+        </tr>
     <?php
         foreach ($teachers as $row) {
 

@@ -57,7 +57,7 @@
                                 <div class="card-icon">
                                     <i class="material-icons fas fa-chalkboard-teacher"></i>
                                 </div>
-                                <p class="card-category">Số lượng giáo viên</p>
+                                <p class="card-category">Số lượng giáo viên giảng dạy</p>
                                 <h3 class="card-title">
                                     <?php
                                     $selectTeachers = selectElementFrom('teachers', "*", "1");

@@ -30,34 +30,54 @@ if (isset($_GET['action'])) {
 if (count($usersAccount) <= 0) {
     echo "0 results";
 } else {
-
-
-
-// output data of each row
-    echo "
+?>
 <form method='get'>
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
-        <tr>";
-
-    echo "<th>Mã ID</th>
+        <tr>
+            <th>Mã ID</th>
+            <th>Ảnh đại diện</th>
             <th>Chức vụ</th>
 
             <th>Tên đăng nhập</th>
             <th>Tên đại diện</th>
-            <th>Ảnh đại diện(source)</th>
             <th>Action</th>
-        </tr>";
+        </tr>
 
+        <tr>
+            <th>
+                <input type="text" name="id" class="form-control" placeholder="Mã ID" />
+            </th>
+            <th>
+                <input type="text" name="teacherName" class="form-control" placeholder="Ảnh đại diện" disabled />
+            </th>
+            <th>
+                <input type="text" name="title" class="form-control" placeholder="Chức vụ" />
+            </th>
+
+            <th>
+                <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập" />
+            </th>
+            <th>
+                <input type="text" name="representName" class="form-control" placeholder="Tên đại diên" />
+            </th>
+            <th>
+                <input type="submit" class="btn btn-success" value="Lọc" style="padding: 7px 10px; margin: 0px 11px" name="filter">
+            </th>
+        </tr>
+<?php
     foreach ($usersAccount as $row) {
 
         $query = getActionForm('queryOnAccount.php', $row['id']);
-        $imgSRC = $row['img-personal'];?>
+        $imgSRC = $row['img-personal'];
+        $img = "<img src='$imgSRC' alt='imageUser' id='imgUser'/>"
+        ?>
         <tr>
             <td><?=$row['id']?></td>
+
+            <td class="imgDiv"><?=$img?></td>
             <td><?=$row['title']?></td>
             <td><?=$row['username']?></td>
             <td><?= ($row['representName'] == "NULL") ? "" : $row['representName'] ?></td>
-            <td><?= ($imgSRC == "NULL") ? "" : $imgSRC?></td>
             <td><?=$query?></td>
         </tr>
     <?php } ?>

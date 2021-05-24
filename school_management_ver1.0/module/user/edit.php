@@ -41,9 +41,8 @@ $imgSRC = $oldData['img-personal'];
             <tr>
                 <th>Ảnh đại diện(source)</th>
                 <td>
-
-                    <input type='text' value='<?=$imgSRC?>' class='form-control' name="imgSrc" >
-                    <input type='file' class='form-control' name="imgSrc" >
+                    <input type='file' class='form-control' name="imgSrc" id="inputImg">
+                    <div id="thumb-output" class="container-sm imgDiv"></div>
                 </td>
             </tr>
 

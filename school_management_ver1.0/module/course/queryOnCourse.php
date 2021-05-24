@@ -7,19 +7,43 @@ $type = "";
 
 global $conn;
 const LIMIT = 10;
+$selectedCourses = new Course("");
 $myTable = "courses";
+if (isset($_POST['filter'])) {
+    unset($filterPart);
+    $filterPost = array();
+    foreach ($_POST as $key=>$value) {
+        if (!empty($_POST[$key])) $filterPost[$key] = $value;
+    }
+    $filterGet = array();
+    foreach ($_GET as $key=>$value) {
+        $filterGet[$key] = $value;
+        if ($key=="direction") break;
+    }
+    $getLink = http_build_query(array_merge($filterGet, $filterPost));
+    unset($_GET);
+    header("location: manageCourse.php?$getLink");
+//    dd($_POST);
+}
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
     $newTeacher = new Teacher('');
     $teachers = $newTeacher->get();
 
-    $selectedCourses = new Course("");
     if ($type == 'view') {
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         }
-        $selectCourses = $selectedCourses->filter("id", "DESC", LIMIT, "$page");
+        $table = "SELECT courses.*, teachers.fullName, (startTime+12) AS start FROM courses
+LEFT JOIN teachers ON teachers.id = courses.teacherId";
+        if (isset($_GET['order'])) {
+            $selectCourses = $selectedCourses->filter("$_GET[order]", "$_GET[direction]", LIMIT,
+                "$page", "$table");
+        } else {
+
+            $selectCourses = $selectedCourses->filter("id", "DESC", LIMIT, "$page", "$table");
+        }
         $courseList = array();
         while ($course = $selectCourses->fetch_assoc()) {
             $newCourse = new Course("$course[id]");

@@ -60,7 +60,7 @@ if (isset($_GET["type"])) {
             $updatedUser = new User("", "$id");
             $oldData = $updatedUser->get();
             if ($t == 'edit') {
-                if (isset($_GET['check'])) {
+//                if (isset($_GET['check'])) {
                     $view_file_name = "module/user/edit.php";
                     $editStatus = 0;
                     $editData = array();
@@ -93,9 +93,9 @@ if (isset($_GET["type"])) {
                         }
                     }
 
-                } else {
-                    $view_file_name = "module/user/preEdit.php";
-                }
+//                } else {
+//                    $view_file_name = "module/user/preEdit.php";
+//                }
             } else if ($t == 'delete') {
                 $id = $oldData['id'];
                 if (checkListRestrictAccount($oldData['username'], $_SESSION['username'])) {

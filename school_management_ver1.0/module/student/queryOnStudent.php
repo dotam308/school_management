@@ -12,6 +12,9 @@ if (isset($_GET['type'])) {
     global $conn;
     $myTable = STUDENT_TABLE;
     if ($type == 'view') {
+        $table = "SELECT students.*, classes.className FROM students 
+                LEFT JOIN classes
+                ON students.classId = classes.id";
         if (isset($_POST['filter'])) {
             $result = filterStudents();
         } else if (isset($_GET['order']) && isset($_GET['direction'])) {
@@ -21,16 +24,16 @@ if (isset($_GET['type'])) {
                 $page = $_GET['page'];
                 $start = ($page - 1) * LIMIT;
                 $limit = LIMIT;
-                $result = $studentModels->filter("$orderBy", "$direction", LIMIT, "$page");
+                $result = $studentModels->filter("$orderBy", "$direction", LIMIT, "$page", "$table");
             }
         } else if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $start = ($page - 1) * LIMIT;
             $limit = LIMIT;
-            $result = $studentModels->filter("id", "DESC", LIMIT, "$page");
+            $result = $studentModels->filter("id", "DESC", LIMIT, "$page", "$table");
 
         } else {
-            $result = $studentModels->filter("id", "DESC", LIMIT, "1");
+            $result = $studentModels->filter("id", "DESC", LIMIT, "1", "$table");
 
         }
 
@@ -66,7 +69,10 @@ if (isset($_GET['type'])) {
 
             $username = $lastId;
             $salt = generateRandomString();
-            $passSalt = md5($lastId . $salt);
+//            $pass = (empty($_POST['pass'])) ? $lastId : $_POST['pass'];
+            $pass = $lastId;
+            $passSalt = md5($pass . $salt);
+
 
             $lastIdUser = selectLastElement('users');
             $insertUserData = array("id" => "NULL",
@@ -87,13 +93,11 @@ if (isset($_GET['type'])) {
                     if ($methodCreate == 'create') {
                         header("location: manageStudent.php?type=view&page=1&order=id&direction=DESC&action=added");
                     } else if ($methodCreate == 'continue') {
-                        header("location: manageStudent.php?type=view&page=1&order=id&direction=DESC&action=added");
+                        header("location: manageStudent.php?type=add&page=1&order=id&direction=DESC&action=added");
 
                 } else {
                     echo "<script>alert('Thêm tài khoản thất bại')</script>";
                 }
-
-
             }
         }
         $selectClass = createSelectClasses();

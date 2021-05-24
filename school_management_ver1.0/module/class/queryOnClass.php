@@ -16,7 +16,15 @@ if (isset($_GET["type"])) {
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         }
-        $classData = $selectClass->filter("id", "DESC", LIMIT, "$page");
+        $table = "SELECT classes.*, teachers.fullName teacherName FROM `classes`
+                    LEFT JOIN teachers 
+                    ON classes.teacherId = teachers.id";
+        if (isset($_GET['order'])) {
+
+            $classData = $selectClass->filter("$_GET[order]", "$_GET[direction]", LIMIT, "$page", "$table");
+        } else {
+            $classData = $selectClass->filter("id", "DESC", LIMIT, "$page", "$table");
+        }
         $classList = array();
         while ($class = $classData->fetch_assoc()) {
             $newClass = new ClassModel("$class[id]");

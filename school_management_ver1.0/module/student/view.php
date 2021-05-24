@@ -24,7 +24,7 @@ if (isset($_GET['action'])) {
         <h3>Danh sách sinh viên</h3>
     </div>
     <div class='col-sm-6 text-right'>
-        <div class="btn btn-primary">
+        <div class="btn btn-sm btn-primary">
             <a class='nav-link' href='manageStudent.php?type=add' style="color: white">
                 Thêm sinh viên
             </a>
@@ -51,23 +51,23 @@ if (count($students) <= 0) {
                 </th>
                 <th class="col-sm-2">Họ tên
 
-                    <a href="manageStudent.php?type=view&page=1&order=name&direction=ASC"
-                       class="<?= (checkStatusOrder('name', 'ASC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=fullName&direction=ASC"
+                       class="<?= (checkStatusOrder('fullName', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageStudent.php?type=view&page=1&order=name&direction=DESC"
-                       class="<?= (checkStatusOrder('name', 'DESC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=fullName&direction=DESC"
+                       class="<?= (checkStatusOrder('fullName', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
                 </th>
                 <th class="col-sm-2">Lớp
 
-                    <a href="manageStudent.php?type=view&page=1&order=class&direction=ASC"
-                       class="<?= (checkStatusOrder('class', 'ASC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=className&direction=ASC"
+                       class="<?= (checkStatusOrder('className', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageStudent.php?type=view&page=1&order=class&direction=DESC"
-                       class="<?= (checkStatusOrder('class', 'DESC')) ? 'activeDir' : '' ?>">
+                    <a href="manageStudent.php?type=view&page=1&order=className&direction=DESC"
+                       class="<?= (checkStatusOrder('className', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
                 </th>

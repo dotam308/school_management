@@ -29,10 +29,7 @@ abstract class BaseModel
         }
         else
         {
-            $sqlSelect = "$table";
-            if ($limit != -1) {
-                $sqlSelect .= " LIMIT " . ($limit * ($page - 1)) . ', ' . $limit;
-            }
+            $sqlSelect = "$table" . " WHERE $condition";
         }
 
 //        echo $sqlSelect;
