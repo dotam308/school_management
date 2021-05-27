@@ -77,23 +77,40 @@ $title = $user['title'];
                         </a>
                     </li>
                     <li class="nav-item <?= $active_menu == 'course' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageCourse.php?type=view&page=1">
+                        <a class="nav-link" href="manageCourse.php?type=view&page=1&order=id&direction=DESC">
                             <i class="material-icons">book</i>
                             <p>Quản lí khoá học</p>
                         </a>
                     </li>
                     <li class="nav-item <?= $active_menu == 'class' ? 'active' : '' ?>">
-                        <a class="nav-link" href="manageClass.php?type=view&page=1">
+                        <a class="nav-link" href="manageClass.php?type=view&page=1&order=id&direction=DESC">
                             <i class="material-icons fas fa-chalkboard"></i>
                             <p>Quản lí lớp học</p>
                         </a>
                     </li>
 
                     <li class="nav-item <?= $active_menu == 'account' ? 'active' : '' ?>">
-                        <a class="nav-link" href="queryOnAccount.php?type=view&page=1">
+                        <a class="nav-link" href="queryOnAccount.php?type=view&page=1&order=id&direction=DESC">
                             <i class="material-icons">add</i>
                             <p>Quản lí tài khoản</p>
                         </a>
+                    </li>
+
+                    <li class='nav-item <?= ($active_menu == 'profile') ? 'active' : "" ?>'>
+                        <a class='nav-link' href='updateAdminProfile.php?for=<?=$username?>'>
+                            <i class='material-icons'>person</i>
+                            <p>Cập nhật hồ sơ cá nhân</p>
+                        </a>
+
+                        <ul class='subs-menu'>
+                            <li class='sub-item <?= ($active_menu == 'profile' && $sub_active == 'viewProfile') ? 'active' : '' ?>'>
+                                <a href='updateAdminProfile.php?for=<?= $username ?>'>Cập nhật hồ sơ cá nhân</a>
+                            </li>
+                            <li class='sub-item <?= ($active_menu == 'profile' && $sub_active == 'updatePassword') ? 'active' : '' ?>'>
+                                <a href='updatePassword.php?for=<?= $username ?>'>Cập nhật mật khẩu</a>
+                            </li>
+                        </ul>
+                        <ul
                     </li>
                 <?php }
                 if ($title == 'student') {

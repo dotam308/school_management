@@ -7,24 +7,57 @@ $type = "";
 
 global $conn;
 const LIMIT = 10;
+$courseModel = new Course();
 $myTable = "courses";
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
     $newTeacher = new Teacher('');
     $teachers = $newTeacher->get();
 
-    $selectedCourses = new Course("");
     if ($type == 'view') {
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
+        } else {
+            $page = 1;
         }
-        $selectCourses = $selectedCourses->filter("id", "DESC", LIMIT, "$page");
+        $table = " courses.*, teachers.fullName, (startTime+12) AS start FROM courses
+LEFT JOIN teachers ON teachers.id = courses.teacherId";
+        if (isset($_POST['filter'])) {
+            $link = http_build_query(array_merge($_GET, $_POST));
+            header("location: manageCourse.php?$link&page=1");
+        }
+        if (isset($_GET['filter'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $courseModel->filter(['table'=>"$table",
+                "limit"=>'-1',
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+            $totalCourses = count($result);
+            $result = $courseModel->filter(['table'=>"$table",
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+        } else if (isset($_GET['order']) && isset($_GET['direction'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $courseModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "table"=>"$table",
+                "limit"=>'-1']);
+            $totalCourses = count($result);
+            $result = $courseModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "table"=>"$table"]);
+
+        }
         $courseList = array();
-        while ($course = $selectCourses->fetch_assoc()) {
-            $newCourse = new Course("$course[id]");
-            $courseList[] = $newCourse->get();
-        }
+        $courseList = $result;
+//        }
         $view_file_name = "module/course/view.php";
     }
 
@@ -61,14 +94,14 @@ if (isset($_GET["type"])) {
 //                       `courseClassCode`, `maxStudent`, `teacherId`)
 //                VALUES (NULL, '$_POST[credit]', '$_POST[startTime]', '$_POST[endTime]', '$_POST[place]', '$_POST[courseCode]', '$_POST[courseName]', '$_POST[courseClassCode]', '$_POST[maxStudent]', '$_POST[selectTeacher]')";
 
-            if ($selectedCourses->insert($insertData)) {
+            if ($courseModel->insert($insertData)) {
                 if (isset($_POST['create'])) {
-                    header("location: manageCourse.php?type=view&action=added");
+                    header("location: manageCourse.php?type=view&page=1&order=id&direction=DESC&action=added");
                 } else if (isset($_POST['continue'])) {
                     header("location: manageCourse.php?type=add&action=added");
                 }
             } else if (isset($_POST['back'])) {
-                header("location: manageCourse.php?type=view");
+                header("location: manageCourse.php?type=view&page=1&order=id&direction=DESC");
             } else {
                 header("location: manageCourse.php?type=add&action=failed");
             }
@@ -81,8 +114,7 @@ if (isset($_GET["type"])) {
             $id = $_GET['for'];
 
             $oldData = selectElementFrom("$myTable", "*", "id='$id'")->fetch_assoc();
-
-            $updatedCourse = new Course("$oldData[id]");
+            $courseModel->setId($id);
             if ($t == 'edit') {
                 $selectTeachers = createSelectTeachers($teachers, "$oldData[teacherId]");
                 $view_file_name = "module/course/edit.php";
@@ -111,15 +143,15 @@ if (isset($_GET["type"])) {
                         "maxStudent"=>"$_POST[maxStudent]",
                         "teacherId"=>"$_POST[selectTeacher]",
                     );
-                    if ($updatedCourse->update($editData)) {
-                        header("location: manageCourse.php?type=view&action=edited");
+                    if ($courseModel->update($editData)) {
+                        header("location: manageCourse.php?type=view&page=1&order=id&direction=DESC&action=edited");
                     } else {
                         echo $conn->error . "error at update Course";
                     }
                 }
             } else if ($t == 'delete') {
-                if ($updatedCourse->delete()) {
-                    header("location: manageCourse.php?type=view&action=deleted");
+                if ($courseModel->delete($id)) {
+                    header("location: manageCourse.php?type=view&page=1&order=id&direction=DESC&action=deleted");
                 } else {
                     echo $conn->error . " error at delete";
                 }

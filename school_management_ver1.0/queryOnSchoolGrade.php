@@ -20,6 +20,10 @@ require_once "module/score/queryOnGrades.php";
     $sub_active = 'score' ?>
     <?php require_once 'slide_bar.php' ?>
     <div class="main-panel">
+
+        <?php
+        require_once "includes/header.php";
+        ?>
         <div class="content">
             <div class="container-fluid">
                 <?php

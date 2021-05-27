@@ -26,23 +26,178 @@ if (count($courseList) <= 0) {
 echo "0 results";
 } else {
 ?>
-<form method='get'>
+<form method='post'>
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
         <tr>
 
-            <th>Mã ID</th>
-            <th>Số tín</th>
+            <?php
+            $linkRef = http_build_query($_GET);
+            $rootLink = "manageCourse.php?$linkRef&page=1";
+            ?>
+            <th>Mã ID
+                <div>
+                <a href="<?=$rootLink?>&order=id&direction=ASC"
+                   class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+                <a href="<?=$rootLink?>&order=id&direction=DESC"
+                   class="<?= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_downward</i>
+                </a>
+                </div>
+            </th>
+            <th>Số tín
+                <div><a href="<?=$rootLink?>&order=credit&direction=ASC"
+                        class="<?= (checkStatusOrder('credit', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=credit&direction=DESC"
+                       class="<?= (checkStatusOrder('credit', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
 
-            <th>Mã khoá học</th>
-            <th>Tên khoá học</th>
-            <th>Mã lớp môn học</th>
-            <th>Sĩ số tối đa</th>
-            <th>Giáo viên</th>
-            <th>Thời gian</th>
-            <th>Địa điểm</th>
+            <th>Mã khoá học
+                <div>
+
+                    <a href="<?=$rootLink?>&order=courseCode&direction=ASC"
+                       class="<?= (checkStatusOrder('courseCode', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=courseCode&direction=DESC"
+                       class="<?= (checkStatusOrder('courseCode', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Tên khoá học
+                <div>
+                    <a href="<?=$rootLink?>&order=courseName&direction=ASC"
+                       class="<?= (checkStatusOrder('courseName', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=courseName&direction=DESC"
+                       class="<?= (checkStatusOrder('courseName', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Mã lớp môn học
+                <div>
+                    <a href="<?=$rootLink?>&order=courseClassCode&direction=ASC"
+                       class="<?= (checkStatusOrder('courseClassCode', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=courseClassCode&direction=DESC"
+                       class="<?= (checkStatusOrder('courseClassCode', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Sĩ số tối đa
+                <div>
+                    <a href="<?=$rootLink?>&order=maxStudent&direction=ASC"
+                       class="<?= (checkStatusOrder('maxStudent', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=maxStudent&direction=DESC"
+                       class="<?= (checkStatusOrder('maxStudent', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Giáo viên
+                <div>
+                    <a href="<?=$rootLink?>&order=teacherId&direction=ASC"
+                       class="<?= (checkStatusOrder('teacherId', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=teacherId&direction=DESC"
+                       class="<?= (checkStatusOrder('teacherId', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Thời gian
+                <div>
+                    <a href="<?=$rootLink?>&order=start&direction=ASC"
+                       class="<?= (checkStatusOrder('start', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=start&direction=DESC"
+                       class="<?= (checkStatusOrder('start', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
+            <th>Địa điểm
+                <div>
+                    <a href="<?=$rootLink?>&order=place&direction=ASC"
+                       class="<?= (checkStatusOrder('place', 'ASC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_upward</i>
+                    </a>
+                    <a href="<?=$rootLink?>&order=place&direction=DESC"
+                       class="<?= (checkStatusOrder('place', 'DESC')) ? 'activeDir' : '' ?>">
+                        <i class="material-icons">arrow_downward</i>
+                    </a>
+                </div>
+            </th>
             <th>Action</th>
 
         </tr>
+    <tr>
+        <th>
+            <input name="id" type="text" placeholder="Mã id" class="form-control"
+                value="<?=$_POST['id'] ?? ($_GET['id'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="credit" type="text"  placeholder="Số tín" class="form-control"
+                   value="<?=$_POST['credit'] ?? ($_GET['credit'] ?? '')?>"
+            />
+        </th>
+
+        <th>
+            <input name="courseCode" type="text"  placeholder="Mã khoá học" class="form-control"
+                   value="<?=$_POST['courseCode'] ?? ($_GET['courseCode'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="courseName" type="text"  placeholder="Tên khoá học" class="form-control"
+                   value="<?=$_POST['courseName'] ?? ($_GET['courseName'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="courseClassCode" type="text"  placeholder="Mã lớp môn học" class="form-control"
+                   value="<?=$_POST['courseClassCode'] ?? ($_GET['courseClassCode'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="maxStudent" type="text"  placeholder="Sĩ số tối đa" class="form-control"
+                   value="<?=$_POST['maxStudent'] ?? ($_GET['maxStudent'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="teacherName" type="text"  placeholder="Giáo viên" class="form-control"
+                   value="<?=$_POST['teacherName'] ?? ($_GET['teacherName'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="time" type="text" placeholder="Thời gian" class="form-control"
+                   value="<?=$_POST['time'] ?? ($_GET['time'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input name="place" type="text"  placeholder="Địa điểm" class="form-control"
+                   value="<?=$_POST['place'] ?? ($_GET['place'] ?? '')?>"
+            />
+        </th>
+        <th>
+            <input type="submit" class="btn btn-success" value="Lọc" style="padding: 7px 10px; margin: 0px 11px" name="filter">
+        </th>
+
+    </tr>
 <?php
         foreach ($courseList as $row) {
 
@@ -69,7 +224,7 @@ echo "0 results";
 }
 
 
-$total_pages = ceil($selectedCourses->get()->num_rows / LIMIT);
+$total_pages = ceil($totalCourses / LIMIT);
 
 //$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
 $pagLink = "<ul class='pagination'>";

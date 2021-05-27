@@ -26,7 +26,7 @@ if ($addStatus != -1) {
         </tr>
         <tr>
             <th>Cố vấn học tập</th>
-            <td><?= $selectTeachers ?></td>
+            <td><?= $selectedClass ?></td>
 
         </tr>
 

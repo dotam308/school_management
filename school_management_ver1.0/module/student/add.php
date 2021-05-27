@@ -27,6 +27,11 @@ if (isset($_GET['action'])) {
 
 		</tr>
 <!--        <tr class="row">-->
+<!--            <th class="col-sm-3">Tạo mật khẩu</th>-->
+<!--            <td class="col-sm-9"><input type='password' name='pass' class="form-control" autocomplete="off"/></td>-->
+<!---->
+<!--        </tr>-->
+<!--        <tr class="row">-->
 <!--            <th class="col-sm-3">Tên đăng nhập</th>-->
 <!--            <td class="col-sm-9"><input type='text' name='username' class="form-control" autocomplete="off"/></td>-->
 <!---->
@@ -40,5 +45,5 @@ if (isset($_GET['action'])) {
 	<button type='submit' class="btn btn-primary" name="create" value="create">Tạo</button>
     <button type='submit' class="btn btn-info" name="create" value="continue">Tạo và tiếp tục</button>
 </form>
-<a href='manageStudent.php?type=view' class="btn btn-dark">Back</a>
+<a href='manageStudent.php?type=view&page=1&order=id&direction=DESC' class="btn btn-dark">Back</a>
 

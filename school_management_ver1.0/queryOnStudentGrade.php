@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 require_once 'function/functions.php';
+require_once 'module/score/queryOnStudentGrade.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,41 +34,7 @@ require_once 'slide_bar.php';
         ?>
         <div class="content">
             <div class="container-fluid">
-                <?php
-                require_once 'function/functions.php';
-                require_once 'connection.php';
-
-                updateStudentOnGrade();
-                global $conn;
-
-                if ($conn->connect_error) {
-                    echo $conn->error;
-                }
-                $idStudent = isset($_GET['for']) ? $_GET['for'] : "";
-                if ($idStudent != "") {
-                        showScores($_GET['for']);
-                }
-                if (isset($_POST['submit']) && $_POST['submit'] == 'submit') {
-                    $updateData = $_POST;
-
-                    $success = false;
-                    foreach ($updateData as $key => $value) {
-
-                        $info = getDetailData($key);
-
-                        $courseIdPart = $info[0];
-                        $studentId = $info[1];
-                        $sqlUpdate = "UPDATE `scores` SET `score`= $value WHERE `courseId`='$courseIdPart' AND `studentId` = '$studentId'";
-
-                        if ($conn->query($sqlUpdate)) {
-                            $success = true;
-                        } else {
-                        }
-                    }
-                    header("location: queryOnStudentGrade.php?for=$idStudent#");
-            }
-                ?>
-
+               <?php require_once "$view_file_name";?>
             </div>
         </div>
         <?php

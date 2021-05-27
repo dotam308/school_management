@@ -5,25 +5,26 @@ require_once 'BaseModel.php';
 class Student extends BaseModel
 {
     protected $table = 'students';
-    public function __construct($id)
-    {
-        global $conn;
-        $this->conn = $conn;
-        $this->id = $id;
-    }
-
-
-
+    protected $fields = ['id', 'fullName', 'classId', 'contactNumber', 'dob'];
+    private $id = '';
     public function update($params)
     {
-        global $conn;
-        $myTable = 'students';
-        $date = strtotime($params[2]);
-        $dob = date('Y-m-d', $date);
+        if ($this->id == '') {
+            echo 'error at update student';
+            return false;
+        }
+        $date = strtotime($params['dob']);
+        $params['dob'] = date('Y-m-d', $date);
+        $updateContent = array();
+        foreach ($params as $key=>$value) {
+            $updateContent[] = "$key" . "=" . "'$value'";
+        }
+        $updateContent = implode(", ", $updateContent);
+        $sqlUpdate = "UPDATE `$this->table` SET $updateContent WHERE $this->id_name='$this->id'";
 
-        $sqlUpdate = "UPDATE `$myTable` SET `fullname`='$params[0]',`classId`='$params[3]',`contactNumber`='$params[1]',
-                   `dob`='$dob' WHERE id='$this->id'";
-
-        return $conn->query($sqlUpdate);
+        return $this->conn->query($sqlUpdate);
+    }
+    public function setId($id){
+        $this->id = $id;
     }
 }

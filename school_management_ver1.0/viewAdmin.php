@@ -57,7 +57,7 @@
                                 <div class="card-icon">
                                     <i class="material-icons fas fa-chalkboard-teacher"></i>
                                 </div>
-                                <p class="card-category">Số lượng giáo viên</p>
+                                <p class="card-category">Số lượng giáo viên giảng dạy</p>
                                 <h3 class="card-title">
                                     <?php
                                     $selectTeachers = selectElementFrom('teachers', "*", "1");
@@ -138,7 +138,7 @@
                                     <tbody>
                                     <?php
                                     $dataTopStudent = getHighestScoreStudents();
-                                    if ($dataTopStudent[0]['score'] >= 8) {
+                                    if ($dataTopStudent && $dataTopStudent[0]['score'] >= 8) {
 
                                         for ($i = 0; $i < count($dataTopStudent); $i++) {
                                             $id = $dataTopStudent[$i]["id"];
