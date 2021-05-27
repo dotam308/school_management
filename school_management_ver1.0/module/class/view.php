@@ -29,16 +29,20 @@ echo "0 results";
 } else {
 
 ?>
-<form method='get'>
+<form method='post'>
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
         <tr>
+            <?php
+            $linkRef = http_build_query($_GET);
+            $rootLink = "manageClass.php?$linkRef&page=1";
+            ?>
             <th>Mã ID
                 <div>
-                    <a href="manageClass.php?type=view&page=1&order=id&direction=ASC"
+                    <a href="<?=$rootLink?>&page=1&order=id&direction=ASC"
                        class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageClass.php?type=view&page=1&order=id&direction=DESC"
+                    <a href="<?=$rootLink?>&page=1&order=id&direction=DESC"
                        class="<?= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -46,11 +50,11 @@ echo "0 results";
             </th>
             <th>Tên lớp
                 <div>
-                    <a href="manageClass.php?type=view&page=1&order=className&direction=ASC"
+                    <a href="<?=$rootLink?>&page=1&order=className&direction=ASC"
                        class="<?= (checkStatusOrder('className', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageClass.php?type=view&page=1&order=className&direction=DESC"
+                    <a href="<?=$rootLink?>&page=1&order=className&direction=DESC"
                        class="<?= (checkStatusOrder('className', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -59,11 +63,11 @@ echo "0 results";
 
             <th>Sĩ số tối đa
                 <div>
-                    <a href="manageClass.php?type=view&page=1&order=maxStudent&direction=ASC"
+                    <a href="<?=$rootLink?>&page=1&order=maxStudent&direction=ASC"
                        class="<?= (checkStatusOrder('maxStudent', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageClass.php?type=view&page=1&order=maxStudent&direction=DESC"
+                    <a href="<?=$rootLink?>&page=1&order=maxStudent&direction=DESC"
                        class="<?= (checkStatusOrder('maxStudent', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -71,11 +75,11 @@ echo "0 results";
             </th>
             <th>Sĩ số hiện tại
                 <div>
-                    <a href="manageClass.php?type=view&page=1&order=numOfStudents&direction=ASC"
+                    <a href="<?=$rootLink?>&page=1&order=numOfStudents&direction=ASC"
                        class="<?= (checkStatusOrder('numOfStudents', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageClass.php?type=view&page=1&order=numOfStudents&direction=DESC"
+                    <a href="<?=$rootLink?>&page=1&order=numOfStudents&direction=DESC"
                        class="<?= (checkStatusOrder('numOfStudents', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -83,11 +87,11 @@ echo "0 results";
             </th>
             <th>Cố vấn học tập
                 <div>
-                    <a href="manageClass.php?type=view&page=1&order=teacherName&direction=ASC"
+                    <a href="<?=$rootLink?>&page=1&order=teacherName&direction=ASC"
                        class="<?= (checkStatusOrder('teacherName', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageClass.php?type=view&page=1&order=teacherName&direction=DESC"
+                    <a href="<?=$rootLink?>&page=1&order=teacherName&direction=DESC"
                        class="<?= (checkStatusOrder('teacherName', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -97,20 +101,30 @@ echo "0 results";
         </tr>
         <tr>
             <th>
-                <input type="text" name="id" class="form-control" placeholder="Mã ID" />
+                <input type="text" name="id" class="form-control" placeholder="Mã ID"
+                       value="<?=$_POST['id'] ?? ($_GET['id'] ?? '')?>"
+                />
             </th>
             <th>
-                <input type="text" name="className" class="form-control" placeholder="Tên lớp" />
+                <input type="text" name="className" class="form-control" placeholder="Tên lớp"
+                       value="<?=$_POST['className'] ?? ($_GET['className'] ?? '')?>"
+                />
             </th>
 
             <th>
-                <input type="text" name="maxStudent" class="form-control" placeholder="Sĩ số tối đa" />
+                <input type="text" name="maxStudent" class="form-control" placeholder="Sĩ số tối đa"
+                       value="<?=$_POST['maxStudent'] ?? ($_GET['maxStudent'] ?? '')?>"
+                />
             </th>
             <th>
-                <input type="text" name="numOfStudents" class="form-control" placeholder="Sĩ số hiện tại" />
+                <input type="text" name="numOfStudents" class="form-control" placeholder="Sĩ số hiện tại"
+                       value="<?=$_POST['numOfStudents'] ?? ($_GET['numOfStudents'] ?? '')?>"
+                />
             </th>
             <th>
-                <input type="text" name="teacherName" class="form-control" placeholder="Cố vấn học tập" />
+                <input type="text" name="teacherName" class="form-control" placeholder="Cố vấn học tập"
+                       value="<?=$_POST['teacherName'] ?? ($_GET['teacherName'] ?? '')?>"
+                />
             </th>
             <th>
                 <input type="submit" class="btn btn-success" value="Lọc" style="padding: 7px 10px; margin: 0px 11px" name="filter">
@@ -144,40 +158,8 @@ echo "0 results";
 
 <?php } ?>
 <?php
-$total_pages = ceil($selectClass->get()->num_rows/ LIMIT);
 
-//$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
-$pagLink = "<ul class='pagination'>";
-$page = isset($_GET['page']) ? $_GET['page'] : 0;
-if ($page > 1) {
-    $pagLink .= "<li class='page-item'>
-        <a class='page-link'
-           href='manageClass.php?type=view&page=" . ($page - 1) ."&order=$_GET[order]&direction=$_GET[direction]" ."'>" . 'prev' . "
-        </a>
-    </li>";
-}
-for ($i=1; $i<=$total_pages; $i++) {
-    $pagLink .= "<li class='page-item'>";
-
-    $toLink = "manageClass.php?type=view&order=$_GET[order]&direction=$_GET[direction]";
-
-    if (isset($_GET['page']) && $_GET['page'] == $i) {
-        $toLink .= "&page=$i";
-        $pagLink .= "<a class='page-link active' href='$toLink'>" . $i . "</a>";
-
-    } else {
-        $toLink .= "&page=$i";
-        $pagLink .= "<a class='page-link' href='$toLink'>" . $i . "</a>";
-    }
-    $pagLink .= "</li>";
-}
-if ($page < $total_pages) {
-
-    $pagLink .= "<li class='page-item'>
-        <a class='page-link'
-           href='manageClass.php?type=view&page=" . ($page + 1). "&order=$_GET[order]&direction=$_GET[direction]" . "'>" . 'next' . "
-        </a>
-    </li>";
-}
-echo $pagLink . "</ul>";
+require_once "module/page/view.php";
+$params = array_merge($_GET, $_POST);
+getPagination("manageClass.php", $params, "$totalClasses");
 

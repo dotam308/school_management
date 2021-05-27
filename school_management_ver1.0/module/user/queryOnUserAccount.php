@@ -6,19 +6,47 @@ require_once './models/User.php';
 global $conn;
 const LIMIT = 10;
 $myTable = "users";
+$userModel = new User();
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
     $username = $_SESSION['username'];
-    $userModel = new User($username);
-    $userC = $userModel->get();
+    $userC = $userModel->get("$username");
 
-    $users = new User("");
+    $users = new User();
     if ($type == 'view') {
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
+        }if (isset($_POST['filter'])) {
+            $link = http_build_query(array_merge($_GET, $_POST));
+            header("location: queryOnAccount.php?$link&page=1");
         }
-        $selectUsers = $users->filter("id", "DESC", "10", "$page");
-        $usersAccount = getUsersAccount($selectUsers);
+        if (isset($_GET['filter'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $userModel->filter([
+                "limit"=>'-1',
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+            $totalAccounts = count($result);
+            $result = $userModel->filter([
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+        } else if (isset($_GET['order']) && isset($_GET['direction'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $userModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "limit"=>'-1']);
+            $totalAccounts = count($result);
+            $result = $userModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page"]);
+
+        }
+        $usersAccount = $result;
         $view_file_name = "module/user/view.php";
     }
     if ($type == 'add') {
@@ -30,25 +58,22 @@ if (isset($_GET["type"])) {
 
             $encodePass = md5($passSalt);
             $insertData = array(
-                'id' => "NULL",
                 "title" => "$_POST[title]",
                 "username" => "$_POST[username]",
                 "pass" => "$encodePass",
-                "salt" => "$salt",
-                "representName" => "NULL",
-                "img-personal" => "NULL"
+                "salt" => "$salt"
             );
 
             if ($users->insert($insertData)) {
                 if (isset($_POST['create'])) {
-                    header("location: queryOnAccount.php?type=view&page=1&action=create");
+                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=create");
                 } else if (isset($_POST['continue'])) {
                     header("location: queryOnAccount.php?type=add&action=create");
                 }
             }
         }
         if (isset($_POST['back'])) {
-            header("location: queryOnAccount.php?type=view&page=1");
+            header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc");
         }
     }
 
@@ -57,16 +82,15 @@ if (isset($_GET["type"])) {
         if ($t != 'view') {
             $id = $_GET['for'];
 
-            $updatedUser = new User("", "$id");
-            $oldData = $updatedUser->get();
+            $oldData = $userModel->get("", "$id");
+            $userModel->setUserId($id);
             if ($t == 'edit') {
-//                if (isset($_GET['check'])) {
                     $view_file_name = "module/user/edit.php";
                     $editStatus = 0;
                     $editData = array();
                     if (isset($_POST['edit'])) {
                         if ($_POST['pass'] != '') {
-                            $encodePass = md5($_POST['pass']);
+                            $encodePass = md5($_POST['pass'].$oldData['salt']);
                             array_push($editData, array(
                                 'updatePass'=>'true',
                                 'title'=>"$_POST[title]",
@@ -88,8 +112,24 @@ if (isset($_GET["type"])) {
                                 'nameInput'=>'imgSrc'
                             ));
                         }
-                        if ($updatedUser->update($editData)) {
-                            header("location: queryOnAccount.php?type=view&page=1&action=edited");
+                        if ($statusUpdate = $userModel->update($editData)) {
+                            echo $statusUpdate;
+                            switch ($statusUpdate) {
+                                case "none":
+                                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=failUpdated");
+                                    break;
+                                case "info":
+                                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=infoUpdated");
+                                    break;
+                                case "img":
+                                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=imgUpdated");
+                                case "both":
+                                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=edited");
+                                    break;
+                                default:
+                                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc");
+                                    break;
+                            }
                         }
                     }
 
@@ -99,13 +139,13 @@ if (isset($_GET["type"])) {
             } else if ($t == 'delete') {
                 $id = $oldData['id'];
                 if (checkListRestrictAccount($oldData['username'], $_SESSION['username'])) {
-                    header("location: queryOnAccount.php?type=view&page=1&action=deletedRestrict");
+                    header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=deletedRestrict");
                 } else {
 
-                    if ($updatedUser->delete()) {
-                        header("location: queryOnAccount.php?type=view&page=1&action=deleted");
+                    if ($userModel->delete($userModel->getUserNameThroughId($id))) {
+                        header("location: queryOnAccount.php?type=view&page=1order=id&direction=desc&&action=deleted");
                     } else {
-                        header("location: queryOnAccount.php?type=view&page=1&action=deletedError");
+                        header("location: queryOnAccount.php?type=view&page=1&order=id&direction=desc&action=deletedError");
                     }
                 }
             }
@@ -115,23 +155,6 @@ if (isset($_GET["type"])) {
     }
 }
 
-function getUsersAccount($selectUserAccount)
-{
-    $usersAccount = array();
-    while ($user = $selectUserAccount->fetch_assoc()) {
-
-        $img = $user['img-personal'];
-        $usersAccount[] = [
-            "id" => "$user[id]",
-            "title" => "$user[title]",
-            "username" => "$user[username]",
-            "pass" => "$user[pass]",
-            "representName" => "$user[representName]",
-            "img-personal" => "$img"
-        ];
-    }
-    return $usersAccount;
-}
 
 //list khong cho phep bat cu ai duoc xoa tai khoan
 //kiem tra user muon xoa co trong list nay khong

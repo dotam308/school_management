@@ -4,30 +4,29 @@ require_once "BaseModel.php";
 class User extends BaseModel
 {
     protected $table = 'users';
-    protected $username = '';
-    public function __construct($username="", $id="")
+    protected $id_name = 'username';
+    private $userId;
+    public function get($username="", $id = "")
     {
-        global $conn;
-        $this->conn = $conn;
-        $this->username = $username;
-        $this->id = $id;
-    }
-    public function get()
-    {
-        if ($this->username != '' || $this->id != '') {
-            $sqlGet = "select * from {$this->table} where username= '{$this->username}' OR id='$this->id'";
-
-//            echo $sqlGet;
+        if ($username != '' || $id != '') {
+            $sqlGet = "select * from {$this->table} where username= '$username' OR id='$id'";
             return $this->conn->query($sqlGet)->fetch_assoc();
         } else {
             $sqlGet = "select * from {$this->table}";
+            echo $sqlGet;
+            return $this->conn->query($sqlGet)->fetch_all(MYSQLI_ASSOC);
         }
-        return $this->conn->query($sqlGet);
     }
     public function update($params)
     {
         // TODO: Implement update() method.
 //        dd($params[0]);
+        $status = "none";
+        //none, cap nhat thong tin, va anh deu bi loi
+        //both, cap nhat thong tin , anh thanh cong
+        //img cap nhat anh thanh cong
+        //info cap nhat anh thanh cong
+        if (empty($this->userId)) return false;
         if ($params[0]['updatePass'] == true) {
             $title =$params[0]['title'];
             $pass =$params[0]['pass'];
@@ -35,39 +34,44 @@ class User extends BaseModel
 
             $sqlUpdate = "UPDATE `$this->table`
                             SET `title`='$title',`pass`='$pass',
-                              `representName`='$representName' WHERE id = '$this->id'";
+                              `representName`='$representName' WHERE id = '$this->userId'";
         } else if ($params[0]['updatePass'] == false) {
 
             $title =$params[0]['title'];
             $representName=$params[0]['representName'];
             $sqlUpdate = "UPDATE `$this->table`
                             SET `title`='$title',
-                              `representName`='$representName' WHERE id = '$this->id'";
+                              `representName`='$representName' WHERE id = '$this->userId'";
         }
+        if ($this->conn->query($sqlUpdate)) {
+            $status = "info";
+        }
+        $updateImg = false;
         if ($params[1]['updateImg'] == true) {
+            $updateImg = true;
             $nameInput = $params[1]['nameInput'];
-            uploadImage("$this->id", "$nameInput");
+            if (uploadImage("$this->userId", "$nameInput")) {
+                if ($status == "info") {
+                    $status = "both";
+                } else {
+                    $status = "img";
+                }
+            } else {
+                echo "<script>alert('Cập nhật ảnh lỗi')</script>";
+            }
         }
-        return $this->conn->query($sqlUpdate);
+        if ($updateImg == false) return "both";
+        return $status;
     }
-//    public function getIdTeacher(){
-//        for ($i = 0; $i < strlen($this->username); $i++) {
-//            if ($this->isNumber($this->username[$i])) {
-//                return substr($this->username, $i);
-//            }
-//        }
-//        return 'not_teacher';
-//    }
-//    private function isNumber($str) {
-//        if ($str == '0' || $str == '1' ||$str == '2' ||$str == '3' ||$str == '4' ||$str == '5' ||$str == '6'
-//                                    ||$str == '7' ||$str == '8' ||$str == '9')
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
     public function setTable($table) {
         $this->table = $table;
 //        echo $table;
+    }
+    public function setUserId($id) {
+        $this->userId = $id;
+    }
+    public function getUserNameThroughId($id) {
+        $username = $this->get("", "$id")['username'];
+        return $username;
     }
 }

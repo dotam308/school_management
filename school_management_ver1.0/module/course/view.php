@@ -30,24 +30,28 @@ echo "0 results";
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
         <tr>
 
+            <?php
+            $linkRef = http_build_query($_GET);
+            $rootLink = "manageCourse.php?$linkRef&page=1";
+            ?>
             <th>Mã ID
                 <div>
-                <a href="manageCourse.php?type=view&page=1&order=id&direction=ASC"
+                <a href="<?=$rootLink?>&order=id&direction=ASC"
                    class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
                     <i class="material-icons">arrow_upward</i>
                 </a>
-                <a href="manageCourse.php?type=view&page=1&order=id&direction=DESC"
+                <a href="<?=$rootLink?>&order=id&direction=DESC"
                    class="<?= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?>">
                     <i class="material-icons">arrow_downward</i>
                 </a>
                 </div>
             </th>
             <th>Số tín
-                <div><a href="manageCourse.php?type=view&page=1&order=credit&direction=ASC"
+                <div><a href="<?=$rootLink?>&order=credit&direction=ASC"
                         class="<?= (checkStatusOrder('credit', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=credit&direction=DESC"
+                    <a href="<?=$rootLink?>&order=credit&direction=DESC"
                        class="<?= (checkStatusOrder('credit', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -57,11 +61,11 @@ echo "0 results";
             <th>Mã khoá học
                 <div>
 
-                    <a href="manageCourse.php?type=view&page=1&order=courseCode&direction=ASC"
+                    <a href="<?=$rootLink?>&order=courseCode&direction=ASC"
                        class="<?= (checkStatusOrder('courseCode', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=courseCode&direction=DESC"
+                    <a href="<?=$rootLink?>&order=courseCode&direction=DESC"
                        class="<?= (checkStatusOrder('courseCode', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -69,11 +73,11 @@ echo "0 results";
             </th>
             <th>Tên khoá học
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=courseName&direction=ASC"
+                    <a href="<?=$rootLink?>&order=courseName&direction=ASC"
                        class="<?= (checkStatusOrder('courseName', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=courseName&direction=DESC"
+                    <a href="<?=$rootLink?>&order=courseName&direction=DESC"
                        class="<?= (checkStatusOrder('courseName', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -81,11 +85,11 @@ echo "0 results";
             </th>
             <th>Mã lớp môn học
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=courseClassCode&direction=ASC"
+                    <a href="<?=$rootLink?>&order=courseClassCode&direction=ASC"
                        class="<?= (checkStatusOrder('courseClassCode', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=courseClassCode&direction=DESC"
+                    <a href="<?=$rootLink?>&order=courseClassCode&direction=DESC"
                        class="<?= (checkStatusOrder('courseClassCode', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -93,11 +97,11 @@ echo "0 results";
             </th>
             <th>Sĩ số tối đa
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=maxStudent&direction=ASC"
+                    <a href="<?=$rootLink?>&order=maxStudent&direction=ASC"
                        class="<?= (checkStatusOrder('maxStudent', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=maxStudent&direction=DESC"
+                    <a href="<?=$rootLink?>&order=maxStudent&direction=DESC"
                        class="<?= (checkStatusOrder('maxStudent', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -105,11 +109,11 @@ echo "0 results";
             </th>
             <th>Giáo viên
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=teacherId&direction=ASC"
+                    <a href="<?=$rootLink?>&order=teacherId&direction=ASC"
                        class="<?= (checkStatusOrder('teacherId', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=teacherId&direction=DESC"
+                    <a href="<?=$rootLink?>&order=teacherId&direction=DESC"
                        class="<?= (checkStatusOrder('teacherId', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -117,11 +121,11 @@ echo "0 results";
             </th>
             <th>Thời gian
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=start&direction=ASC"
+                    <a href="<?=$rootLink?>&order=start&direction=ASC"
                        class="<?= (checkStatusOrder('start', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=start&direction=DESC"
+                    <a href="<?=$rootLink?>&order=start&direction=DESC"
                        class="<?= (checkStatusOrder('start', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -129,11 +133,11 @@ echo "0 results";
             </th>
             <th>Địa điểm
                 <div>
-                    <a href="manageCourse.php?type=view&page=1&order=place&direction=ASC"
+                    <a href="<?=$rootLink?>&order=place&direction=ASC"
                        class="<?= (checkStatusOrder('place', 'ASC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_upward</i>
                     </a>
-                    <a href="manageCourse.php?type=view&page=1&order=place&direction=DESC"
+                    <a href="<?=$rootLink?>&order=place&direction=DESC"
                        class="<?= (checkStatusOrder('place', 'DESC')) ? 'activeDir' : '' ?>">
                         <i class="material-icons">arrow_downward</i>
                     </a>
@@ -144,32 +148,50 @@ echo "0 results";
         </tr>
     <tr>
         <th>
-            <input name="id" type="text" placeholder="Mã id" class="form-control"/>
+            <input name="id" type="text" placeholder="Mã id" class="form-control"
+                value="<?=$_POST['id'] ?? ($_GET['id'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="credit" type="text"  placeholder="Số tín" class="form-control"/>
+            <input name="credit" type="text"  placeholder="Số tín" class="form-control"
+                   value="<?=$_POST['credit'] ?? ($_GET['credit'] ?? '')?>"
+            />
         </th>
 
         <th>
-            <input name="courseCode" type="text"  placeholder="Mã khoá học" class="form-control"/>
+            <input name="courseCode" type="text"  placeholder="Mã khoá học" class="form-control"
+                   value="<?=$_POST['courseCode'] ?? ($_GET['courseCode'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="courseName" type="text"  placeholder="Tên khoá học" class="form-control"/>
+            <input name="courseName" type="text"  placeholder="Tên khoá học" class="form-control"
+                   value="<?=$_POST['courseName'] ?? ($_GET['courseName'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="courseClassCode" type="text"  placeholder="Mã lớp môn học" class="form-control"/>
+            <input name="courseClassCode" type="text"  placeholder="Mã lớp môn học" class="form-control"
+                   value="<?=$_POST['courseClassCode'] ?? ($_GET['courseClassCode'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="maxStudent" type="text"  placeholder="Sĩ số tối đa" class="form-control"/>
+            <input name="maxStudent" type="text"  placeholder="Sĩ số tối đa" class="form-control"
+                   value="<?=$_POST['maxStudent'] ?? ($_GET['maxStudent'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="teacherName" type="text"  placeholder="Giáo viên" class="form-control"/>
+            <input name="teacherName" type="text"  placeholder="Giáo viên" class="form-control"
+                   value="<?=$_POST['teacherName'] ?? ($_GET['teacherName'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="time" type="text" placeholder="Thời gian" class="form-control"/>
+            <input name="time" type="text" placeholder="Thời gian" class="form-control"
+                   value="<?=$_POST['time'] ?? ($_GET['time'] ?? '')?>"
+            />
         </th>
         <th>
-            <input name="place" type="text"  placeholder="Địa điểm" class="form-control"/>
+            <input name="place" type="text"  placeholder="Địa điểm" class="form-control"
+                   value="<?=$_POST['place'] ?? ($_GET['place'] ?? '')?>"
+            />
         </th>
         <th>
             <input type="submit" class="btn btn-success" value="Lọc" style="padding: 7px 10px; margin: 0px 11px" name="filter">
@@ -202,7 +224,7 @@ echo "0 results";
 }
 
 
-$total_pages = ceil($selectedCourses->get()->num_rows / LIMIT);
+$total_pages = ceil($totalCourses / LIMIT);
 
 //$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
 $pagLink = "<ul class='pagination'>";

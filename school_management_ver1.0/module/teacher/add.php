@@ -35,7 +35,7 @@ if (isset($_GET['action'])) {
   </div>
   
   <button class='btn btn-primary' name='create' type='submit' value='create'>Tạo</button>
-  <button class='btn btn-info' name='continue' type='submit' value='continue'>Tạo và tiếp tục</button>
+  <button class='btn btn-info' name='create' type='submit' value='continue'>Tạo và tiếp tục</button>
 </form>
     <a class="btn btn-dark" href="manageTeacher.php?type=view&page=1&order=id&direction=DESC">Back</a>
 

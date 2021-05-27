@@ -45,5 +45,5 @@ if (isset($_GET['action'])) {
 	<button type='submit' class="btn btn-primary" name="create" value="create">Tạo</button>
     <button type='submit' class="btn btn-info" name="create" value="continue">Tạo và tiếp tục</button>
 </form>
-<a href='manageStudent.php?type=view' class="btn btn-dark">Back</a>
+<a href='manageStudent.php?type=view&page=1&order=id&direction=DESC' class="btn btn-dark">Back</a>
 

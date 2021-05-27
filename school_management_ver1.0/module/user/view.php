@@ -1,17 +1,30 @@
 <?php
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
-    if ($action == 'create') {
-        echo "<div class='alert alert-success'>Thêm thành công</div>";
-    } else if ($action == 'edited') {
-
-        echo "<div class='alert alert-success'>Cập nhật thành công</div>";
-    } else if ($action == 'deleted') {
-
-        echo "<div class='alert alert-success'>Xoá thành công</div>";
-    } else if ($action == 'deletedRestrict') {
-
-        echo "<script>alert('Không được phép xoá tài khoản này')</script>";
+    switch ($action) {
+        case 'create':
+            echo "<div class='alert alert-success'>Thêm thành công</div>";
+            break;
+        case 'edited':
+            echo "<div class='alert alert-success'>Cập nhật thành công</div>";
+            break;
+        case 'deletedRestrict':
+            echo "<script>alert('Không được phép xoá tài khoản này')</script>";
+            break;
+        case 'deleted':
+            echo "<div class='alert alert-success'>Xoá thành công</div>";
+            break;
+        case "failUpdated":
+            echo "<div class='alert alert-danger'>Dữ liệu không tồn tại</div>";
+            break;
+        case "infoUpdated":
+            echo "<div class='alert alert-success'>Cập nhật thông tin thành công</div>";
+//            echo "<div class='alert alert-danger'>Cập nhật ảnh thất bại</div>";
+            break;
+        case "imgUpdated":
+            echo "<div class='alert alert-success'>Cập nhật ảnh thành công</div>";
+//            echo "<div class='alert alert-danger'>Cập nhật thông tin thất bại</div>";
+            break;
     }
 }
 ?>
@@ -31,34 +44,87 @@ if (count($usersAccount) <= 0) {
     echo "0 results";
 } else {
 ?>
-<form method='get'>
+<form method='post'>
     <table style='width:100%; text-align: left' class='table table-striped table-bordered table-hover'>
         <tr>
-            <th>Mã ID</th>
-            <th>Ảnh đại diện</th>
-            <th>Chức vụ</th>
+            <?php
+            $linkRef = http_build_query($_GET);
+            $rootLink = "queryOnAccount.php?$linkRef&page=1";
+            ?>
+            <th>Mã ID
+                <a href="<?=$rootLink?>&order=id&direction=ASC"
+                   class="<?= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+                <a href="<?=$rootLink?>&order=id&direction=DESC"
+                   class="<?= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_downward</i>
+                </a>
+            </th>
+            <th>Ảnh đại diện
+<!--                <a href="--><?//=$rootLink?><!--&order=id&direction=ASC"-->
+<!--                   class="--><?//= (checkStatusOrder('id', 'ASC')) ? 'activeDir' : '' ?><!--">-->
+<!--                    <i class="material-icons">arrow_upward</i>-->
+<!--                </a>-->
+<!--                <a href="--><?//=$rootLink?><!--&order=id&direction=DESC"-->
+<!--                   class="--><?//= (checkStatusOrder('id', 'DESC')) ? 'activeDir' : '' ?><!--">-->
+<!--                    <i class="material-icons">arrow_downward</i>-->
+<!--                </a>-->
+            </th>
+            <th>Chức vụ
+                <a href="<?=$rootLink?>&order=title&direction=ASC"
+                   class="<?= (checkStatusOrder('title', 'ASC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+                <a href="<?=$rootLink?>&order=title&direction=DESC"
+                   class="<?= (checkStatusOrder('title', 'DESC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_downward</i>
+                </a>
+            </th>
 
-            <th>Tên đăng nhập</th>
-            <th>Tên đại diện</th>
+            <th>Tên đăng nhập
+                <a href="<?=$rootLink?>&order=username&direction=ASC"
+                   class="<?= (checkStatusOrder('username', 'ASC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+                <a href="<?=$rootLink?>&order=username&direction=DESC"
+                   class="<?= (checkStatusOrder('username', 'DESC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_downward</i>
+                </a>
+            </th>
+            <th>Tên đại diện
+                <a href="<?=$rootLink?>&order=representName&direction=ASC"
+                   class="<?= (checkStatusOrder('representName', 'ASC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+                <a href="<?=$rootLink?>&order=representName&direction=DESC"
+                   class="<?= (checkStatusOrder('representName', 'DESC')) ? 'activeDir' : '' ?>">
+                    <i class="material-icons">arrow_downward</i>
+                </a>
+            </th>
             <th>Action</th>
         </tr>
 
         <tr>
             <th>
-                <input type="text" name="id" class="form-control" placeholder="Mã ID" />
+                <input type="text" name="id" class="form-control" placeholder="Mã ID"
+                       value="<?=$_POST['id'] ?? ($_GET['id']?? '')?>"/>
             </th>
             <th>
-                <input type="text" name="teacherName" class="form-control" placeholder="Ảnh đại diện" disabled />
+                <input type="text" name="img-personal" class="form-control" placeholder="Ảnh đại diện" disabled />
             </th>
             <th>
-                <input type="text" name="title" class="form-control" placeholder="Chức vụ" />
+                <input type="text" name="title" class="form-control" placeholder="Chức vụ"
+                       value="<?=$_POST['title'] ?? ($_GET['title']?? '')?>" />
             </th>
 
             <th>
-                <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập" />
+                <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập"
+                       value="<?=$_POST['username'] ?? ($_GET['username']?? '')?>" />
             </th>
             <th>
-                <input type="text" name="representName" class="form-control" placeholder="Tên đại diên" />
+                <input type="text" name="representName" class="form-control" placeholder="Tên đại diên"
+                       value="<?=$_POST['representName'] ?? ($_GET['representName']?? '')?>"/>
             </th>
             <th>
                 <input type="submit" class="btn btn-success" value="Lọc" style="padding: 7px 10px; margin: 0px 11px" name="filter">
@@ -87,39 +153,6 @@ if (count($usersAccount) <= 0) {
 <?php } ?>
 <?php
 
-$total_pages = ceil($users->get()->num_rows/ LIMIT);
-
-//$selectObjectFilter = selectElementFrom("temp_teacher", "*", "1");
-$pagLink = "<ul class='pagination'>";
-    $page = isset($_GET['page']) ? $_GET['page'] : 0;
-    if ($page > 1) {
-    $pagLink .= "<li class='page-item'>
-        <a class='page-link'
-           href='queryOnAccount.php?type=view&page=" . ($page - 1) . "'>" . 'prev' . "
-        </a>
-    </li>";
-    }
-    for ($i=1; $i<=$total_pages; $i++) {
-    $pagLink .= "<li class='page-item'>";
-
-        $toLink = "queryOnAccount.php?type=view";
-
-        if (isset($_GET['page']) && $_GET['page'] == $i) {
-        $toLink .= "&page=$i";
-        $pagLink .= "<a class='page-link active' href='$toLink'>" . $i . "</a>";
-
-        } else {
-        $toLink .= "&page=$i";
-        $pagLink .= "<a class='page-link' href='$toLink'>" . $i . "</a>";
-        }
-        $pagLink .= "</li>";
-    }
-    if ($page < $total_pages) {
-
-    $pagLink .= "<li class='page-item'>
-        <a class='page-link'
-           href='queryOnAccount.php?type=view&page=" . ($page + 1) . "'>" . 'next' . "
-        </a>
-    </li>";
-    }
-    echo $pagLink . "</ul>";
+require_once "module/page/view.php";
+$params = array_merge($_GET, $_POST);
+getPagination("queryOnAccount.php", $params, "$totalAccounts");

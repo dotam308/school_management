@@ -14,7 +14,7 @@
         </tr>
         <tr>
          <th>Cố vấn học tập</th>
-            <td><?=$selectTeachers?></td>
+            <td><?=$teacherModel?></td>
         </tr>
     </table>
     <button type='submit' class='btn btn-primary'>Hoàn tất</button>

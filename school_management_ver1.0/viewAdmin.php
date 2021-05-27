@@ -138,7 +138,7 @@
                                     <tbody>
                                     <?php
                                     $dataTopStudent = getHighestScoreStudents();
-                                    if ($dataTopStudent[0]['score'] >= 8) {
+                                    if ($dataTopStudent && $dataTopStudent[0]['score'] >= 8) {
 
                                         for ($i = 0; $i < count($dataTopStudent); $i++) {
                                             $id = $dataTopStudent[$i]["id"];

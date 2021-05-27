@@ -8,33 +8,54 @@ require_once "models/Teacher.php";
 
 
 $username = $_GET['for'];
-$userMod = new User($username);
+$userMod = new User();
 $combineUserAndTeacher = "(SELECT users.*, teachers.fullName, teachers.unit, teachers.contactNumber FROM `users` 
                                                 LEFT JOIN teachers
                                                 ON users.userId = teachers.id) users
                                               ";
 $userMod->setTable($combineUserAndTeacher);
-$account = $userMod->get();
+$account = $userMod->get("$username");
+//dd($account);
 $userId = $account['userId'];
 
+
+if ($userId != 0) {
+    $fullName = $account['fullName'];
+    $unit = $account['unit'];
+    $contactNumber = $account['contactNumber'];
+} else {
+    $fullName = $account['representName'];
+}
+$representName = $account['representName'];
+
+$teacherMod = new Teacher();
 if (isset($_POST['upload'])) {
     $uploadStatus = uploadImage($_GET['for'], 'imagefiles');
 }
 
 if (isset($_POST['update'])) {
     global $conn;
-    $insertedData = [
-      "fullName"=> "$_POST[fullName]",
-        "unit"=>"$_POST[unit]",
-        "contactNumber"=>"$_POST[contactNumber]",
-        "representName"=>"$_POST[representName]"
-    ];
-    $teacherMod = new Teacher("$userId");
-
+    if ($account['title'] == 'admin') {
+        $sqlUpdateRepresentName = "UPDATE users SET representName = '$_POST[representName]',
+                 username='$_POST[username]' WHERE username='$_SESSION[username]'";
+        if ($conn->query($sqlUpdateRepresentName)) {
+            $_SESSION['username'] = $_POST['username'];
+            $username = $_POST['username'];
+            header("location: updateAdminProfile.php?for=$username&action=infoUpdated");
+        }
+    } else {
+        $insertedData = [
+            "fullName"=> "$_POST[fullName]",
+            "unit"=>"$_POST[unit]",
+            "contactNumber"=>"$_POST[contactNumber]",
+            "representName"=>"$_POST[representName]"
+        ];
+        $teacherMod->setId($userId);
 //    $sqlUpdate = "UPDATE `students` SET `contactNumber` = '$_POST[contactNumber]', `dob` = '$_POST[dob]' WHERE `students`.`id` = '$_GET[for]'";
-    $sqlUpdateRepresentName = "UPDATE users SET representName = '$_POST[representName]' WHERE username='$_SESSION[username]'";
-    if ($teacherMod->update($insertedData) && $conn->query($sqlUpdateRepresentName)) {
-        header("location: updateAdminProfile.php?for=$username&action=updated");
+        $sqlUpdateRepresentName = "UPDATE users SET representName = '$_POST[representName]' WHERE username='$_SESSION[username]'";
+        if ($teacherMod->update($insertedData) && $conn->query($sqlUpdateRepresentName)) {
+            header("location: updateAdminProfile.php?for=$username&action=updated");
+        }
     }
 
 }
@@ -98,8 +119,10 @@ require_once 'slide_bar.php';
                 <?php
                     if (isset($_GET['action'])) {
                         $type = $_GET['action'];
-                        if ($type == 'updated') {
-                            echo "<div class='alert alert-success'>Cập nhật thành công</div>";
+                        if ($type == 'infoUpdated') {
+                            echo "<div class='alert alert-success'>Cập nhật thông tin thành công</div>";
+                        } else if ($type == "imgUpdated") {
+                            echo "<div class='alert alert-success'>Cập nhật ảnh thành công</div>";
                         }
                     }
 
@@ -111,11 +134,15 @@ require_once 'slide_bar.php';
                             <div>
                                 <div class="img-container">
                                     Cập nhật ảnh đại diện
-                                    <div class="container-sm">
-                                        <img src="<?= $srcImg ?>" id='img-user'>
-                                    </div>
 
-                                        <div id="thumb-output" class="container-sm"></div>
+                                        <div id="thumb-output" class="container-sm">
+                                            <?php if (!empty($srcImg)) {?>
+
+                                            <div class="container-sm">
+                                                <img src="<?= $srcImg ?>" id='img-user'>
+                                            </div>
+                                            <?php } ?>
+                                        </div>
                                     <input type='file' name='imagefiles' id="inputImg">
                                     <input type='submit' value='Upload' name='upload' class="btn btn-dark">
                                 </div>
@@ -125,21 +152,6 @@ require_once 'slide_bar.php';
                     <div class="col-sm-9 text-center">
                         <form method="post">
                             <table class="table table-bordered">
-                                <?php
-                                if ($userId != 0) {
-                                    $fullName = $account['fullName'];
-                                    $unit = $account['unit'];
-                                    $contactNumber = $account['contactNumber'];
-                                } else {
-                                    $fullName = $account['representName'];
-                                }
-                                //                                $fullName = $account['fullName'];
-
-
-                                //                                $selectedClass = createSelectClasses($class['id'], true);
-
-                                $representName = $account['representName'];
-                                ?>
                                 <?php if ($userId != 0) { ?>
                                     <tr>
                                         <th>Mã tài khoản</th>
@@ -164,6 +176,11 @@ require_once 'slide_bar.php';
                                                    name="contactNumber"></td>
                                     </tr>
                                 <?php } ?>
+                                <tr>
+                                    <th>Tên đăng nhập</th>
+                                    <td><input type="text" value="<?= $username ?>" class="form-control"
+                                               name="username"></td>
+                                </tr>
                                 <tr>
                                     <th>Tên đại diện</th>
                                     <td><input type="text" value="<?= $representName ?>" class="form-control"

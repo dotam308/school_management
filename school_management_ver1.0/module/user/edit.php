@@ -42,7 +42,16 @@ $imgSRC = $oldData['img-personal'];
                 <th>Ảnh đại diện(source)</th>
                 <td>
                     <input type='file' class='form-control' name="imgSrc" id="inputImg">
-                    <div id="thumb-output" class="container-sm imgDiv"></div>
+                    <div style="display: flex">
+                        <div id="thumb-output" class="container-sm imgDiv">
+                            <?php
+                            $src = $oldData["img-personal"];
+                                if (!empty($src)) {
+                                    echo "<img class='container-sm imgDiv' src='$src' alt='$src'/>";
+                                }
+                            ?>
+                        </div>
+                    </div>
                 </td>
             </tr>
 

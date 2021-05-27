@@ -30,13 +30,13 @@ if (count($courseList) <= 0) {
         foreach ($courseList as $row) {
 
             echo "<tr>
-                <td><input type='checkbox' name='$row[courseCode]' id='new_$row[courseClassCode]' value='$row[courseId]'/></td>
+                <td><input type='checkbox' name='$row[courseCode]' id='new_$row[courseClassCode]' value='$row[id]'/></td>
                 <td>$row[courseName]</td>
                 <td>$row[courseCode]</td>
                 <td>$row[courseClassCode]</td>
                 <td>$row[credit]</td>
-                <td>$row[teacher]</td>
-                <td>$row[time]</td>
+                <td>$row[fullName]</td>
+                <td>$row[startTime]-$row[endTime]</td>
                 <td>$row[place]</td>
 
             </tr>";
@@ -71,7 +71,7 @@ if (count($courseList) <= 0) {
         <td>$row[courseName]</td>
         <td>$row[courseClassCode]</td>
         <td>$row[credit]</td>
-        <td>$row[teacher]</td>
+        <td>$row[fullName]</td>
         <td>$row[time]</td>
         <td>$row[place]</td>
         <td>$row[queryAction]</td>

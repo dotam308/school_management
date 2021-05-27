@@ -6,35 +6,59 @@ require_once "./models/ClassModel.php";
 global $conn;
 const LIMIT = 10;
 $myTable = "classes";
+$teacherModel = new Teacher();
+
+$classModel = new ClassModel();
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
-    $selectTeachers = new Teacher("");
-    $teachers = $selectTeachers->get();
+    $teachers = $teacherModel->get('');
 
-    $selectClass = new ClassModel("");
     if ($type == 'view') {
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         }
-        $table = "SELECT classes.*, teachers.fullName teacherName FROM `classes`
+        $table = "classes.*, teachers.fullName teacherName FROM `classes`
                     LEFT JOIN teachers 
                     ON classes.teacherId = teachers.id";
-        if (isset($_GET['order'])) {
+        if (isset($_POST['filter'])) {
+            $link = http_build_query(array_merge($_GET, $_POST));
+            header("location: manageClass.php?$link&page=1");
+        }
+        if (isset($_GET['filter'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $classModel->filter(['table'=>"$table",
+                "limit"=>'-1',
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+            $totalClasses = count($result);
+            $result = $classModel->filter(['table'=>"$table",
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+        } else if (isset($_GET['order']) && isset($_GET['direction'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $classModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "table"=>"$table",
+                "limit"=>'-1']);
+            $totalClasses = count($result);
+            $result = $classModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "table"=>"$table"]);
 
-            $classData = $selectClass->filter("$_GET[order]", "$_GET[direction]", LIMIT, "$page", "$table");
-        } else {
-            $classData = $selectClass->filter("id", "DESC", LIMIT, "$page", "$table");
         }
         $classList = array();
-        while ($class = $classData->fetch_assoc()) {
-            $newClass = new ClassModel("$class[id]");
-            $classList[] = $newClass->get();
-        }
+        $classList = $result;
         $view_file_name = "module/class/view.php";
     }
     if ($type == 'add') {
         $addStatus = -1;
-        $selectTeachers = createSelectTeachers($teachers);
+        $selectedClass = createSelectTeachers($teachers);
         $view_file_name = "module/class/add.php";
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -58,7 +82,7 @@ if (isset($_GET["type"])) {
                 'teacherId' => "$_POST[selectTeacher]"
             );
 
-            if ($selectClass->insert($insertData)) {
+            if ($classModel->insert($insertData)) {
                 if (isset($_POST['create'])) {
                     header("location: manageClass.php?type=view&page=1&action=create");
                 } else if (isset($_POST['continue'])) {
@@ -75,10 +99,10 @@ if (isset($_GET["type"])) {
         if ($t != 'view') {
             $id = $_GET['for'];
 
-            $selectedClass = new ClassModel("$id");
-            $oldData = $selectedClass->get();
-            $selectTeachers = createSelectTeachers($teachers, $oldData['teacherId']);
-
+            $oldData = $classModel->get($id);
+//            dd($oldData);
+            $teacherModel = createSelectTeachers($teachers, $oldData['teacherId']);
+            $classModel->setId($id);
             if ($t == 'edit') {
                 $view_file_name = "module/class/edit.php";
                 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -99,14 +123,14 @@ if (isset($_GET["type"])) {
                       "teacherId"=> "$_POST[selectTeacher]"
 
                     );
-                    if ($selectedClass->update($editData)) {
+                    if ($classModel->update($editData)) {
                         header("location: manageClass.php?type=view&page=1&action=edited");
                     } else {
                         echo $conn->error . "error at update Course";
                     }
                 }
             } else if ($t == 'delete') {
-                if ($selectedClass->delete()) {
+                if ($classModel->delete($id)) {
                     header("location: manageClass.php?type=view&page=1&action=deleted");
                 } else {
                     header("location: manageClass.php?type=view&page=1&action=deletedError");

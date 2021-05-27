@@ -25,7 +25,7 @@ require_once "module/register/registerQuery.php";
             if (isset($_GET['type'])) {
                 if ($_GET['type'] == 'view') {
                     echo "<a class='btn btn-info' style='color: black; padding: 0.25rem 0.5rem;' 
-                        href='manageStudent.php?type=view'>Quay về</a>";
+                        href='manageStudent.php?type=view&page=1&order=id&direction=DESC'>Quay về</a>";
                 }
             }
 

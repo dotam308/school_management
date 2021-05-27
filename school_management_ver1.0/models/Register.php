@@ -4,13 +4,7 @@ require_once "BaseModel.php";
 class Register extends BaseModel
 {
     protected $table = "registers";
-    public function __construct($id)
-    {
-        global $conn;
-        $this->conn = $conn;
-        $this->id = $id;
-    }
-
+    protected $id;
     public function get($position="")
     {
         $selectRegister = "SELECT registers.id, registers.courseId, registers.studentId, students.fullName, className, courses.teacherId, teachers.fullName teacher,
@@ -44,6 +38,7 @@ class Register extends BaseModel
                 "time" => "$row[startTime] - $row[endTime]",
                 "place" => "$row[place]",
                 "queryAction" => "$queryAction",
+                "courseId" => "$row[courseId]"
             ];
         }
 
@@ -55,5 +50,8 @@ class Register extends BaseModel
     public function update($params)
     {
         // TODO: Implement update() method.
+    }
+    public function setId($id) {
+        $this->id = $id;
     }
 }

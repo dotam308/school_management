@@ -8,7 +8,7 @@ global $conn;
 
 $myTable = "teachers";
 const LIMIT = 10;
-$teacherModel = new Teacher('');
+$teacherModel = new Teacher();
 if (isset($_GET["type"])) {
     $type = $_GET["type"];
     if ($type == 'view') {
@@ -16,15 +16,38 @@ if (isset($_GET["type"])) {
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         }
-        if (isset($_GET['order'])) {
+        if (isset($_POST['filter'])) {
+            $link = http_build_query(array_merge($_GET, $_POST));
+            header("location: manageTeacher.php?$link&page=1");
+        }
+        if (isset($_GET['filter'])) {
             $orderBy = $_GET['order'];
             $direction = $_GET['direction'];
-            $teachersData = $teacherModel->filter("$orderBy","$direction",  -1, "$page");
+            $result = $teacherModel->filter([
+                "limit"=>'-1',
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+            $totalSelectedTeacher = count($result);
+            $result = $teacherModel->filter([
+                'page'=>$page,
+                "order"=>"$orderBy",
+                "direction"=>"$direction",], array_merge($_GET, $_POST));
+        } else if (isset($_GET['order']) && isset($_GET['direction'])) {
+            $orderBy = $_GET['order'];
+            $direction = $_GET['direction'];
+            $result = $teacherModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page",
+                "limit"=>'-1']);
+            $totalSelectedTeacher = count($result);
+            $result = $teacherModel->filter(["order"=>"$orderBy",
+                "direction"=>"$direction",
+                "page"=>"$page"]);
 
-            $totalSelectedTeacher = $teachersData->num_rows;
-            $teachersData = $teacherModel->filter("$orderBy","$direction",  LIMIT, "$page");
         }
-        $teachers = getTeacherList($teachersData);
+
+        $teachers = $result;
 
         $view_file_name = "module/teacher/view.php";
     }
@@ -35,7 +58,6 @@ if (isset($_GET["type"])) {
         if (isset($_POST['fullName'])) {
 
             $insertTeacherData = array(
-                'id' => 'NULL',
                 'fullName' => "$_POST[fullName]",
                 'unit' => "$_POST[unit]",
                 "contactNumber" => "$_POST[contactNumber]"
@@ -50,22 +72,25 @@ if (isset($_GET["type"])) {
                 $username = convert_vi_to_en($lastNameTeacher).$idLastTeacher;
                 $passSalt = md5($username . $salt);
 
-                $insertUserData = array("id" => "NULL",
+                $insertUserData = array( "userId" => "$idLastTeacher",
                     "title" => "admin",
                     "username" => "$username",
                     "pass" => "$passSalt",
                     "salt" => "$salt",
-                    "representName" => "$lastNameTeacher",
-                    "img-personal" => NULL
+                    "representName" => "$lastNameTeacher"
                 );
                 $userAdd = new User();
                 if ($userAdd->insert($insertUserData)) {
 
                     if (isset($_POST['create'])) {
-                        header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=created");
-                    } else if (isset($_POST['continue'])) {
-                        header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=created");
+                        $type = $_POST['create'];
+                        if ($type == 'create') {
+                            header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=created");
+                        } else {
+                            header("location: manageTeacher.php?type=add&action=created");
+                        }
                     }
+
                 }
                 if (isset($_POST['back'])) {
                     header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC");
@@ -78,9 +103,7 @@ if (isset($_GET["type"])) {
         $t = $_GET['type'];
         if ($t != 'view') {
             $id = $_GET['for'];
-
-            $updatedTeacher = new Teacher("$id");
-            $oldData = $updatedTeacher->get();
+            $oldData = $teacherModel->get($id);
             if ($t == 'edit') {
                 $view_file_name = "module/teacher/edit.php";
                 if (isset($_POST['update'])) {
@@ -91,7 +114,8 @@ if (isset($_GET["type"])) {
                         'contactNumber'=>"$_POST[contactNumber]"
                     );
 //                    dd($dataInsert);
-                    if ($updatedTeacher->update($dataInsert)) {
+                    $teacherModel->setId($id);
+                    if ($teacherModel->update($dataInsert)) {
                         header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=edited");
                     } else {
                         header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=editedFailed");
@@ -100,7 +124,7 @@ if (isset($_GET["type"])) {
             } else if ($t == 'delete') {
 
 
-                if ($updatedTeacher->delete()) {
+                if ($teacherModel->delete($id)) {
                     header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=deleted");
                 } else {
                     header("location: manageTeacher.php?type=view&page=1&order=id&direction=DESC&action=deletedFailed");
@@ -110,18 +134,4 @@ if (isset($_GET["type"])) {
             echo $conn->error . " error at selectCourse";
         }
     }
-}
-
-function getTeacherList($data)
-{
-    $teachers = array();
-    while ($teacher = $data->fetch_assoc()) {
-        $teachers[] = [
-            'id' => $teacher['id'],
-            'fullName' => $teacher['fullName'],
-            'unit' => $teacher['unit'],
-            'contactNumber' => $teacher['contactNumber']
-        ];
-    }
-    return $teachers;
 }

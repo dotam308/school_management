@@ -5,47 +5,39 @@ require_once './models/Register.php';
 require_once './models/RegisterList.php';
 require_once './models/Student.php';
 require_once './models/Course.php';
+require_once './models/Score.php';
 global $conn;
+$studentMod = new Student();
+$registers = new Register();
+$scoreModel = new Score();
 if (isset($_GET['for'])) {
     $id = $_GET['for'];
     $type = $_GET['type'];
     global $idStudent;
     $idStudent = $id;
 
-    $newStudent = new Student("$id");
-    $getStudent = $newStudent->get();
+    $registers->setId($_GET['for']);
+    $getStudent = $studentMod->get("$id");
 
-    $registers = new Register("$id");
     switch ($type) {
         case "view":
-            $dataRegis = $registers->get();
+            $dataRegis = $registers->get("$_GET[for]");
             $view_file_name = 'module/register/view.php';
             break;
         case "add":
             $dataRegis = $registers->get("add");
-            $sqlSelectCourse = "SELECT * FROM courses c
-                        WHERE c.courseName NOT IN (SELECT courseName FROM `registers`
-                                    LEFT JOIN courses 
-                                    ON registers.courseId = courses.id WHERE studentId = '$id')";
-            $courseData = $conn->query($sqlSelectCourse);
-            $courseList = array();
-            while ($row = $courseData->fetch_assoc()) {
-                $idTeacher = $row['teacherId'];
-                $teacher = selectElementFrom("teachers", "fullName", "id = '$idTeacher'")
-                    ->fetch_assoc()['fullName'];
-
-                $courseList[] = [
-                    "courseName" => "$row[courseName]",
-                    "courseCode" => "$row[courseCode]",
-                    "courseClassCode" => "$row[courseClassCode]",
-                    "credit" => "$row[credit]",
-                    "teacher" => "$teacher",
-                    "time" => "$row[startTime]-$row[endTime]",
-                    "place" => "$row[place]",
-                    "courseId" => "$row[id]"
-
-                ];
-            }
+            $courseTable = "(SELECT c.*, teachers.fullName
+                         FROM courses c 
+                         LEFT JOIN teachers 
+                         ON c.teacherId = teachers.id WHERE c.courseName NOT IN 
+                                (SELECT courseName 
+                                 FROM `registers` 
+                                 LEFT JOIN courses 
+                                 ON registers.courseId = courses.id 
+                                 WHERE registers.studentId = '$id' )) courses";
+            $courseMod = new Course();
+            $courseMod->setTable($courseTable);
+            $courseList = $courseMod->get();
             $view_file_name = 'module/register/add.php';
 
             if (isset($_POST['btnSubmit'])) {
@@ -53,17 +45,22 @@ if (isset($_GET['for'])) {
                     $insertCourses = array();
                     foreach ($_POST as $key=>$value) {
                         if ($value != '') {
-                            $course = new Course("$value");
-                            $dataCourse = $course->get();
+                            $course = new Course();
+                            $dataCourse = $course->get($value);
 
                             $insertRegister = [
-                              "id"=>'NULL',
                                 "courseId"=>"$dataCourse[id]",
                                 "studentId"=> "$id"
 
                             ];
-                            if ($registers->insert($insertRegister)) {
-                                header("location: registerCourses.php?type=add&for=19020514&actionNow=added");
+                            $insertScore = [
+                                "courseId"=>"$dataCourse[id]",
+                                "studentId"=> "$id",
+                                "score"=>"0.0"
+
+                            ];
+                            if ($registers->insert($insertRegister) && $scoreModel->insert($insertScore)) {
+                                header("location: registerCourses.php?type=add&for=$id&actionNow=added");
                             }
 
                         }
@@ -76,9 +73,11 @@ if (isset($_GET['for'])) {
             if (isset($_GET['for'])) {
                 $courseId = $_GET['ele'];
                 $studentId = $_GET['for'];
-
-                $deleteOnRegisters = new RegisterList("$studentId", "$courseId");
-                if ($deleteOnRegisters->delete()) {
+                $deleteOnRegisters = new RegisterList();
+                $registerId = $deleteOnRegisters->getRegisterId($courseId, $studentId);
+                $scoreStudent = new Score();
+                $scoreId = $scoreStudent->getScoreId("$courseId", "$studentId");
+                if ($deleteOnRegisters->delete($registerId) && $scoreStudent->delete($scoreId)) {
                     if (isset($_GET['combine'])) {
                         header("location: registerCourses.php?type=add&for=$studentId&actionNow=added&action=deleted");
                     }else {

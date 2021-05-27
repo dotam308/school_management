@@ -3,13 +3,18 @@
  * @param $value
  */
 //require_once "./models/BaseModel.php";
+//require_once "../connection.php";
 function dd($value)
 {
     echo '<pre>';
     print_r($value);
     echo '</pre>';
 }
-
+//function removeSameElementInArray($array) {
+//    foreach ()
+//}
+//$sqlSelect = selectElementFrom("students", "*", "1");
+//dd($sqlSelect->fetch_all(MYSQLI_ASSOC));
 function getActionForm($originLink, $id, $edit = true, $delete = true, $deletedElement = "", $regis = false, $addCourse = false, $studentId = "", $combine = "")
 {
     $res = "<ul style='display: flex'>";
@@ -63,10 +68,6 @@ function updateStudentOnGrade()
     $sizeR = $register->num_rows;
     $sizeS = $score->num_rows;
     if ($sizeS == 0) {
-
-        echo "1";
-
-
         $register = $conn->query($sqlRegister);
         while ($rowR = $register->fetch_assoc()) {
             $sqlInsert = "INSERT INTO `scores`(`id`, `score`, `courseId`, `studentId`)
@@ -133,101 +134,6 @@ function createSelectClasses($oldClass = 0, $disabled = false)
         return $selectClass;
     }
 }
-
-function showScores($studentId)
-{
-    global $conn;
-    $sum = 0;
-    $toTalCredit = 0;
-    $sqlGetStudentThroughId = "SELECT fullName FROM `students` WHERE `id` = '$studentId'";
-    $student = $conn->query($sqlGetStudentThroughId)->fetch_all()[0][0];
-
-    echo "<h3 style='text-align: center; color: red'>Kết quả học tập</h3>";
-    echo "<div style='display: flex; margin: 0px 300px'>
-                            <div style='margin-right: auto;'>Mã sinh viên: $studentId</div>
-                            <div> Sinh viên: $student </div>
-
-                        </div>";
-    echo "<form  method='post' action='#'>
-                                <table class='table table-bordered table-hover table-striped' style='width:  100%;'>
-                                    <tr>
-                                        <th>Mã môn học</th>
-                                        <th>Tên môn học</th>
-                                        <th>Số tín</th>
-                                        <th>Điểm</th>
-                                    </tr>";
-    $sqlGetData = "SELECT * FROM `registers` WHERE studentId='$studentId'";
-
-    if ($res = $conn->query($sqlGetData)) {
-        $data = $res->fetch_all();
-        for ($i = 0; $i < count($data); $i++) {
-            $courseId = $data[$i][1];
-
-            $sqlSelectCourseThroughId = "SELECT * FROM `courses` WHERE `id`='$courseId'";
-            $courseData = $conn->query($sqlSelectCourseThroughId)->fetch_all()[0];
-
-
-            $sqlSelectScoreThroughId = "SELECT score FROM `scores`
-        	            WHERE `courseId`='$courseId' AND `studentId` ='$studentId'";
-
-
-            $scoreData = $conn->query($sqlSelectScoreThroughId)->fetch_all();
-
-            if (count($scoreData) > 0) {
-
-                $scoreOfThisCourse = $scoreData[0][0];
-                $valueT = $scoreOfThisCourse;
-                $sum += $valueT * $courseData[1];
-            } else {
-                $valueT = 0;
-            }
-
-            $toTalCredit += $courseData[1];
-
-            echo "
-        	            <tr>
-        	            <td>$courseData[5]</td>
-        	            <td>$courseData[6]</td>
-        	            <td>$courseData[1]</td>";
-            global $title;
-            if ($title == 'admin') {
-                echo "<td><input type='text' name='$courseData[0]_$studentId' style='width: 50px;' value='$valueT'></td>
-        	            </tr>";
-            } else if ($title == 'student') {
-                echo "<td>$valueT</td>
-        	            </tr>";
-            }
-
-        }
-
-        $res = 0;
-        if ($toTalCredit != 0) {
-            $avg = $sum / $toTalCredit;
-            $res = round($avg, 1);
-        }
-        echo "Điểm trung bình: $res <br />";
-        ?>
-        </table> <?php
-        global $title;
-        if ($title == 'admin') {
-            echo '<button type="submit" name="submit" value="submit" class="btn btn-primary">Ghi nhận</button>';
-            echo "<a type='submit' class='btn btn-info'
-                href='queryOnRegister.php?type=view&for=$studentId'>Quay lại</a>";
-
-        } else if ($title == 'student') {
-
-            echo "<a type='submit' class='btn btn-info'
-               href='process.php'>Quay lại</a>";
-
-        } ?>
-        </form>
-        <?php
-    } else {
-        echo "error at GetData";
-    }
-
-}
-
 function getDetailData($data)
 {
 
@@ -576,6 +482,8 @@ function uploadImage($usernameORId, $nameInput)
     $valid_ext = array('png', 'jpeg', 'jpg');
 
     // Location
+
+    $filename = substr(md5(generateRandomString()), "0", "5") . $filename;
     $location = "images/" . $filename;
     $thumbnail_location = "images/thumbnail/" . $filename;
 
@@ -591,12 +499,11 @@ function uploadImage($usernameORId, $nameInput)
             // Compress Image
             compressImage($_FILES[$nameInput]['type'], $location, $thumbnail_location, 60);
 
-            echo "<script>alert('Successfully Uploaded')</script>";
-
             $sqlInsertImageToDB = "UPDATE `users` SET `img-personal` = '$location' 
 WHERE `users`.`username` = '$usernameORId' OR `users`.`id` = '$usernameORId'";
 
             if ($conn->query($sqlInsertImageToDB)) {
+                header("location: updateAdminProfile.php?for=$_SESSION[username]&action=imgUpdated");
                 return $location;
             }
         }
@@ -676,7 +583,7 @@ function createSelectTeachers($teachers, $selected="", $fetchassoc = true) {
                     <select name='selectTeacher' class='form-control'>
                         <option value='' selected='selected'>----select----</option>";
     if ($fetchassoc) {
-        while ($row = $teachers->fetch_assoc()) {
+        foreach ($teachers as $row) {
             $fullName = $row['fullName'];
             $id = $row['id'];
             $showTeacher = $fullName . "-" . $id;

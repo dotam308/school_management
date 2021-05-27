@@ -10,8 +10,8 @@ $user = $selectUser->fetch_assoc();
 
 if (isset($_POST['update'])) {
     global $conn;
-    if (md5($_POST['oldPass']) == $user['pass']) {
-        $encodePass = md5($_POST['newPass']);
+    if (md5($_POST['oldPass'].$user['salt']) == $user['pass']) {
+        $encodePass = md5($_POST['newPass'].$user['salt']);
         if ($_POST['newPass'] == $_POST['newPass2']) {
 
             $sqlUpdatePass = "UPDATE users SET pass = '$encodePass' WHERE username='$username'";
@@ -62,7 +62,7 @@ $sub_active = 'updatePassword';
 
                         <tr>
                             <th>Tên đăng nhập</th>
-                            <td><input type="text" value="<?= $username ?>" class="form-control" disabled></td>
+                            <td><input type="text" value="<?= $username ?>" class="form-control" disabled ></td>
                         </tr>
                         <tr>
                             <th>Mật khẩu cũ</th>
